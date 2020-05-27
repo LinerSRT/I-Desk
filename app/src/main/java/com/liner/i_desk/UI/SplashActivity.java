@@ -245,31 +245,31 @@ public class SplashActivity extends AppCompatActivity {
         splashLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final MaterialDialog registerDialog = new MaterialDialog.Builder(SplashActivity.this)
+                final MaterialDialog loginDialog = new MaterialDialog.Builder(SplashActivity.this)
                         .title("Вход")
                         .content("Выполняется вход в аккаунт, подождите")
                         .progressIndeterminateStyle(true)
                         .cancelable(false)
                         .widgetColor(getResources().getColor(R.color.color_primary))
                         .progress(true, 0).build();
-                registerDialog.show();
+                loginDialog.show();
                 firebaseAuth.signOut();
                 firebaseAuth.signInWithEmailAndPassword(splashLoginEmailField.getText().toString().trim(), splashLoginPasswordField.getText().toString().trim()).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                     @Override
                     public void onSuccess(AuthResult authResult) {
                         if(authResult.getUser().isEmailVerified()){
-                            registerDialog.dismiss();
+                            loginDialog.dismiss();
                             startActivity(new Intent(SplashActivity.this, MainActivity.class));
                             finish();
                         } else {
-                            registerDialog.dismiss();
-                            showErrorDialog("Внимание!", "Вы не подтвердили свой ул.адрес. Инструкция была выслана вам на почту");
+                            loginDialog.dismiss();
+                            showErrorDialog("Внимание!", "Вы не подтвердили свой E-Mail. Инструкция для подтверждения была выслана вам на почту");
                         }
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        registerDialog.dismiss();
+                        loginDialog.dismiss();
                         if(Objects.requireNonNull(e.getLocalizedMessage()).contains("invalid") || Objects.requireNonNull(e.getLocalizedMessage().contains("no user"))){
                             showErrorDialog("Ошибка!", "Неверный пароль или E-Mail");
                         }
@@ -413,13 +413,21 @@ public class SplashActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (loginEmailCorrect) {
+                    final MaterialDialog resetPasswordDialog = new MaterialDialog.Builder(SplashActivity.this)
+                            .title("")
+                            .content("Пожалуйста, подождите")
+                            .progressIndeterminateStyle(true)
+                            .cancelable(false)
+                            .widgetColor(getResources().getColor(R.color.color_primary))
+                            .progress(true, 0).build();
+                    resetPasswordDialog.show();
                     firebaseAuth.sendPasswordResetEmail(splashLoginEmailField.getText().toString().trim()).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()) {
                                 new MaterialDialog.Builder(SplashActivity.this)
                                         .title("Восстановление пароля!")
-                                        .content("На ваш эл. адрес была выслана инструкция по восстановлению пароля")
+                                        .content("На ваш E-Mail была выслана инструкция по восстановлению пароля")
                                         .positiveText("Ок")
                                         .positiveColorRes(R.color.color_primary)
                                         .show();
@@ -429,7 +437,7 @@ public class SplashActivity extends AppCompatActivity {
                         }
                     });
                 } else {
-                    showErrorDialog("Внимание", "Введите корректный адрес эл. почты!");
+                    showErrorDialog("Внимание", "Введите корректный E-Mail!");
                 }
             }
         });
@@ -452,7 +460,7 @@ public class SplashActivity extends AppCompatActivity {
                     @Override
                     public void onValueExists() {
                         registerDialog.dismiss();
-                        showErrorDialog("Внимание", "Данный адрес эл. почты уже используется");
+                        showErrorDialog("Внимание", "Данный E-Mail уже используется");
                     }
 
                     @Override
@@ -502,7 +510,7 @@ public class SplashActivity extends AppCompatActivity {
                                                                                                     registerDialog.dismiss();
                                                                                                     new MaterialDialog.Builder(SplashActivity.this)
                                                                                                             .title("Регистрация прошла успешно!")
-                                                                                                            .content("На ваш эл. адрес было выслано сообщение для подтверждения регистрации")
+                                                                                                            .content("На ваш E-Mail было выслано сообщение для подтверждения регистрации")
                                                                                                             .positiveText("Ок")
                                                                                                             .positiveColorRes(R.color.color_primary)
                                                                                                             .dismissListener(new DialogInterface.OnDismissListener() {
