@@ -28,7 +28,7 @@
             android:inputType="textEmailAddress"
             android:textSize="@dimen/primaryTextSize"
             app:ertv_left_icon="@drawable/email_icon"
-            app:ertv_regex="[a-zA-Z_0-9\w]*@[a-z]*\.[a-z]*"
+            app:ertv_regex="[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -43,7 +43,7 @@
             android:hint="Придумайте пароль"
             android:textSize="@dimen/primaryTextSize"
             app:ertv_left_icon="@drawable/password_icon"
-            app:ertv_regex="([a-zA-Z0-9\W]{6,23})" />
+            app:ertv_regex="(?=.*[0-9])(?=.*[a-zA-Zа-яА-Я]).{6,}" />
 
         <com.liner.i_desk.Utils.Views.EditRegexTextView
             android:id="@+id/splashRegisterReplyPasswordField"
@@ -55,7 +55,7 @@
             android:hint="Повторите пароль"
             android:textSize="@dimen/primaryTextSize"
             app:ertv_left_icon="@drawable/password_icon"
-            app:ertv_regex="([a-zA-Z0-9\W]{6,23})" />
+            app:ertv_regex="(?=.*[0-9])(?=.*[a-zA-Zа-яА-Я]).{6,}" />
 
 
         <com.liner.i_desk.Utils.Views.EditRegexTextView
@@ -68,7 +68,7 @@
             android:hint="Придумайте никнейм"
             android:textSize="@dimen/primaryTextSize"
             app:ertv_left_icon="@drawable/account_icon"
-            app:ertv_regex="([a-zA-Z0-9\W]{6,23})" />
+            app:ertv_regex="([a-zA-Z0-9\W]{1,23})" />
 
 
         <RelativeLayout

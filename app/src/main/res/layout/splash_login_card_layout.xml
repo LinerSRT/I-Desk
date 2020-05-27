@@ -24,7 +24,7 @@
             android:layout_marginBottom="20dp"
             android:gravity="center"
             android:focusableInTouchMode="true"
-            app:ertv_regex="[a-zA-Z_0-9\w]*@[a-z]*\.[a-z]*"
+            app:ertv_regex="[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+"
             app:ertv_left_icon="@drawable/email_icon"
             android:hint="Укажите свой адрес эл. почты"
             android:inputType="textEmailAddress"
@@ -47,7 +47,7 @@
                 app:ertv_left_icon="@drawable/password_icon"
                 android:gravity="center"
                 android:hint="Пароль"
-                app:ertv_regex="([a-zA-Z0-9\W]{6,23})"
+                app:ertv_regex="(?=.*[0-9])(?=.*[a-zA-Zа-яА-Я]).{6,}"
                 android:inputType="textPassword"
                 android:textSize="@dimen/primaryTextSize" />
 

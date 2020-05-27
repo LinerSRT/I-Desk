@@ -40,4 +40,7 @@ dependencies {
     implementation group: 'com.squareup.picasso', name: 'picasso', version: '2.71828'
     implementation 'de.hdodenhof:circleimageview:3.1.0'
     implementation 'com.theartofdev.edmodo:android-image-cropper:2.8.+'
+    implementation 'id.zelory:compressor:2.1.0'
+    implementation 'com.afollestad.material-dialogs:commons:0.9.2.3'
+    implementation 'com.nabinbhandari.android:permissions:3.8'
 }

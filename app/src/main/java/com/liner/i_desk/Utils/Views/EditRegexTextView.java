@@ -8,6 +8,7 @@ import android.graphics.drawable.Drawable;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.widget.EditText;
 
 import com.liner.i_desk.R;
@@ -22,6 +23,8 @@ public class EditRegexTextView extends EditText {
     private String regexString = "";
     private int leftDrawableIconResource;
     private Drawable leftDrawableIcon;
+    private boolean controlIconAutomatically = true;
+    private boolean fieldCorrect = false;
 
 
     public EditRegexTextView(Context context) {
@@ -41,7 +44,7 @@ public class EditRegexTextView extends EditText {
 
     private void init(Context context, AttributeSet attributeSet) {
         TypedArray typedArray = context.obtainStyledAttributes(attributeSet, R.styleable.EditRegexTextView, 0, 0);
-        leftDrawableIconResource = typedArray.getResourceId(R.styleable.EditRegexTextView_ertv_left_icon, R.drawable.email_icon);
+        leftDrawableIconResource = typedArray.getResourceId(R.styleable.EditRegexTextView_ertv_left_icon, -1);
         regexString = typedArray.getString(R.styleable.EditRegexTextView_ertv_regex);
         typedArray.recycle();
         TextWatcher textWatcher = new TextWatcher() {
@@ -58,17 +61,26 @@ public class EditRegexTextView extends EditText {
             @Override
             public void afterTextChanged(Editable editable) {
                 String result = editable.toString().trim();
+                Log.d("TAGTAG", "Check "+result);
+                Log.d("TAGTAG", "With pattern "+regexString);
+                Log.d("TAGTAG", "Match "+Pattern.compile(regexString).matcher(result));
                 if (Pattern.compile(regexString).matcher(result).matches()) {
-                    leftDrawableIcon = getContext().getDrawable(leftDrawableIconResource);
-                    Objects.requireNonNull(leftDrawableIcon).setColorFilter(ColorUtils.getThemeColor(getContext(), R.attr.colorPrimaryDark), PorterDuff.Mode.SRC_IN);
-                    setCompoundDrawablesWithIntrinsicBounds(leftDrawableIcon, null, null, null);
+                    fieldCorrect = true;
+                    if(controlIconAutomatically) {
+                        if(leftDrawableIconResource != -1) {
+                            setLeftIcon(R.attr.colorPrimaryDark);
+                        }
+                    }
                     if (textListener != null) {
                         textListener.onValid(result);
                     }
                 } else {
-                    leftDrawableIcon = getContext().getDrawable(leftDrawableIconResource);
-                    Objects.requireNonNull(leftDrawableIcon).setColorFilter(ColorUtils.getThemeColor(getContext(), R.attr.disabledColor), PorterDuff.Mode.SRC_IN);
-                    setCompoundDrawablesWithIntrinsicBounds(leftDrawableIcon, null, null, null);
+                    fieldCorrect = false;
+                    if(controlIconAutomatically) {
+                        if(leftDrawableIconResource != -1) {
+                            setLeftIcon(R.attr.disabledColor);
+                        }
+                    }
                     if (textListener != null) {
                         textListener.onNotValid();
                     }
@@ -76,11 +88,17 @@ public class EditRegexTextView extends EditText {
             }
         };
         addTextChangedListener(textWatcher);
-        leftDrawableIcon = context.getDrawable(leftDrawableIconResource);
-        Objects.requireNonNull(leftDrawableIcon).setColorFilter(ColorUtils.getThemeColor(context, R.attr.disabledColor), PorterDuff.Mode.SRC_IN);
-        setCompoundDrawablesWithIntrinsicBounds(leftDrawableIcon, null, null, null);
+        if(leftDrawableIconResource != -1) {
+            setLeftIcon(R.attr.disabledColor);
+        }
     }
 
+
+    private void setLeftIcon(int color){
+        leftDrawableIcon = getContext().getDrawable(leftDrawableIconResource);
+        Objects.requireNonNull(leftDrawableIcon).setColorFilter(ColorUtils.getThemeColor(getContext(), color), PorterDuff.Mode.SRC_IN);
+        setCompoundDrawablesWithIntrinsicBounds(leftDrawableIcon, null, null, null);
+    }
 
     public void setTextListener(IEditTextListener textListener) {
         this.textListener = textListener;
@@ -88,6 +106,19 @@ public class EditRegexTextView extends EditText {
 
     public void setRegexString(String regexString) {
         this.regexString = regexString;
+    }
+
+    public void setControlIconAutomatically(boolean controlIconAutomatically) {
+        this.controlIconAutomatically = controlIconAutomatically;
+    }
+
+
+    public void setFieldCorrect(boolean fieldCorrect) {
+        setLeftIcon((fieldCorrect) ? R.attr.colorPrimaryDark:R.attr.disabledColor);
+    }
+
+    public boolean isFieldCorrect() {
+        return fieldCorrect;
     }
 
     public interface IEditTextListener {
