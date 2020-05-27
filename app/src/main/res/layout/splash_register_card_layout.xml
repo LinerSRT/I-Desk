@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/splashRegisterCardView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardBackgroundColor="?backgroundColor"
+    app:cardCornerRadius="@dimen/cardsCornerRadius"
+    app:cardElevation="@dimen/cardElevation"
+    app:cardUseCompatPadding="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="@dimen/contentMargin">
+
+        <com.liner.i_desk.Utils.Views.EditRegexTextView
+            android:id="@+id/splashRegisterEmailField"
+            style="@style/EditTextTheme"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/contentMarginHalf"
+            android:focusableInTouchMode="true"
+            android:gravity="center"
+            android:hint="Укажите свой адрес эл. почты"
+            android:inputType="textEmailAddress"
+            android:textSize="@dimen/primaryTextSize"
+            app:ertv_left_icon="@drawable/email_icon"
+            app:ertv_regex="[a-zA-Z_0-9\w]*@[a-z]*\.[a-z]*"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <com.liner.i_desk.Utils.Views.EditRegexTextView
+            android:id="@+id/splashRegisterPasswordField"
+            style="@style/EditTextTheme"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/contentMarginHalf"
+            android:gravity="center"
+            android:hint="Придумайте пароль"
+            android:textSize="@dimen/primaryTextSize"
+            app:ertv_left_icon="@drawable/password_icon"
+            app:ertv_regex="([a-zA-Z0-9\W]{6,23})" />
+
+        <com.liner.i_desk.Utils.Views.EditRegexTextView
+            android:id="@+id/splashRegisterReplyPasswordField"
+            style="@style/EditTextTheme"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/contentMarginHalf"
+            android:gravity="center"
+            android:hint="Повторите пароль"
+            android:textSize="@dimen/primaryTextSize"
+            app:ertv_left_icon="@drawable/password_icon"
+            app:ertv_regex="([a-zA-Z0-9\W]{6,23})" />
+
+
+        <com.liner.i_desk.Utils.Views.EditRegexTextView
+            android:id="@+id/splashRegisterNickNameField"
+            style="@style/EditTextTheme"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/contentMarginHalf"
+            android:gravity="center"
+            android:hint="Придумайте никнейм"
+            android:textSize="@dimen/primaryTextSize"
+            app:ertv_left_icon="@drawable/account_icon"
+            app:ertv_regex="([a-zA-Z0-9\W]{6,23})" />
+
+
+        <RelativeLayout
+            android:id="@+id/splashRegisterAddPhotoView"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_margin="@dimen/contentMarginHalf">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/splashRegisterProfilePhotoView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/temp_user_photo"
+                app:civ_border_color="?colorPrimaryDark"
+                app:civ_border_width="2dp" />
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_alignParentBottom="true"
+                android:background="@drawable/circle_bg"
+                android:elevation="4dp"
+                android:src="@drawable/add_circle_icon" />
+
+        </RelativeLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="Нажмите что бы загрузить свое фото"
+            android:textColor="?textColorDark"
+            android:textSize="@dimen/secondaryTextSizeSmall" />
+
+        <Button
+            android:id="@+id/splashRegisterButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/contentMarginHalf"
+            android:background="@drawable/button_bg"
+            android:elevation="4dp"
+            android:enabled="false"
+            android:text="Регистрация"
+            android:textAllCaps="false"
+            android:textColor="@color/color_white"
+            android:textSize="16sp" />
+
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

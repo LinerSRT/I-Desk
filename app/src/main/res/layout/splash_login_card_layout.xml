@@ -1,0 +1,89 @@
+<androidx.cardview.widget.CardView
+    android:id="@+id/splashLoginCardView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardBackgroundColor="?backgroundColor"
+    app:cardCornerRadius="@dimen/cardsCornerRadius"
+    app:cardElevation="@dimen/cardElevation"
+    app:cardUseCompatPadding="true"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="@dimen/contentMargin">
+
+        <com.liner.i_desk.Utils.Views.EditRegexTextView
+            android:id="@+id/splashLoginEmailField"
+            style="@style/EditTextTheme"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:gravity="center"
+            android:focusableInTouchMode="true"
+            app:ertv_regex="[a-zA-Z_0-9\w]*@[a-z]*\.[a-z]*"
+            app:ertv_left_icon="@drawable/email_icon"
+            android:hint="Укажите свой адрес эл. почты"
+            android:inputType="textEmailAddress"
+            android:textSize="@dimen/primaryTextSize"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <com.liner.i_desk.Utils.Views.EditRegexTextView
+                android:id="@+id/splashLoginPasswordField"
+                style="@style/EditTextTheme"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                app:ertv_left_icon="@drawable/password_icon"
+                android:gravity="center"
+                android:hint="Пароль"
+                app:ertv_regex="([a-zA-Z0-9\W]{6,23})"
+                android:inputType="textPassword"
+                android:textSize="@dimen/primaryTextSize" />
+
+            <ImageButton
+                android:id="@+id/splashLoginShowPassword"
+                android:layout_width="@dimen/contentHeight"
+                android:layout_height="match_parent"
+                android:background="@null"
+                android:src="@drawable/hide_password_icon" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/splashLoginButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/contentMarginHalf"
+            android:background="@drawable/button_bg"
+            android:elevation="4dp"
+            android:text="Войти"
+            android:enabled="false"
+            android:textAllCaps="false"
+            android:textColor="@color/color_white"
+            android:textSize="16sp" />
+
+
+        <TextView
+            android:id="@+id/splashForgotPassword"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="Забыли пароль?"
+            android:textColor="?textColorDark"
+            android:textSize="@dimen/secondaryTextSize"
+            android:textStyle="bold" />
+
+
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

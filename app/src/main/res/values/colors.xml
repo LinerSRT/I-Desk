@@ -1,25 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="color_text">#252525</color>
-    <color name="color_text_dark">#454545</color>
-    <color name="color_disable">#757575</color>
+    <color name="color_text_dark">#5E5E5E</color>
+    <color name="color_disable">#949393</color>
     <color name="color_white">#FFFFFF</color>
     <color name="color_white_dark">#DBDBDB</color>
     <color name="color_warning_red">#C00</color>
     <color name="color_news_media_background">#E7E7E7</color>
-    <color name="color_primary_green">#15C01E</color>
-    <color name="color_primary_dark_green">#108D16</color>
-    <color name="color_primary_red">#C01515</color>
-    <color name="color_primary_dark_red">#A01212</color>
-    <color name="color_primary_yellow">#FFBAC015</color>
-    <color name="color_primary_dark_yellow">#80850F</color>
-    <color name="color_primary_blue">#1545C0</color>
-    <color name="color_primary_dark_blue">#103694</color>
+    <color name="color_primary">#1590C0</color>
+    <color name="color_primary_dark">#106B8F</color>
     <color name="color_background">#FFFAFAFA</color>
     <color name="color_background_black">#000000</color>
     <color name="color_background_dark">#1A1A1A</color>
     <color name="color_background_secondary">#F1F1F1</color>
     <color name="color_background_black_secondary">#141414</color>
     <color name="color_background_dark_secondary">#303030</color>
-    <color name="black_alpa">#80000000</color>
+    <color name="black_alpha">#80000000</color>
 </resources>
