@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "712345616446",
+    "firebase_url": "https://i-desk.firebaseio.com",
+    "project_id": "i-desk",
+    "storage_bucket": "i-desk.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:712345616446:android:db19e2e46b735e157a516f",
+        "android_client_info": {
+          "package_name": "com.liner.i_desk"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "712345616446-p09c5dj6ao2aecs8etasqi03jpkckvhd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.liner.i_desk",
+            "certificate_hash": "d75907c83b3b153b5cbac121c9ecdb83875d34f9"
+          }
+        },
+        {
+          "client_id": "712345616446-b3b70aimkue616r7dlqlqufn828fu6pi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBi1nreSLIX_OvabIz8iTGbubi6W02DXJM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "712345616446-b3b70aimkue616r7dlqlqufn828fu6pi.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

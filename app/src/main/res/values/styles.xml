@@ -1,0 +1,114 @@
+<resources>
+
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="backgroundColor">@color/color_background</item>
+        <item name="backgroundColorSecondary">@color/color_background_secondary</item>
+        <item name="textColor">@color/color_text</item>
+        <item name="textColorDark">@color/color_text_dark</item>
+        <item name="colorPrimary">@color/color_warning_red</item>
+        <item name="colorPrimaryDark">@color/color_primary_dark_red</item>
+        <item name="colorAccent">@color/color_warning_red</item>
+    </style>
+
+    <style name="AppTheme.Black" parent="AppTheme.Light">
+        <item name="backgroundColor">@color/color_background_black</item>
+        <item name="backgroundColorSecondary">@color/color_background_black_secondary</item>
+        <item name="textColor">@color/color_white</item>
+        <item name="textColorDark">@color/color_white_dark</item>
+    </style>
+
+    <style name="AppTheme.Dark" parent="AppTheme.Light">
+        <item name="backgroundColorSecondary">@color/color_background_dark_secondary</item>
+        <item name="backgroundColor">@color/color_background_dark</item>
+        <item name="textColor">@color/color_white</item>
+        <item name="textColorDark">@color/color_white_dark</item>
+    </style>
+
+    <style name="AppTheme.Red" parent="AppTheme.Light">
+        <item name="colorPrimary">@color/color_warning_red</item>
+        <item name="colorPrimaryDark">@color/color_primary_dark_red</item>
+        <item name="colorAccent">@color/color_warning_red</item>
+    </style>
+
+
+    <style name="AppTheme.Blue" parent="AppTheme.Light">
+        <item name="colorPrimary">@color/color_primary_blue</item>
+        <item name="colorPrimaryDark">@color/color_primary_dark_blue</item>
+        <item name="colorAccent">@color/color_primary_blue</item>
+    </style>
+
+    <style name="AppTheme.Yellow" parent="AppTheme.Light">
+        <item name="colorPrimary">@color/color_primary_yellow</item>
+        <item name="colorPrimaryDark">@color/color_primary_dark_yellow</item>
+        <item name="colorAccent">@color/color_primary_yellow</item>
+    </style>
+
+    <style name="AppTheme.Green" parent="AppTheme.Light">
+        <item name="colorPrimary">@color/color_primary_green</item>
+        <item name="colorPrimaryDark">@color/color_primary_dark_green</item>
+        <item name="colorAccent">@color/color_primary_green</item>
+    </style>
+
+
+    <style name="AppTheme.Red.Black" parent="AppTheme.Black">
+        <item name="colorPrimary">@color/color_warning_red</item>
+        <item name="colorPrimaryDark">@color/color_primary_dark_red</item>
+        <item name="colorAccent">@color/color_warning_red</item>
+    </style>
+
+
+    <style name="AppTheme.Blue.Black" parent="AppTheme.Black">
+        <item name="colorPrimary">@color/color_primary_blue</item>
+        <item name="colorPrimaryDark">@color/color_primary_dark_blue</item>
+        <item name="colorAccent">@color/color_primary_blue</item>
+    </style>
+
+    <style name="AppTheme.Yellow.Black" parent="AppTheme.Black">
+        <item name="colorPrimary">@color/color_primary_yellow</item>
+        <item name="colorPrimaryDark">@color/color_primary_dark_yellow</item>
+        <item name="colorAccent">@color/color_primary_yellow</item>
+    </style>
+
+    <style name="AppTheme.Green.Black" parent="AppTheme.Black">
+        <item name="colorPrimary">@color/color_primary_green</item>
+        <item name="colorPrimaryDark">@color/color_primary_dark_green</item>
+        <item name="colorAccent">@color/color_primary_green</item>
+    </style>
+
+    <style name="AppTheme.Red.Dark" parent="AppTheme.Dark">
+        <item name="colorPrimary">@color/color_warning_red</item>
+        <item name="colorPrimaryDark">@color/color_primary_dark_red</item>
+        <item name="colorAccent">@color/color_warning_red</item>
+    </style>
+
+
+    <style name="AppTheme.Blue.Dark" parent="AppTheme.Dark">
+        <item name="colorPrimary">@color/color_primary_blue</item>
+        <item name="colorPrimaryDark">@color/color_primary_dark_blue</item>
+        <item name="colorAccent">@color/color_primary_blue</item>
+    </style>
+
+    <style name="AppTheme.Yellow.Dark" parent="AppTheme.Dark">
+        <item name="colorPrimary">@color/color_primary_yellow</item>
+        <item name="colorPrimaryDark">@color/color_primary_dark_yellow</item>
+        <item name="colorAccent">@color/color_primary_yellow</item>
+    </style>
+
+    <style name="AppTheme.Green.Dark" parent="AppTheme.Dark">
+        <item name="colorPrimary">@color/color_primary_green</item>
+        <item name="colorPrimaryDark">@color/color_primary_dark_green</item>
+        <item name="colorAccent">@color/color_primary_green</item>
+    </style>
+
+    <style name="ScrollbarStyle">
+        <item name="android:scrollbarAlwaysDrawVerticalTrack">true</item>
+        <item name="android:scrollbarSize">4dp</item>
+        <item name="android:scrollbarStyle">outsideInset</item>
+        <item name="android:fastScrollAlwaysVisible">true</item>
+        <item name="android:fastScrollEnabled">false</item>
+        <item name="android:scrollbars">vertical</item>
+        <item name="android:scrollbarThumbVertical">@drawable/scrollbar_thumb</item>
+    </style>
+
+
+</resources>
