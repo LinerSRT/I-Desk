@@ -9,7 +9,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.InputType;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -17,7 +16,6 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -87,8 +85,6 @@ public class SplashActivity extends AppCompatActivity {
     private EditRegexTextView splashRegisterPasswordField;
     private EditRegexTextView splashRegisterReplyPasswordField;
     private EditRegexTextView splashRegisterNickNameField;
-    private RadioButton splashRegisterAccountTypeClient;
-    private RadioButton splashRegisterAccountTypeExecutor;
     private CircleImageView splashRegisterProfilePhotoView;
     private Button splashRegisterButton;
     private boolean loginEmailCorrect = false;
@@ -111,6 +107,8 @@ public class SplashActivity extends AppCompatActivity {
         TextView splashForgotPassword;
         GoogleSignInButton splashSighWithGoogle;
         RelativeLayout splashRegisterAddPhotoView;
+        RadioButton splashRegisterAccountTypeClient;
+        RadioButton splashRegisterAccountTypeExecutor;
         {
             loginCardView = findViewById(R.id.splashLoginCardView);
             registerCardView = findViewById(R.id.splashRegisterCardView);
@@ -510,7 +508,7 @@ public class SplashActivity extends AppCompatActivity {
                                                 @Override
                                                 public void onComplete(@NonNull final Task<AuthResult> authResultTask) {
                                                     if (authResultTask.isSuccessful()) {
-                                                        final DatabaseReference currentUserDatabase = firebaseDatabase.getReference().child("Users").child(Objects.requireNonNull(authResultTask.getResult()).getUser().getUid());
+                                                        final DatabaseReference currentUserDatabase = firebaseDatabase.getReference().child("Users").child(Objects.requireNonNull(Objects.requireNonNull(authResultTask.getResult()).getUser()).getUid());
                                                         usersDatabase.keepSynced(true);
                                                         final StorageReference path = firebaseStorage.getReference().child("user_images").child(Objects.requireNonNull(firebaseAuth.getCurrentUser()).getUid()).child("profile_photos").child(userNickName + "_" + TextUtils.generateRandomString(10) + ".jpg");
                                                         UploadTask uploadTask = path.putBytes(ImageUtils.getDrawableByteArray(splashRegisterProfilePhotoView.getDrawable()));
@@ -679,7 +677,7 @@ public class SplashActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
-                Picasso.get().load(CropImage.getActivityResult(data).getUri()).into(splashRegisterProfilePhotoView);
+                Picasso.get().load(Objects.requireNonNull(CropImage.getActivityResult(data)).getUri()).into(splashRegisterProfilePhotoView);
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 final SimpleBottomSheetDialog simpleBottomSheetDialog = new SimpleBottomSheetDialog(SplashActivity.this);
                 simpleBottomSheetDialog.setDialogTitle("Внимание!");
@@ -691,13 +689,13 @@ public class SplashActivity extends AppCompatActivity {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             if (result.isSuccess()) {
                 final GoogleSignInAccount account = result.getSignInAccount();
-                AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
+                AuthCredential credential = GoogleAuthProvider.getCredential(Objects.requireNonNull(account).getIdToken(), null);
                 firebaseAuth.signInWithCredential(credential)
                         .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                             @Override
                             public void onComplete(@NonNull final Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
-                                    final String userID = task.getResult().getUser().getUid();
+                                    final String userID = Objects.requireNonNull(task.getResult()).getUser().getUid();
                                     final String userEmail = account.getEmail();
                                     final String userNickName = account.getDisplayName();
                                     final String photoURL = String.valueOf(account.getPhotoUrl());
