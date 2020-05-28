@@ -1,14 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".UI.MainActivity">
+    android:animateLayoutChanges="true"
+    android:background="?backgroundColor"
+    android:orientation="vertical">
 
-    <Button
-        android:id="@+id/signout"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        />
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+    <com.liner.i_desk.Utils.Views.ExtendedViewPager
+        android:id="@+id/mainPager"
+        android:overScrollMode="never"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+
+
+    <me.ibrahimsn.lib.SmoothBottomBar
+        android:id="@+id/bottomBar"
+        android:elevation="@dimen/cardElevation"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/appBarHeight"
+        app:backgroundColor="?backgroundColorSecondary"
+        app:indicatorColor="?colorPrimary"
+        app:duration="300"
+        app:iconTint="?textColor"
+        app:iconTintActive="@color/color_white"
+        app:iconSize="18dp"
+        app:menu="@menu/app_menu"
+        app:textColor="@color/color_white"
+        app:textSize="0sp"
+        app:indicatorRadius="10dp"
+        tools:ignore="SmallSp" />
+
+</LinearLayout>

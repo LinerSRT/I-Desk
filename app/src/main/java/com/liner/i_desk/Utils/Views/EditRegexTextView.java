@@ -14,6 +14,7 @@ import android.widget.EditText;
 import com.liner.i_desk.R;
 import com.liner.i_desk.Utils.ColorUtils;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
@@ -61,13 +62,10 @@ public class EditRegexTextView extends EditText {
             @Override
             public void afterTextChanged(Editable editable) {
                 String result = editable.toString().trim();
-                Log.d("TAGTAG", "Check "+result);
-                Log.d("TAGTAG", "With pattern "+regexString);
-                Log.d("TAGTAG", "Match "+Pattern.compile(regexString).matcher(result));
                 if (Pattern.compile(regexString).matcher(result).matches()) {
                     fieldCorrect = true;
-                    if(controlIconAutomatically) {
-                        if(leftDrawableIconResource != -1) {
+                    if (controlIconAutomatically) {
+                        if (leftDrawableIconResource != -1) {
                             setLeftIcon(R.attr.colorPrimaryDark);
                         }
                     }
@@ -76,8 +74,8 @@ public class EditRegexTextView extends EditText {
                     }
                 } else {
                     fieldCorrect = false;
-                    if(controlIconAutomatically) {
-                        if(leftDrawableIconResource != -1) {
+                    if (controlIconAutomatically) {
+                        if (leftDrawableIconResource != -1) {
                             setLeftIcon(R.attr.disabledColor);
                         }
                     }
@@ -88,13 +86,13 @@ public class EditRegexTextView extends EditText {
             }
         };
         addTextChangedListener(textWatcher);
-        if(leftDrawableIconResource != -1) {
+        if (leftDrawableIconResource != -1) {
             setLeftIcon(R.attr.disabledColor);
         }
     }
 
 
-    private void setLeftIcon(int color){
+    private void setLeftIcon(int color) {
         leftDrawableIcon = getContext().getDrawable(leftDrawableIconResource);
         Objects.requireNonNull(leftDrawableIcon).setColorFilter(ColorUtils.getThemeColor(getContext(), color), PorterDuff.Mode.SRC_IN);
         setCompoundDrawablesWithIntrinsicBounds(leftDrawableIcon, null, null, null);
@@ -114,7 +112,7 @@ public class EditRegexTextView extends EditText {
 
 
     public void setFieldCorrect(boolean fieldCorrect) {
-        setLeftIcon((fieldCorrect) ? R.attr.colorPrimaryDark:R.attr.disabledColor);
+        setLeftIcon((fieldCorrect) ? R.attr.colorPrimaryDark : R.attr.disabledColor);
     }
 
     public boolean isFieldCorrect() {

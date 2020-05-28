@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:animateLayoutChanges="true"
+    android:background="?backgroundColor"
+    android:orientation="vertical">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/appBarHeight"
+        android:background="?colorPrimary"
+        android:elevation="@dimen/cardElevation"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:layout_marginStart="@dimen/primaryTextSizeLarge"
+            android:gravity="center_vertical"
+            android:text="Главная"
+            android:textColor="@color/color_white"
+            android:textSize="@dimen/primaryTextSizeLarge"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/userName"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="UserName"
+            android:textColor="@color/color_white"
+            android:textSize="@dimen/primaryTextSize"
+            android:textStyle="italic"
+            android:gravity="center"/>
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/userPhoto"
+            android:layout_width="@dimen/appBarHeight"
+            android:layout_height="@dimen/appBarHeight"
+            android:src="@drawable/temp_user_photo"
+            app:civ_border_color="@color/color_white"
+            app:civ_border_width="1dp"
+            android:padding="@dimen/contentMargin"/>
+    </LinearLayout>
+
+
+
+</LinearLayout>
