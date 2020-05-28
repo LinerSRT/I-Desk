@@ -1,4 +1,4 @@
-package com.liner.i_desk.UI;
+package com.liner.i_desk.Utils.Views;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;

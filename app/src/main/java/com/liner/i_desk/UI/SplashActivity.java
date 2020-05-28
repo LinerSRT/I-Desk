@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -53,6 +54,9 @@ import com.liner.i_desk.Utils.ColorUtils;
 import com.liner.i_desk.Utils.ImageUtils;
 import com.liner.i_desk.Utils.TextUtils;
 import com.liner.i_desk.Utils.Views.EditRegexTextView;
+import com.liner.i_desk.Utils.Views.IndeterminateBottomSheetDialog;
+import com.liner.i_desk.Utils.Views.SelectionBottomSheetDialog;
+import com.liner.i_desk.Utils.Views.SimpleBottomSheetDialog;
 import com.nabinbhandari.android.permissions.PermissionHandler;
 import com.nabinbhandari.android.permissions.Permissions;
 import com.squareup.picasso.Picasso;
@@ -644,7 +648,7 @@ public class SplashActivity extends AppCompatActivity {
                         .requestIdToken(getString(R.string.default_web_client_id))
                         .requestEmail()
                         .build();
-                GoogleApiClient googleApiClient = new GoogleApiClient.Builder(SplashActivity.this)
+                final GoogleApiClient googleApiClient = new GoogleApiClient.Builder(SplashActivity.this)
                         .enableAutoManage(SplashActivity.this, new GoogleApiClient.OnConnectionFailedListener() {
                             @Override
                             public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
@@ -686,7 +690,6 @@ public class SplashActivity extends AppCompatActivity {
         } else if (requestCode == 1058) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             if (result.isSuccess()) {
-                //TODO Проверять существует ли эмейл и показать диалог с выбором типа аккаунта перед регистрацией и входом
                 final GoogleSignInAccount account = result.getSignInAccount();
                 AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
                 firebaseAuth.signInWithCredential(credential)
@@ -708,18 +711,31 @@ public class SplashActivity extends AppCompatActivity {
 
                                         @Override
                                         public void onValueNotFound() {
-                                            final DatabaseReference currentUserDatabase = firebaseDatabase.getReference().child("Users").child(userID);
-                                            usersDatabase.keepSynced(true);
-                                            currentUserDatabase.child("userPhotoURL").setValue(photoURL);
-                                            currentUserDatabase.child("userUID").setValue(userID);
-                                            currentUserDatabase.child("userEmail").setValue(userEmail);
-                                            currentUserDatabase.child("userPassword").setValue(TextUtils.generateRandomString(20));
-                                            currentUserDatabase.child("userName").setValue(userNickName);
-                                            if (userEmail != null) {
-                                                firebaseAuth.createUserWithEmailAndPassword(userEmail, TextUtils.generateRandomString(20));
-                                            }
-                                            startActivity(new Intent(SplashActivity.this, MainActivity.class));
-                                            finish();
+
+                                            final SelectionBottomSheetDialog selectionBottomSheetDialog = new SelectionBottomSheetDialog(SplashActivity.this);
+                                            selectionBottomSheetDialog.setDialogTitle("Внимание");
+                                            selectionBottomSheetDialog.setDialogText("Выберите тип вашего аккаунта");
+                                            selectionBottomSheetDialog.setListener(new SelectionBottomSheetDialog.ISeledtionDialogListener() {
+                                                @Override
+                                                public void onSelected(int id, int viewID, String text) {
+                                                    registerAccountType = id;
+                                                    selectionBottomSheetDialog.dismiss(true);
+                                                    final DatabaseReference currentUserDatabase = firebaseDatabase.getReference().child("Users").child(userID);
+                                                    usersDatabase.keepSynced(true);
+                                                    currentUserDatabase.child("userPhotoURL").setValue(photoURL);
+                                                    currentUserDatabase.child("userUID").setValue(userID);
+                                                    currentUserDatabase.child("userEmail").setValue(userEmail);
+                                                    currentUserDatabase.child("userPassword").setValue(TextUtils.generateRandomString(20));
+                                                    currentUserDatabase.child("userName").setValue(userNickName);
+                                                    currentUserDatabase.child("isClientAccount").setValue(registerAccountType == 0);
+                                                    if (userEmail != null) {
+                                                        firebaseAuth.createUserWithEmailAndPassword(userEmail, TextUtils.generateRandomString(20));
+                                                    }
+                                                    startActivity(new Intent(SplashActivity.this, MainActivity.class));
+                                                    finish();
+                                                }
+                                            });
+                                            selectionBottomSheetDialog.create();
                                         }
                                     });
                                 } else {

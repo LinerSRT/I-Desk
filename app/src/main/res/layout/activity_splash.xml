@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     android:background="?backgroundColor"
     android:gravity="center"
-    android:orientation="vertical"
     android:animateLayoutChanges="true"
     tools:context=".UI.SplashActivity">
 
@@ -28,7 +27,7 @@
         android:id="@+id/splashDescriptionText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="32dp"
+        android:layout_marginBottom="8dp"
         android:text="Для работы необходимо войти в аккаунт или создать новый"
         android:textColor="?textColorDark"
         android:textSize="@dimen/secondaryTextSizeSmall"
