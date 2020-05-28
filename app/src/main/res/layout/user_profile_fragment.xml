@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
+    android:background="?backgroundColor">
+
+    <ImageView
+        android:id="@+id/profileUserPhoto"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:adjustViewBounds="true"
+        android:cropToPadding="false"
+        android:scaleType="centerCrop"
+        android:src="@drawable/profile_background"
+        android:tint="#70000000" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/profileUserCard"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/profileUserPhoto"
+        android:layout_marginTop="-64dp"
+        app:cardCornerRadius="@dimen/cardsCornerRadius"
+        app:cardElevation="@dimen/cardElevation"
+        app:cardUseCompatPadding="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="@dimen/contentMarginHalf">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/profileUserName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Имя пользователя"
+                    android:textColor="?textColor"
+                    android:textSize="@dimen/primaryTextSizeLarge"
+                    android:textStyle="bold|italic" />
+
+                <TextView
+                    android:id="@+id/profileUserType"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Исполнитель"
+                    android:textColor="?colorPrimaryDark"
+                    android:textSize="@dimen/secondaryTextSize" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/contentMarginHalf"
+                    android:text="О себе"
+                    android:textColor="?textColorDark"
+                    android:textSize="@dimen/tipsTextSize" />
+
+                <TextView
+                    android:id="@+id/profileUserAbout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Тут представлена краткая информация о пользователе, которую он может редактировать на свое усмотрение"
+                    android:textColor="?textColor"
+                    android:textSize="@dimen/secondaryTextSize" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/contentMarginHalf"
+                    android:text="Доп. информация"
+                    android:textColor="?textColorDark"
+                    android:textSize="@dimen/tipsTextSize" />
+
+                <TextView
+                    android:id="@+id/profileUserAdditionalInfo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Тут представлена дополнительная информация о пользователе, которую он может редактировать на свое усмотрение"
+                    android:textColor="?textColor"
+                    android:textSize="@dimen/secondaryTextSize" />
+
+            </LinearLayout>
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/profileUserPhoto2"
+                android:layout_width="64dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:src="@drawable/temp_user_photo"
+                app:civ_border_color="@color/color_white"
+                app:civ_border_width="1dp" />
+
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/profileUserCard"
+        android:overScrollMode="never">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="-32dp"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingTop="32dp">
+
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardBackgroundColor="?backgroundColor"
+                app:cardCornerRadius="@dimen/cardsCornerRadius"
+                app:cardUseCompatPadding="true">
+
+                <LinearLayout
+                    android:id="@+id/profileUserChangePhoto"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/contentMarginHalf">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:drawableStart="@drawable/camera_icon"
+                        android:gravity="center_vertical"
+                        android:text="Сменить фото"
+                        android:textColor="?textColor"
+                        android:textSize="@dimen/secondaryTextSize" />
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardBackgroundColor="?backgroundColor"
+                app:cardCornerRadius="@dimen/cardsCornerRadius"
+                app:cardUseCompatPadding="true">
+
+                <LinearLayout
+                    android:id="@+id/profileUserChangeAbout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/contentMarginHalf"
+                        android:drawableStart="@drawable/edit_icon"
+                        android:gravity="center_vertical"
+                        android:text="Изменить данные о себе"
+                        android:textColor="?textColor"
+                        android:textSize="@dimen/secondaryTextSize" />
+
+
+                    <net.cachapa.expandablelayout.ExpandableLayout
+                        android:id="@+id/profileAboutActionLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:el_duration="300"
+                        app:el_expanded="false"
+                        app:el_parallax="50">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/contentMarginHalf"
+                            android:layout_marginEnd="@dimen/contentMarginHalf"
+                            android:orientation="vertical">
+
+                            <com.liner.i_desk.Utils.Views.EditRegexTextView
+                                android:id="@+id/profileAboutActionText"
+                                style="@style/EditTextTheme"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="О себе"
+                                android:textSize="@dimen/primaryTextSize"
+                                app:ertv_left_icon="-1"
+                                app:ertv_regex=".{1,}" />
+
+
+                            <Button
+                                android:id="@+id/profileAboutActionSubmit"
+                                android:layout_width="wrap_content"
+                                android:layout_height="@dimen/contentHeight"
+                                android:layout_gravity="end"
+                                android:layout_marginBottom="@dimen/contentMarginHalf"
+                                android:background="@drawable/button_bg"
+                                android:enabled="false"
+                                android:text="Сохранить"
+                                android:textAllCaps="false"
+                                android:textColor="@color/color_white"
+                                android:textSize="@dimen/secondaryTextSize" />
+
+                        </LinearLayout>
+                    </net.cachapa.expandablelayout.ExpandableLayout>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardBackgroundColor="?backgroundColor"
+                app:cardCornerRadius="@dimen/cardsCornerRadius"
+                app:cardUseCompatPadding="true">
+
+                <LinearLayout
+                    android:id="@+id/profileUserChangeAdditionalInfo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/contentMarginHalf"
+                        android:drawableStart="@drawable/edit_icon"
+                        android:gravity="center_vertical"
+                        android:text="Изменить доп. информацию"
+                        android:textColor="?textColor"
+                        android:textSize="@dimen/secondaryTextSize" />
+
+                    <net.cachapa.expandablelayout.ExpandableLayout
+                        android:id="@+id/profileAdditionalActionLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:el_duration="300"
+                        app:el_expanded="false"
+                        app:el_parallax="50">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/contentMarginHalf"
+                            android:layout_marginEnd="@dimen/contentMarginHalf"
+                            android:orientation="vertical">
+
+                            <com.liner.i_desk.Utils.Views.EditRegexTextView
+                                android:id="@+id/profileAdditionalActionText"
+                                style="@style/EditTextTheme"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="Доп.информация"
+                                android:textSize="@dimen/primaryTextSize"
+                                app:ertv_left_icon="-1"
+                                app:ertv_regex=".{1,}" />
+
+
+                            <Button
+                                android:id="@+id/profileAdditionalActionSubmit"
+                                android:layout_width="wrap_content"
+                                android:layout_height="@dimen/contentHeight"
+                                android:layout_gravity="end"
+                                android:layout_marginBottom="@dimen/contentMarginHalf"
+                                android:background="@drawable/button_bg"
+                                android:enabled="false"
+                                android:text="Сохранить"
+                                android:textAllCaps="false"
+                                android:textColor="@color/color_white"
+                                android:textSize="@dimen/secondaryTextSize" />
+
+                        </LinearLayout>
+                    </net.cachapa.expandablelayout.ExpandableLayout>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardBackgroundColor="?backgroundColor"
+                app:cardCornerRadius="@dimen/cardsCornerRadius"
+                app:cardUseCompatPadding="true">
+
+                <TextView
+                    android:id="@+id/profileUserSignOut"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:padding="@dimen/contentMarginHalf"
+                    android:text="Выйти из аккаунта"
+                    android:textColor="?colorPrimaryDark"
+                    android:textSize="@dimen/secondaryTextSize" />
+            </androidx.cardview.widget.CardView>
+        </LinearLayout>
+
+    </ScrollView>
+</RelativeLayout>

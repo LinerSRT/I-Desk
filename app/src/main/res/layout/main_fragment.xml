@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:animateLayoutChanges="true"
     android:background="?backgroundColor"
     android:orientation="vertical">
 
@@ -11,40 +10,129 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/appBarHeight"
-        android:background="?colorPrimary"
+        android:background="@drawable/round_corner_bottom"
         android:elevation="@dimen/cardElevation"
         android:orientation="horizontal">
 
         <TextView
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="match_parent"
             android:layout_marginStart="@dimen/primaryTextSizeLarge"
+            android:layout_weight="1"
             android:gravity="center_vertical"
             android:text="Главная"
             android:textColor="@color/color_white"
             android:textSize="@dimen/primaryTextSizeLarge"
             android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/userName"
+        <androidx.cardview.widget.CardView
+            android:id="@+id/showAccountActions"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="UserName"
-            android:textColor="@color/color_white"
-            android:textSize="@dimen/primaryTextSize"
-            android:textStyle="italic"
-            android:gravity="center"/>
+            app:cardBackgroundColor="?colorPrimary"
+            app:cardCornerRadius="@dimen/cardsCornerRadius"
+            app:cardUseCompatPadding="true">
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/userPhoto"
-            android:layout_width="@dimen/appBarHeight"
-            android:layout_height="@dimen/appBarHeight"
-            android:src="@drawable/temp_user_photo"
-            app:civ_border_color="@color/color_white"
-            app:civ_border_width="1dp"
-            android:padding="@dimen/contentMargin"/>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:padding="@dimen/contentMarginHalf">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/contentMargin"
+                    android:layout_marginEnd="@dimen/contentMargin"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/userName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:maxLines="1"
+                        android:textColor="@color/color_white"
+                        android:textSize="@dimen/primaryTextSize"
+                        android:textStyle="italic|bold" />
+
+                    <TextView
+                        android:id="@+id/userType"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginEnd="@dimen/contentMarginHalf"
+                        android:gravity="center"
+                        android:textColor="@color/color_white"
+                        android:textSize="@dimen/tipsTextSize" />
+                </LinearLayout>
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/userPhoto"
+                    android:layout_width="@dimen/contentHeight"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:src="@drawable/temp_user_photo"
+                    app:civ_border_color="@color/color_white"
+                    app:civ_border_width="1dp" />
+
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
     </LinearLayout>
+
+    <net.cachapa.expandablelayout.ExpandableLayout
+        android:id="@+id/accountActionsLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/contentMargin"
+        android:layout_marginEnd="@dimen/contentMargin"
+        app:el_duration="300"
+        app:el_parallax="50"
+        app:el_expanded="false">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/round_corner_bottom"
+            android:backgroundTint="?backgroundColorSecondary"
+            android:orientation="vertical"
+            android:padding="@dimen/contentMarginHalf">
+
+
+            <TextView
+                android:id="@+id/accountActionsAddNewRequest"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/contentMarginHalf"
+                android:drawableStart="@drawable/add_request"
+                android:drawablePadding="@dimen/contentMarginHalf"
+                android:gravity="center_vertical"
+                android:paddingTop="@dimen/contentMarginHalf"
+                android:paddingBottom="@dimen/contentMarginHalf"
+                android:text="Создать заявку"
+                android:textColor="?textColor"
+                android:textSize="@dimen/secondaryTextSize" />
+
+
+            <TextView
+                android:id="@+id/accountActionsSignOut"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/contentMarginHalf"
+                android:drawableStart="@drawable/sighout_icon"
+                android:drawablePadding="@dimen/contentMarginHalf"
+                android:gravity="center_vertical"
+                android:paddingTop="@dimen/contentMarginHalf"
+                android:paddingBottom="@dimen/contentMarginHalf"
+                android:text="Выйти из аккаунта"
+                android:textColor="?colorPrimaryDark"
+                android:textSize="@dimen/secondaryTextSize"
+                android:textStyle="bold" />
+
+
+        </LinearLayout>
+
+    </net.cachapa.expandablelayout.ExpandableLayout>
 
 
 

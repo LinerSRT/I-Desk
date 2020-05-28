@@ -1,14 +1,19 @@
 package com.liner.i_desk.API.Data;
 
+import java.util.List;
+
 public class User {
     private String userUID;
     private String userName;
     private String userEmail;
     private String userPassword;
     private String userPhotoURL;
-    private String deviceToken;
+    private String userAboutText;
+    private String userAdditionalInformationText;
     private long userLastOnlineTimeStamp;
     private boolean isClientAccount = true;
+
+    private List<Request> requestList;
 
     public User() {
     }
@@ -53,14 +58,6 @@ public class User {
         this.userPhotoURL = userPhotoURL;
     }
 
-    public String getDeviceToken() {
-        return deviceToken;
-    }
-
-    public void setDeviceToken(String deviceToken) {
-        this.deviceToken = deviceToken;
-    }
-
     public long getUserLastOnlineTimeStamp() {
         return userLastOnlineTimeStamp;
     }
@@ -77,6 +74,33 @@ public class User {
         isClientAccount = clientAccount;
     }
 
+
+    public List<Request> getRequestList() {
+        return requestList;
+    }
+
+    public void setRequestList(List<Request> requestList) {
+        this.requestList = requestList;
+    }
+
+
+    public String getUserAboutText() {
+        return userAboutText;
+    }
+
+    public void setUserAboutText(String userAboutText) {
+        this.userAboutText = userAboutText;
+    }
+
+
+    public String getUserAdditionalInformationText() {
+        return userAdditionalInformationText;
+    }
+
+    public void setUserAdditionalInformationText(String userAdditionalInformationText) {
+        this.userAdditionalInformationText = userAdditionalInformationText;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -85,9 +109,11 @@ public class User {
                 ", userEmail='" + userEmail + '\'' +
                 ", userPassword='" + userPassword + '\'' +
                 ", userPhotoURL='" + userPhotoURL + '\'' +
-                ", deviceToken='" + deviceToken + '\'' +
+                ", userAboutText='" + userAboutText + '\'' +
+                ", userAdditionalInformationText='" + userAdditionalInformationText + '\'' +
                 ", userLastOnlineTimeStamp=" + userLastOnlineTimeStamp +
                 ", isClientAccount=" + isClientAccount +
+                ", requestList=" + requestList +
                 '}';
     }
 }

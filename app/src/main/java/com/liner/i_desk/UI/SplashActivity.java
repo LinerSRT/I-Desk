@@ -152,18 +152,8 @@ public class SplashActivity extends AppCompatActivity {
                                         handler.postDelayed(new Runnable() {
                                             @Override
                                             public void run() {
-                                                loginCardView.animate()
-                                                        .alpha(1f)
-                                                        .setDuration(300)
-                                                        .setListener(new AnimatorListenerAdapter() {
-                                                            @Override
-                                                            public void onAnimationEnd(Animator animation) {
-                                                                super.onAnimationEnd(animation);
-                                                                splashDescriptionText.setVisibility(View.VISIBLE);
-                                                                startActivity(new Intent(SplashActivity.this, MainActivity.class));
-                                                                finish();
-                                                            }
-                                                        });
+                                                startActivity(new Intent(SplashActivity.this, MainActivity.class));
+                                                finish();
                                             }
                                         }, 600);
                                     }

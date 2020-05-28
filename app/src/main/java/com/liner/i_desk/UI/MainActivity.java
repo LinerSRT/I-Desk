@@ -1,37 +1,42 @@
 package com.liner.i_desk.UI;
 
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager.widget.ViewPager;
 
-import android.content.Intent;
+import android.content.Context;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
+import android.view.MotionEvent;
+import android.view.inputmethod.InputMethodManager;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
 import com.liner.i_desk.API.Data.User;
 import com.liner.i_desk.API.FirebaseHelper;
 import com.liner.i_desk.R;
 import com.liner.i_desk.UI.Fragments.MainFragment;
-import com.liner.i_desk.UI.Fragments.SettingsFragment;
+import com.liner.i_desk.UI.Fragments.UserProfileFragment;
+import com.liner.i_desk.Utils.Animations.PagesTransformer;
 import com.liner.i_desk.Utils.FragmentsClassesPagerAdapter;
 import com.liner.i_desk.Utils.Views.ExtendedViewPager;
+import com.liner.i_desk.Utils.Views.FirebaseActivity;
+import com.liner.i_desk.Utils.Views.FirebaseFragment;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 import me.ibrahimsn.lib.OnItemSelectedListener;
 import me.ibrahimsn.lib.SmoothBottomBar;
 
-public class MainActivity extends FragmentActivity {
+public class MainActivity extends FirebaseActivity {
     private ExtendedViewPager extendedViewPager;
     private SmoothBottomBar bottomBar;
-    public static User user;
-    public static FirebaseAuth firebaseAuth;
-    public static DatabaseReference usersDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,45 +44,31 @@ public class MainActivity extends FragmentActivity {
         setContentView(R.layout.activity_main);
         extendedViewPager = findViewById(R.id.mainPager);
         bottomBar = findViewById(R.id.bottomBar);
-        firebaseAuth = FirebaseAuth.getInstance();
-        usersDatabase = FirebaseDatabase.getInstance().getReference("Users");
-        FirebaseHelper.getUserModel(new FirebaseHelper.IFirebaseHelperListener() {
-            @Override
-            public void onSuccess(Object result) {
-                user = (User) result;
-                initPages();
-            }
+    }
 
-            @Override
-            public void onFail(String reason) {
-                user = null;
-                initPages();
-            }
-        });
+    @Override
+    public void onFirebaseChanged(User user) {
 
     }
 
-    public static User getUser() {
-        return user;
+    @Override
+    public void onUserObtained(User user) {
+        initPages();
     }
 
-    public static DatabaseReference getUsersDatabase() {
-        return usersDatabase;
-    }
 
-    public static FirebaseAuth getFirebaseAuth() {
-        return firebaseAuth;
-    }
+
 
     private void initPages() {
-        ArrayList<Class<? extends Fragment>> mainPages = new ArrayList<>();
+        ArrayList<Class<? extends FirebaseFragment>> mainPages = new ArrayList<>();
         mainPages.add(MainFragment.class);
-        mainPages.add(SettingsFragment.class);
+        mainPages.add(UserProfileFragment.class);
         FragmentsClassesPagerAdapter adapter = new FragmentsClassesPagerAdapter(getSupportFragmentManager(), this, mainPages);
         extendedViewPager.setAdapter(adapter);
         extendedViewPager.setCurrentItem(0);
         extendedViewPager.setOffscreenPageLimit(2);
-        extendedViewPager.setPagingEnabled(false);
+        extendedViewPager.setPagingEnabled(true);
+        extendedViewPager.setPageTransformer(false, new PagesTransformer());
         bottomBar.setActiveItem(extendedViewPager.getCurrentItem());
         bottomBar.setOnItemSelectedListener(new OnItemSelectedListener() {
             @Override
@@ -101,5 +92,19 @@ public class MainActivity extends FragmentActivity {
 
             }
         });
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        if (getCurrentFocus() != null) {
+            InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            Objects.requireNonNull(inputMethodManager).hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+        }
+        return super.dispatchTouchEvent(ev);
+    }
+
+    @Override
+    public void onBackPressed() {
+
     }
 }
