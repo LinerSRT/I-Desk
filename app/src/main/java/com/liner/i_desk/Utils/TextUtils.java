@@ -13,4 +13,15 @@ public class TextUtils {
         }
         return sb.toString();
     }
+    public static int randInt(int min, int max) {
+        return new Random().nextInt((max - min) + 1) + min;
+    }
+
+    public static float getPercent(float firstValue, float secondValue){
+        return ((firstValue/secondValue) * 100f);
+    }
+
+    public static float getPercent(long firstValue, long secondValue){
+        return ((Float.parseFloat(Long.toString(firstValue))/Float.parseFloat(Long.toString(secondValue))) * 100f);
+    }
 }

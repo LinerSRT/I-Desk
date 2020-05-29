@@ -5,8 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Parcel;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,18 +15,16 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.liner.i_desk.API.Data.User;
 import com.liner.i_desk.API.FirebaseHelper;
 import com.liner.i_desk.R;
-import com.liner.i_desk.UI.MainActivity;
 import com.liner.i_desk.UI.SplashActivity;
 import com.liner.i_desk.Utils.ImageUtils;
 import com.liner.i_desk.Utils.TextUtils;
@@ -36,6 +32,7 @@ import com.liner.i_desk.Utils.Views.EditRegexTextView;
 import com.liner.i_desk.Utils.Views.FirebaseActivity;
 import com.liner.i_desk.Utils.Views.FirebaseFragment;
 import com.liner.i_desk.Utils.Views.IndeterminateBottomSheetDialog;
+import com.liner.i_desk.Utils.Views.ProgressBottomSheetDialog;
 import com.liner.i_desk.Utils.Views.SimpleBottomSheetDialog;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
@@ -48,9 +45,7 @@ import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-import static android.app.Activity.RESULT_OK;
-
-public class UserProfileFragment extends FirebaseFragment {
+public class UserProfileFragment extends FirebaseFragment implements EditRegexTextView.IEditTextListener {
     private FirebaseActivity firebaseActivity;
     private ImageView profileUserPhoto;
     private TextView profileUserName;
@@ -72,7 +67,6 @@ public class UserProfileFragment extends FirebaseFragment {
 
     private Button profileAboutActionSubmit;
     private Button profileAdditionalActionSubmit;
-
 
 
     @Override
@@ -106,11 +100,11 @@ public class UserProfileFragment extends FirebaseFragment {
         profileAdditionalActionText = view.findViewById(R.id.profileAdditionalActionText);
         profileAboutActionSubmit = view.findViewById(R.id.profileAboutActionSubmit);
         profileAdditionalActionSubmit = view.findViewById(R.id.profileAdditionalActionSubmit);
-
-
         actionProgressDialog = new IndeterminateBottomSheetDialog(getActivity());
         actionProgressDialog.setDialogTitle("Подождите");
         actionProgressDialog.setDialogText("Идет обработка");
+        profileAboutActionText.setTextListener(this);
+        profileAdditionalActionText.setTextListener(this);
         loadUserData();
 
         profileUserChangePhoto.setOnClickListener(new View.OnClickListener() {
@@ -124,32 +118,6 @@ public class UserProfileFragment extends FirebaseFragment {
 
             }
         });
-
-
-        profileAboutActionText.setTextListener(new EditRegexTextView.IEditTextListener() {
-            @Override
-            public void onValid(String result) {
-                profileAboutActionSubmit.setEnabled(true);
-            }
-
-            @Override
-            public void onNotValid() {
-                profileAboutActionSubmit.setEnabled(false);
-
-            }
-        });
-        profileAdditionalActionText.setTextListener(new EditRegexTextView.IEditTextListener() {
-            @Override
-            public void onValid(String result) {
-                profileAdditionalActionSubmit.setEnabled(true);
-            }
-
-            @Override
-            public void onNotValid() {
-                profileAdditionalActionSubmit.setEnabled(false);
-            }
-        });
-
 
         profileUserChangeAbout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -176,11 +144,8 @@ public class UserProfileFragment extends FirebaseFragment {
                     @Override
                     public void onSuccess(Object result) {
                         actionProgressDialog.dismiss(true);
-                        final SimpleBottomSheetDialog simpleBottomSheetDialog = new SimpleBottomSheetDialog(getActivity());
-                        simpleBottomSheetDialog.setDialogTitle("");
-                        simpleBottomSheetDialog.setDialogText("Данные успешно обновлены");
-                        simpleBottomSheetDialog.setDialogDoneBtnText("ОК");
-                        simpleBottomSheetDialog.create();
+                        profileAboutActionText.setText(firebaseActivity.user.getUserAboutText());
+                        showUpdateDataDialog();
                         profileAboutActionLayout.collapse(true);
                     }
 
@@ -201,11 +166,8 @@ public class UserProfileFragment extends FirebaseFragment {
                     @Override
                     public void onSuccess(Object result) {
                         actionProgressDialog.dismiss(true);
-                        final SimpleBottomSheetDialog simpleBottomSheetDialog = new SimpleBottomSheetDialog(getActivity());
-                        simpleBottomSheetDialog.setDialogTitle("");
-                        simpleBottomSheetDialog.setDialogText("Данные успешно обновлены");
-                        simpleBottomSheetDialog.setDialogDoneBtnText("ОК");
-                        simpleBottomSheetDialog.create();
+                        showUpdateDataDialog();
+                        profileAdditionalActionText.setText(firebaseActivity.user.getUserAdditionalInformationText());
                         profileAdditionalActionLayout.collapse(true);
                     }
 
@@ -217,8 +179,6 @@ public class UserProfileFragment extends FirebaseFragment {
                 });
             }
         });
-
-
 
         profileUserSignOut.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -257,6 +217,11 @@ public class UserProfileFragment extends FirebaseFragment {
                 Picasso.get().load(Objects.requireNonNull(CropImage.getActivityResult(data)).getUri()).into(new Target() {
                     @Override
                     public void onBitmapLoaded(final Bitmap bitmap, Picasso.LoadedFrom from) {
+                        actionProgressDialog.dismiss(true);
+                        final ProgressBottomSheetDialog uploadDialog = new ProgressBottomSheetDialog(getActivity());
+                        uploadDialog.setDialogTitle("Загрузка");
+                        uploadDialog.setDialogText("Пожалуйста подождите, Ваше фото загружается");
+                        uploadDialog.create();
                         final StorageReference path = firebaseActivity.storageReference.child("user_images").child(Objects.requireNonNull(firebaseActivity.firebaseAuth.getCurrentUser()).getUid()).child("profile_photos").child(firebaseActivity.user.getUserName() + "_" + TextUtils.generateRandomString(10) + ".jpg");
                         final UploadTask uploadTask = path.putBytes(ImageUtils.getDrawableByteArray(bitmap));
                         uploadTask.addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
@@ -269,17 +234,19 @@ public class UserProfileFragment extends FirebaseFragment {
                                             FirebaseHelper.setUserValue(firebaseActivity.firebaseAuth.getCurrentUser().getUid(), "userPhotoURL", uri.toString(), new FirebaseHelper.IFirebaseHelperListener() {
                                                 @Override
                                                 public void onSuccess(Object result) {
-                                                    actionProgressDialog.dismiss(true);
+                                                    uploadDialog.dismiss(true);
+                                                    profileUserPhoto.setImageBitmap(bitmap);
+                                                    profileUserPhoto2.setImageBitmap(bitmap);
                                                     final SimpleBottomSheetDialog simpleBottomSheetDialog = new SimpleBottomSheetDialog(getActivity());
-                                                    simpleBottomSheetDialog.setDialogTitle("");
-                                                    simpleBottomSheetDialog.setDialogText("Фото было успешно обновлено");
+                                                    simpleBottomSheetDialog.setDialogTitle("Фото обновлено");
+                                                    simpleBottomSheetDialog.setDialogText("Ваша фотография была успешно обновлена");
                                                     simpleBottomSheetDialog.setDialogDoneBtnText("ОК");
                                                     simpleBottomSheetDialog.create();
                                                 }
 
                                                 @Override
                                                 public void onFail(String reason) {
-                                                    actionProgressDialog.dismiss(true);
+                                                    uploadDialog.dismiss(true);
                                                     showUploadPhotoErrorDialog();
                                                 }
                                             });
@@ -287,16 +254,21 @@ public class UserProfileFragment extends FirebaseFragment {
                                     }).addOnFailureListener(new OnFailureListener() {
                                         @Override
                                         public void onFailure(@NonNull Exception e) {
-                                            actionProgressDialog.dismiss(true);
+                                            uploadDialog.dismiss(true);
                                             showUploadPhotoErrorDialog();
                                         }
                                     });
 
 
                                 } else {
-                                    actionProgressDialog.dismiss(true);
+                                    uploadDialog.dismiss(true);
                                     showUploadPhotoErrorDialog();
                                 }
+                            }
+                        }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                            @Override
+                            public void onProgress(@NonNull UploadTask.TaskSnapshot taskSnapshot) {
+                                uploadDialog.setProgress(Math.round(TextUtils.getPercent(taskSnapshot.getBytesTransferred(), taskSnapshot.getTotalByteCount())));
                             }
                         });
                     }
@@ -311,9 +283,6 @@ public class UserProfileFragment extends FirebaseFragment {
 
                     }
                 });
-                Picasso.get().load(Objects.requireNonNull(CropImage.getActivityResult(data)).getUri()).into(profileUserPhoto);
-                Picasso.get().load(Objects.requireNonNull(CropImage.getActivityResult(data)).getUri()).into(profileUserPhoto2);
-
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 showUploadPhotoErrorDialog();
             } else if (resultCode == 0) {
@@ -330,6 +299,8 @@ public class UserProfileFragment extends FirebaseFragment {
         profileUserName.setText(firebaseActivity.user.getUserName());
         profileUserAbout.setText(firebaseActivity.user.getUserAboutText());
         profileUserAdditionalInfo.setText(firebaseActivity.user.getUserAdditionalInformationText());
+        profileAboutActionText.setText(firebaseActivity.user.getUserAboutText());
+        profileAdditionalActionText.setText(firebaseActivity.user.getUserAdditionalInformationText());
     }
 
     private void showUploadPhotoErrorDialog() {
@@ -340,11 +311,31 @@ public class UserProfileFragment extends FirebaseFragment {
         simpleBottomSheetDialog.create();
     }
 
+    private void showUpdateDataDialog() {
+        final SimpleBottomSheetDialog simpleBottomSheetDialog = new SimpleBottomSheetDialog(getActivity());
+        simpleBottomSheetDialog.setDialogTitle("Обновлено");
+        simpleBottomSheetDialog.setDialogText("Ваши данные были успешно обновлены");
+        simpleBottomSheetDialog.setDialogDoneBtnText("ОК");
+        simpleBottomSheetDialog.create();
+    }
+
     private void showErrorDialog() {
         final SimpleBottomSheetDialog simpleBottomSheetDialog = new SimpleBottomSheetDialog(getActivity());
         simpleBottomSheetDialog.setDialogTitle("Внимание!");
         simpleBottomSheetDialog.setDialogText("Произошла ошибка, попробуйте позже");
         simpleBottomSheetDialog.setDialogDoneBtnText("ОК");
         simpleBottomSheetDialog.create();
+    }
+
+    @Override
+    public void onValid(String result) {
+        profileAdditionalActionSubmit.setEnabled(profileAdditionalActionText.isFieldCorrect());
+        profileAboutActionSubmit.setEnabled(profileAboutActionText.isFieldCorrect());
+    }
+
+    @Override
+    public void onNotValid() {
+        profileAdditionalActionSubmit.setEnabled(profileAdditionalActionText.isFieldCorrect());
+        profileAboutActionSubmit.setEnabled(profileAboutActionText.isFieldCorrect());
     }
 }

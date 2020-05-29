@@ -4,7 +4,6 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -21,7 +20,7 @@ import com.liner.i_desk.API.FirebaseHelper;
 import com.liner.i_desk.Utils.BroadcastManager;
 
 public abstract class FirebaseActivity extends FragmentActivity {
-    private FirebaseActivity firebaseActivity;
+    public FirebaseActivity firebaseActivity;
     public FirebaseAuth firebaseAuth;
     public FirebaseDatabase firebaseDatabase;
     public StorageReference storageReference;
@@ -82,7 +81,11 @@ public abstract class FirebaseActivity extends FragmentActivity {
 
             @Override
             public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
+                if(dataSnapshot.getKey().equals(firebaseUser.getUid())){
+                    user = dataSnapshot.getValue(User.class);
+                    onFirebaseChanged(user);
+                    broadcastManager.sendLocal(FIREBASE_ACTION);
+                }
             }
 
             @Override

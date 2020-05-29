@@ -10,9 +10,9 @@ public class Request {
     }
     private String requestID;
     private String requestUserID;
-    private long requestTime;
+    private String requestTime;
     private Type requestType;
-    private long requestDeadline;
+    private String requestDeadline;
     private int requestPriority;
     private String requestName;
     private String requestText;
@@ -22,11 +22,11 @@ public class Request {
     public Request() {
     }
 
-    public long getRequestTime() {
+    public String getRequestTime() {
         return requestTime;
     }
 
-    public void setRequestTime(long requestTime) {
+    public void setRequestTime(String requestTime) {
         this.requestTime = requestTime;
     }
 
@@ -38,11 +38,11 @@ public class Request {
         this.requestType = requestType;
     }
 
-    public long getRequestDeadline() {
+    public String getRequestDeadline() {
         return requestDeadline;
     }
 
-    public void setRequestDeadline(long requestDeadline) {
+    public void setRequestDeadline(String requestDeadline) {
         this.requestDeadline = requestDeadline;
     }
 

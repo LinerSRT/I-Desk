@@ -16,4 +16,9 @@
     <color name="color_background_black_secondary">#141414</color>
     <color name="color_background_dark_secondary">#303030</color>
     <color name="black_alpha">#80000000</color>
+
+
+    <color name="request_incident">#C62828</color>
+    <color name="request_consultation">#1565C0</color>
+    <color name="request_service">#2E7D32</color>
 </resources>

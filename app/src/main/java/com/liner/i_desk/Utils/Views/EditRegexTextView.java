@@ -116,7 +116,7 @@ public class EditRegexTextView extends EditText {
     }
 
     public boolean isFieldCorrect() {
-        return fieldCorrect;
+        return this.fieldCorrect;
     }
 
     public interface IEditTextListener {
