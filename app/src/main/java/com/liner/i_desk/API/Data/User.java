@@ -12,7 +12,6 @@ public class User {
     private String userAdditionalInformationText;
     private long userLastOnlineTimeStamp;
     private boolean isClientAccount = true;
-
     private List<Request> requestList;
 
     public User() {

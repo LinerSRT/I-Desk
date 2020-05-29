@@ -30,88 +30,104 @@
                 android:textColor="@color/color_white"/>
 
         </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="@dimen/contentMarginHalf"
-        android:orientation="vertical">
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/requestName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Имя заявки"
-            android:textSize="@dimen/primaryTextSize"
-            android:textColor="?textColor"
-            android:textStyle="bold"/>
-
-        <TextView
-            android:id="@+id/requestText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:maxLines="2"
-            android:layout_marginEnd="64dp"
-            android:text="Очень длинный текст заявки который придумал пользователь просто так для теста. Тут простой набор букв безсмысленного значения"
-            android:textSize="@dimen/secondaryTextSizeSmall"
-            android:layout_marginBottom="@dimen/contentMargin"
-            android:textColor="?textColorDark"/>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Дата создания"
-                android:textSize="@dimen/tipsTextSize"
-                android:textColor="?colorPrimaryDark"
-                android:layout_gravity="start"/>
-            <TextView
-                android:id="@+id/requestTimeDeadline"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="20.20.2002"
-                android:textSize="@dimen/tipsTextSize"
-                android:textColor="?textColorDark"
-                android:gravity="end"/>
-        </LinearLayout>
-        <ProgressBar
-            android:id="@+id/requestTimeDeadlineProgress"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            style="@android:style/Widget.Material.ProgressBar.Horizontal"
-            android:progress="32"
-            android:progressTint="?colorPrimaryDark"
-            android:backgroundTint="?disabledColor"/>
+                android:padding="@dimen/contentMarginHalf"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/requestName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Имя заявки"
+                    android:layout_marginEnd="64dp"
+                    android:textSize="@dimen/primaryTextSize"
+                    android:textColor="?textColor"
+                    android:textStyle="bold"/>
+
+                <TextView
+                    android:id="@+id/requestText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:maxLines="2"
+                    android:layout_marginEnd="64dp"
+                    android:text="Очень длинный текст заявки который придумал пользователь просто так для теста. Тут простой набор букв безсмысленного значения"
+                    android:textSize="@dimen/secondaryTextSizeSmall"
+                    android:layout_marginBottom="@dimen/contentMargin"
+                    android:textColor="?textColorDark"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Дата создания"
+                        android:textSize="@dimen/tipsTextSize"
+                        android:textColor="?colorPrimaryDark"
+                        android:layout_gravity="start"/>
+                    <TextView
+                        android:id="@+id/requestTimeDeadline"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="20.20.2002"
+                        android:textSize="@dimen/tipsTextSize"
+                        android:textColor="?textColorDark"
+                        android:gravity="end"/>
+                </LinearLayout>
+                <ProgressBar
+                    android:id="@+id/requestTimeDeadlineProgress"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="@android:style/Widget.Material.ProgressBar.Horizontal"
+                    android:progress="32"
+                    android:progressTint="?colorPrimaryDark"
+                    android:backgroundTint="?disabledColor"/>
 
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <TextView
-                android:id="@+id/requestTimeCreation"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="18.20.2002"
-                android:textSize="@dimen/tipsTextSize"
-                android:textColor="?textColorDark"
-                android:layout_gravity="start"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:id="@+id/requestTimeCreation"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="18.20.2002"
+                        android:textSize="@dimen/tipsTextSize"
+                        android:textColor="?textColorDark"
+                        android:layout_gravity="start"/>
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Дедлайн"
-                android:textSize="@dimen/tipsTextSize"
-                android:textColor="#DF0000"
-                android:gravity="end"/>
-        </LinearLayout>
-
-
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Дедлайн"
+                        android:textSize="@dimen/tipsTextSize"
+                        android:textColor="#DF0000"
+                        android:gravity="end"/>
+                </LinearLayout>
 
 
-    </LinearLayout>
+
+
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/requestDeadlineWarning"
+                android:elevation="4dp"
+                android:layout_width="@dimen/contentHeight"
+                android:layout_height="@dimen/contentHeight"
+                android:src="@drawable/dead_line_warning_icon"
+                android:layout_marginTop="@dimen/contentMargin"
+                android:layout_marginEnd="@dimen/contentMargin"
+                android:layout_alignParentEnd="true"/>
+        </RelativeLayout>
 
     </LinearLayout>
 </androidx.cardview.widget.CardView>

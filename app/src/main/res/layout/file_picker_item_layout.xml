@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_marginStart="@dimen/contentMarginHalf"
+    android:layout_marginEnd="@dimen/contentMarginHalf"
+    android:layout_marginTop="@dimen/contentMarginHalf"
+    android:layout_height="wrap_content">
+
+
+    <TextView
+        android:id="@+id/filePickerItem"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Filename"
+        android:textSize="@dimen/secondaryTextSize"
+        android:textColor="?textColor"
+        android:gravity="center_vertical"
+        android:drawableStart="@drawable/file_icon"/>
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+    <CheckBox
+        android:id="@+id/filePickerCheck"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:checked="true"/>
+
+</LinearLayout>

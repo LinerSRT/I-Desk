@@ -26,6 +26,7 @@ import com.google.firebase.storage.UploadTask;
 import com.liner.i_desk.API.FirebaseHelper;
 import com.liner.i_desk.R;
 import com.liner.i_desk.UI.SplashActivity;
+import com.liner.i_desk.Utils.Animations.ViewAnimator;
 import com.liner.i_desk.Utils.ImageUtils;
 import com.liner.i_desk.Utils.TextUtils;
 import com.liner.i_desk.Utils.Views.EditRegexTextView;
@@ -110,11 +111,17 @@ public class UserProfileFragment extends FirebaseFragment implements EditRegexTe
         profileUserChangePhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                actionProgressDialog.create();
-                CropImage.activity()
-                        .setGuidelines(CropImageView.Guidelines.ON)
-                        .setAspectRatio(1, 1)
-                        .start(getContext(), UserProfileFragment.this);
+                new ViewAnimator(view).animateAction(200, new ViewAnimator.AnimatorListener() {
+                    @Override
+                    public void done() {
+                        actionProgressDialog.create();
+                        CropImage.activity()
+                                .setGuidelines(CropImageView.Guidelines.ON)
+                                .setAspectRatio(1, 1)
+                                .start(getContext(), UserProfileFragment.this);
+                    }
+                });
+
 
             }
         });
@@ -122,16 +129,28 @@ public class UserProfileFragment extends FirebaseFragment implements EditRegexTe
         profileUserChangeAbout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                profileAboutActionLayout.toggle(true);
-                profileAdditionalActionLayout.collapse(true);
+                new ViewAnimator(view).animateAction(200, new ViewAnimator.AnimatorListener() {
+                    @Override
+                    public void done() {
+
+                        profileAboutActionLayout.toggle(true);
+                        profileAdditionalActionLayout.collapse(true);
+                    }
+                });
             }
         });
 
         profileUserChangeAdditionalInfo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                profileAdditionalActionLayout.toggle(true);
-                profileAboutActionLayout.collapse(true);
+                new ViewAnimator(view).animateAction(200, new ViewAnimator.AnimatorListener() {
+                    @Override
+                    public void done() {
+
+                        profileAdditionalActionLayout.toggle(true);
+                        profileAboutActionLayout.collapse(true);
+                    }
+                });
             }
         });
 
@@ -139,70 +158,100 @@ public class UserProfileFragment extends FirebaseFragment implements EditRegexTe
         profileAboutActionSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                actionProgressDialog.create();
-                FirebaseHelper.setUserValue(firebaseActivity.firebaseUser.getUid(), "userAboutText", profileAboutActionText.getText().toString().trim(), new FirebaseHelper.IFirebaseHelperListener() {
+                new ViewAnimator(view).animateAction(200, new ViewAnimator.AnimatorListener() {
                     @Override
-                    public void onSuccess(Object result) {
-                        actionProgressDialog.dismiss(true);
-                        profileAboutActionText.setText(firebaseActivity.user.getUserAboutText());
-                        showUpdateDataDialog();
-                        profileAboutActionLayout.collapse(true);
-                    }
+                    public void done() {
+                        actionProgressDialog.create();
+                        FirebaseHelper.setUserValue(firebaseActivity.firebaseUser.getUid(), "userAboutText", profileAboutActionText.getText().toString().trim(), new FirebaseHelper.IFirebaseHelperListener() {
+                            @Override
+                            public void onSuccess(Object result) {
+                                actionProgressDialog.dismiss(true);
+                                profileAboutActionText.setText(firebaseActivity.user.getUserAboutText());
+                                showUpdateDataDialog();
+                                profileAboutActionLayout.collapse(true);
+                            }
 
-                    @Override
-                    public void onFail(String reason) {
-                        actionProgressDialog.dismiss(true);
-                        showErrorDialog();
+                            @Override
+                            public void onFail(String reason) {
+                                actionProgressDialog.dismiss(true);
+                                showErrorDialog();
+                            }
+                        });
                     }
                 });
+
             }
         });
 
         profileAdditionalActionSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                actionProgressDialog.create();
-                FirebaseHelper.setUserValue(firebaseActivity.firebaseUser.getUid(), "userAdditionalInformationText", profileAdditionalActionText.getText().toString().trim(), new FirebaseHelper.IFirebaseHelperListener() {
+                new ViewAnimator(view).animateAction(200, new ViewAnimator.AnimatorListener() {
                     @Override
-                    public void onSuccess(Object result) {
-                        actionProgressDialog.dismiss(true);
-                        showUpdateDataDialog();
-                        profileAdditionalActionText.setText(firebaseActivity.user.getUserAdditionalInformationText());
-                        profileAdditionalActionLayout.collapse(true);
-                    }
+                    public void done() {
+                        actionProgressDialog.create();
+                        FirebaseHelper.setUserValue(firebaseActivity.firebaseUser.getUid(), "userAdditionalInformationText", profileAdditionalActionText.getText().toString().trim(), new FirebaseHelper.IFirebaseHelperListener() {
+                            @Override
+                            public void onSuccess(Object result) {
+                                actionProgressDialog.dismiss(true);
+                                showUpdateDataDialog();
+                                profileAdditionalActionText.setText(firebaseActivity.user.getUserAdditionalInformationText());
+                                profileAdditionalActionLayout.collapse(true);
+                            }
 
-                    @Override
-                    public void onFail(String reason) {
-                        actionProgressDialog.dismiss(true);
-                        showErrorDialog();
+                            @Override
+                            public void onFail(String reason) {
+                                actionProgressDialog.dismiss(true);
+                                showErrorDialog();
+                            }
+                        });
                     }
                 });
+
             }
         });
 
         profileUserSignOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final SimpleBottomSheetDialog confirmDialog = new SimpleBottomSheetDialog(getActivity());
-                confirmDialog.setDialogTitle("Выход");
-                confirmDialog.setDialogText("Вы действительно хотите выйти из своего аккаунта?");
-                confirmDialog.setDialogDoneBtnText("Выйти");
-                confirmDialog.setDialogCancelBtnText("Отмена");
-                confirmDialog.setCancelClickListener(new View.OnClickListener() {
+                new ViewAnimator(view).animateAction(200, new ViewAnimator.AnimatorListener() {
                     @Override
-                    public void onClick(View view) {
-                        confirmDialog.dismiss(true);
+                    public void done() {
+                        final SimpleBottomSheetDialog confirmDialog = new SimpleBottomSheetDialog(getActivity());
+                        confirmDialog.setDialogTitle("Выход");
+                        confirmDialog.setDialogText("Вы действительно хотите выйти из своего аккаунта?");
+                        confirmDialog.setDialogDoneBtnText("Выйти");
+                        confirmDialog.setDialogCancelBtnText("Отмена");
+                        confirmDialog.setCancelClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                new ViewAnimator(view).animateAction(200, new ViewAnimator.AnimatorListener() {
+                                    @Override
+                                    public void done() {
+
+                                        confirmDialog.dismiss(true);
+                                    }
+                                });
+                            }
+                        });
+                        confirmDialog.setDoneClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                new ViewAnimator(view).animateAction(200, new ViewAnimator.AnimatorListener() {
+                                    @Override
+                                    public void done() {
+
+                                        firebaseActivity.firebaseAuth.signOut();
+                                        getContext().startActivity(new Intent(getContext(), SplashActivity.class));
+                                        getActivity().finish();
+                                    }
+                                });
+                            }
+                        });
+                        confirmDialog.create();
                     }
                 });
-                confirmDialog.setDoneClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        firebaseActivity.firebaseAuth.signOut();
-                        getContext().startActivity(new Intent(getContext(), SplashActivity.class));
-                        getActivity().finish();
-                    }
-                });
-                confirmDialog.create();
+
             }
         });
         return view;

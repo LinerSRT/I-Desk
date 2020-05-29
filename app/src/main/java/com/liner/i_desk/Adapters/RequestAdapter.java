@@ -1,10 +1,12 @@
 package com.liner.i_desk.Adapters;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -14,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.liner.i_desk.API.Data.Request;
 import com.liner.i_desk.R;
+import com.liner.i_desk.Utils.ColorUtils;
 import com.liner.i_desk.Utils.TimeUtils;
 import com.liner.i_desk.Utils.Views.VerticalTextView;
 
@@ -38,24 +41,28 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.ViewHold
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Request item = requestList.get(position);
         switch (item.getRequestType()) {
-            case Service:
+            case SERVICE:
                 holder.requestTypeString.setText("Сервис");
                 holder.requestAccentLayout.getBackground().setColorFilter(context.getResources().getColor(R.color.request_service), PorterDuff.Mode.SRC_IN);
                 break;
-            case Incident:
+            case INCIDENT:
                 holder.requestTypeString.setText("Инцидент");
                 holder.requestAccentLayout.getBackground().setColorFilter(context.getResources().getColor(R.color.request_incident), PorterDuff.Mode.SRC_IN);
                 break;
-            case Consultation:
+            case CONSULTATION:
                 holder.requestTypeString.setText("Консультация");
                 holder.requestAccentLayout.getBackground().setColorFilter(context.getResources().getColor(R.color.request_consultation), PorterDuff.Mode.SRC_IN);
                 break;
         }
-        holder.requestName.setText(item.getRequestName());
-        holder.requestText.setText(item.getRequestText());
-        holder.requestTimeCreation.setText(TimeUtils.convertDate(item.getRequestTime(), true));
-        holder.requestTimeDeadline.setText(TimeUtils.convertDate(item.getRequestDeadline(), true));
-        holder.requestTimeDeadlineProgress.setProgress((int) TimeUtils.getDeadlinePercent(item.getRequestTime(), item.getRequestDeadline()));
+
+
+        holder.requestName.setText(item.getRequestTitle());
+        holder.requestText.setText(item.getRequestShortDescription());
+        holder.requestTimeCreation.setText(TimeUtils.convertDate(item.getRequestCreationTime(), true));
+        holder.requestTimeDeadline.setText(TimeUtils.convertDate(item.getRequestDeadlineTime(), true));
+        holder.requestTimeDeadlineProgress.setProgress((int) TimeUtils.getDeadlinePercent(item.getRequestCreationTime(), item.getRequestDeadlineTime()));
+        holder.requestTimeDeadlineProgress.getProgressDrawable().setColorFilter(ColorUtils.interpolateColor(ColorUtils.getThemeColor(context, R.attr.colorPrimaryDark), Color.RED, holder.requestTimeDeadlineProgress.getProgress()), PorterDuff.Mode.SRC_IN);
+        holder.requestDeadlineWarning.setVisibility((holder.requestTimeDeadlineProgress.getProgress() > 80)?View.VISIBLE:View.GONE);
     }
 
     @Override
@@ -72,6 +79,7 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.ViewHold
         private VerticalTextView requestTypeString;
         private ProgressBar requestTimeDeadlineProgress;
         private LinearLayout requestAccentLayout;
+        private ImageView requestDeadlineWarning;
 
         ViewHolder(final View view) {
             super(view);
@@ -82,7 +90,11 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.ViewHold
             requestTypeString = view.findViewById(R.id.requestTypeString);
             requestAccentLayout = view.findViewById(R.id.requestAccentLayout);
             requestTimeDeadlineProgress = view.findViewById(R.id.requestTimeDeadlineProgress);
+            requestDeadlineWarning = view.findViewById(R.id.requestDeadlineWarning);
         }
 
     }
+
+
+
 }

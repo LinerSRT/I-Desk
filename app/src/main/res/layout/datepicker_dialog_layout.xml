@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:padding="@dimen/contentMargin"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/datePickerDialogTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="?textColor"
+        android:textSize="@dimen/primaryTextSizeLarge"
+        android:textStyle="bold"
+        android:maxLines="2"/>
+
+    <com.ycuwq.datepicker.date.DatePicker
+        android:id="@+id/datePickerDialogView"
+        android:background="?backgroundColor"
+        app:halfVisibleItemCount="2"
+        app:itemTextColor="?textColor"
+        app:selectedTextColor="?colorPrimaryDark"
+        android:layout_marginTop="@dimen/contentMarginHalf"
+        android:layout_marginBottom="@dimen/contentMarginHalf"
+        app:wheelCyclic="true"
+        app:zoomInSelectedItem="true"
+        app:wheelCurtainBorderColor="?backgroundColor"
+        app:itemHeightSpace="@dimen/secondaryTextSize"
+        app:wheelCurtain="true"
+        app:selectedTextSize="@dimen/primaryTextSizeLarge"
+        app:wheelCurtainBorder="false"
+        app:itemTextSize="@dimen/secondaryTextSize"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="16dp"/>
+
+    <LinearLayout
+        android:id="@+id/datePickerDialogButtonLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="end"
+        android:paddingEnd="@dimen/contentMarginHalf"
+        android:orientation="horizontal">
+        <TextView
+            android:id="@+id/datePickerDialogCancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/color_disable"
+            android:textSize="@dimen/primaryTextSize"
+            android:padding="@dimen/contentMarginHalf"
+            android:layout_marginEnd="@dimen/contentMargin"
+            android:textStyle="bold"/>
+        <TextView
+            android:id="@+id/datePickerDialogDone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="?colorPrimaryDark"
+            android:padding="@dimen/contentMarginHalf"
+            android:layout_marginEnd="@dimen/contentMargin"
+            android:textSize="@dimen/primaryTextSize"
+            android:textStyle="bold"
+            android:maxLines="2"/>
+    </LinearLayout>
+
+</LinearLayout>

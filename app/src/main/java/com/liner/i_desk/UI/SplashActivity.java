@@ -48,6 +48,7 @@ import com.google.firebase.storage.UploadTask;
 import com.liner.i_desk.API.Data.User;
 import com.liner.i_desk.API.FirebaseHelper;
 import com.liner.i_desk.R;
+import com.liner.i_desk.Utils.Animations.ViewAnimator;
 import com.liner.i_desk.Utils.ColorUtils;
 import com.liner.i_desk.Utils.ImageUtils;
 import com.liner.i_desk.Utils.TextUtils;
@@ -104,11 +105,11 @@ public class SplashActivity extends AppCompatActivity {
         firebaseDatabase = FirebaseDatabase.getInstance();
         usersDatabase = firebaseDatabase.getReference("Users");
         firebaseStorage = FirebaseStorage.getInstance();
-        TextView splashForgotPassword;
-        GoogleSignInButton splashSighWithGoogle;
-        RelativeLayout splashRegisterAddPhotoView;
-        RadioButton splashRegisterAccountTypeClient;
-        RadioButton splashRegisterAccountTypeExecutor;
+        final TextView splashForgotPassword;
+        final GoogleSignInButton splashSighWithGoogle;
+        final RelativeLayout splashRegisterAddPhotoView;
+        final RadioButton splashRegisterAccountTypeClient;
+        final RadioButton splashRegisterAccountTypeExecutor;
         {
             loginCardView = findViewById(R.id.splashLoginCardView);
             registerCardView = findViewById(R.id.splashRegisterCardView);
@@ -152,7 +153,7 @@ public class SplashActivity extends AppCompatActivity {
                                         handler.postDelayed(new Runnable() {
                                             @Override
                                             public void run() {
-                                                startActivity(new Intent(SplashActivity.this, MainActivity.class));
+                                                startActivity(new Intent(SplashActivity.this, MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED|Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS));
                                                 finish();
                                             }
                                         }, 600);
@@ -215,55 +216,68 @@ public class SplashActivity extends AppCompatActivity {
         splashLoginShowPassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (splashLoginPasswordField.getInputType() == InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD) {
-                    splashLoginPasswordField.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-                    splashLoginShowPassword.setImageResource(R.drawable.hide_password_icon);
-                    splashLoginShowPassword.setColorFilter(ColorUtils.getThemeColor(SplashActivity.this, R.attr.disabledColor));
-                } else {
-                    splashLoginShowPassword.setImageResource(R.drawable.show_password_icon);
-                    splashLoginShowPassword.setColorFilter(ColorUtils.getThemeColor(SplashActivity.this, R.attr.colorPrimaryDark));
-                    splashLoginPasswordField.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
-                }
-                splashLoginPasswordField.setSelection(splashLoginPasswordField.length());
+                new ViewAnimator(splashLoginShowPassword).animateAction(200, new ViewAnimator.AnimatorListener() {
+                    @Override
+                    public void done() {
+                        if (splashLoginPasswordField.getInputType() == InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD) {
+                            splashLoginPasswordField.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                            splashLoginShowPassword.setImageResource(R.drawable.hide_password_icon);
+                            splashLoginShowPassword.setColorFilter(ColorUtils.getThemeColor(SplashActivity.this, R.attr.disabledColor));
+                        } else {
+                            splashLoginShowPassword.setImageResource(R.drawable.show_password_icon);
+                            splashLoginShowPassword.setColorFilter(ColorUtils.getThemeColor(SplashActivity.this, R.attr.colorPrimaryDark));
+                            splashLoginPasswordField.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+                        }
+                        splashLoginPasswordField.setSelection(splashLoginPasswordField.length());
+                    }
+                });
+
             }
         });
         splashLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final IndeterminateBottomSheetDialog loginDialog = new IndeterminateBottomSheetDialog(SplashActivity.this);
-                loginDialog.setDialogTitle("Подождите");
-                loginDialog.setDialogText("Выполняется вход в аккаунт");
-                loginDialog.create();
-                firebaseAuth.signOut();
-                firebaseAuth.signInWithEmailAndPassword(splashLoginEmailField.getText().toString().trim(), splashLoginPasswordField.getText().toString().trim()).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                new ViewAnimator(splashLoginButton).animateAction(200, new ViewAnimator.AnimatorListener() {
                     @Override
-                    public void onSuccess(AuthResult authResult) {
-                        if (Objects.requireNonNull(authResult.getUser()).isEmailVerified()) {
-                            loginDialog.dismiss();
-                            startActivity(new Intent(SplashActivity.this, MainActivity.class));
-                            finish();
-                        } else {
-                            loginDialog.dismiss();
-                            final SimpleBottomSheetDialog simpleBottomSheetDialog = new SimpleBottomSheetDialog(SplashActivity.this);
-                            simpleBottomSheetDialog.setDialogTitle("Внимание!");
-                            simpleBottomSheetDialog.setDialogText("Вы не подтвердили свой E-Mail. Инструкция для подтверждения была выслана вам на почту");
-                            simpleBottomSheetDialog.setDialogDoneBtnText("ОК");
-                            simpleBottomSheetDialog.create();
-                        }
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        loginDialog.dismiss();
-                        if (Objects.requireNonNull(e.getLocalizedMessage()).contains("invalid") || Objects.requireNonNull(e.getLocalizedMessage().contains("no user"))) {
-                            final SimpleBottomSheetDialog simpleBottomSheetDialog = new SimpleBottomSheetDialog(SplashActivity.this);
-                            simpleBottomSheetDialog.setDialogTitle("Ошибка!");
-                            simpleBottomSheetDialog.setDialogText("Неверный пароль или E-Mail");
-                            simpleBottomSheetDialog.setDialogDoneBtnText("ОК");
-                            simpleBottomSheetDialog.create();
-                        }
+                    public void done() {
+                        final IndeterminateBottomSheetDialog loginDialog = new IndeterminateBottomSheetDialog(SplashActivity.this);
+                        loginDialog.setDialogTitle("Подождите");
+                        loginDialog.setDialogText("Выполняется вход в аккаунт");
+                        loginDialog.create();
+                        firebaseAuth.signOut();
+                        firebaseAuth.signInWithEmailAndPassword(splashLoginEmailField.getText().toString().trim(), splashLoginPasswordField.getText().toString().trim()).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                            @Override
+                            public void onSuccess(AuthResult authResult) {
+                                if (Objects.requireNonNull(authResult.getUser()).isEmailVerified()) {
+                                    loginDialog.dismiss();
+                                    startActivity(new Intent(SplashActivity.this, MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED|Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS));
+                                    finish();
+                                } else {
+                                    loginDialog.dismiss();
+                                    final SimpleBottomSheetDialog simpleBottomSheetDialog = new SimpleBottomSheetDialog(SplashActivity.this);
+                                    simpleBottomSheetDialog.setDialogTitle("Внимание!");
+                                    simpleBottomSheetDialog.setDialogText("Вы не подтвердили свой E-Mail. Инструкция для подтверждения была выслана вам на почту");
+                                    simpleBottomSheetDialog.setDialogDoneBtnText("ОК");
+                                    simpleBottomSheetDialog.create();
+                                }
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                loginDialog.dismiss();
+                                if (Objects.requireNonNull(e.getLocalizedMessage()).contains("invalid") || Objects.requireNonNull(e.getLocalizedMessage().contains("no user"))) {
+                                    final SimpleBottomSheetDialog simpleBottomSheetDialog = new SimpleBottomSheetDialog(SplashActivity.this);
+                                    simpleBottomSheetDialog.setDialogTitle("Ошибка!");
+                                    simpleBottomSheetDialog.setDialogText("Неверный пароль или E-Mail");
+                                    simpleBottomSheetDialog.setDialogDoneBtnText("ОК");
+                                    simpleBottomSheetDialog.create();
+                                }
+                            }
+                        });
                     }
                 });
+
+
             }
         });
 
@@ -271,56 +285,62 @@ public class SplashActivity extends AppCompatActivity {
         splashCreateNewAccountButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (loginCardView.getVisibility() == View.VISIBLE) {
-                    loginCardView.animate()
-                            .translationX(-loginCardView.getWidth())
-                            .alpha(0.0f)
-                            .setDuration(300)
-                            .setListener(new AnimatorListenerAdapter() {
-                                @Override
-                                public void onAnimationEnd(Animator animation) {
-                                    super.onAnimationEnd(animation);
-                                    loginCardView.setVisibility(View.GONE);
-                                }
-                            });
-                    registerCardView.animate()
-                            .setDuration(300)
-                            .translationX(0)
-                            .alpha(1f)
-                            .setListener(new AnimatorListenerAdapter() {
-                                @Override
-                                public void onAnimationEnd(Animator animation) {
-                                    super.onAnimationEnd(animation);
-                                    registerCardView.setVisibility(View.VISIBLE);
-                                    splashCreateNewAccountButton.setText("Войти в существующий аккаунт");
-                                }
-                            });
+                new ViewAnimator(splashCreateNewAccountButton).animateAction(200, new ViewAnimator.AnimatorListener() {
+                    @Override
+                    public void done() {
+                        if (loginCardView.getVisibility() == View.VISIBLE) {
+                            loginCardView.animate()
+                                    .translationX(-loginCardView.getWidth())
+                                    .alpha(0.0f)
+                                    .setDuration(300)
+                                    .setListener(new AnimatorListenerAdapter() {
+                                        @Override
+                                        public void onAnimationEnd(Animator animation) {
+                                            super.onAnimationEnd(animation);
+                                            loginCardView.setVisibility(View.GONE);
+                                        }
+                                    });
+                            registerCardView.animate()
+                                    .setDuration(300)
+                                    .translationX(0)
+                                    .alpha(1f)
+                                    .setListener(new AnimatorListenerAdapter() {
+                                        @Override
+                                        public void onAnimationEnd(Animator animation) {
+                                            super.onAnimationEnd(animation);
+                                            registerCardView.setVisibility(View.VISIBLE);
+                                            splashCreateNewAccountButton.setText("Войти в существующий аккаунт");
+                                        }
+                                    });
 
-                } else {
-                    loginCardView.animate()
-                            .translationX(0)
-                            .alpha(1f)
-                            .setDuration(300)
-                            .setListener(new AnimatorListenerAdapter() {
-                                @Override
-                                public void onAnimationEnd(Animator animation) {
-                                    super.onAnimationEnd(animation);
-                                    loginCardView.setVisibility(View.VISIBLE);
-                                }
-                            });
-                    registerCardView.animate()
-                            .translationX(registerCardView.getWidth())
-                            .alpha(0.0f)
-                            .setDuration(300)
-                            .setListener(new AnimatorListenerAdapter() {
-                                @Override
-                                public void onAnimationEnd(Animator animation) {
-                                    super.onAnimationEnd(animation);
-                                    registerCardView.setVisibility(View.GONE);
-                                    splashCreateNewAccountButton.setText("Создать новый");
-                                }
-                            });
-                }
+                        } else {
+                            loginCardView.animate()
+                                    .translationX(0)
+                                    .alpha(1f)
+                                    .setDuration(300)
+                                    .setListener(new AnimatorListenerAdapter() {
+                                        @Override
+                                        public void onAnimationEnd(Animator animation) {
+                                            super.onAnimationEnd(animation);
+                                            loginCardView.setVisibility(View.VISIBLE);
+                                        }
+                                    });
+                            registerCardView.animate()
+                                    .translationX(registerCardView.getWidth())
+                                    .alpha(0.0f)
+                                    .setDuration(300)
+                                    .setListener(new AnimatorListenerAdapter() {
+                                        @Override
+                                        public void onAnimationEnd(Animator animation) {
+                                            super.onAnimationEnd(animation);
+                                            registerCardView.setVisibility(View.GONE);
+                                            splashCreateNewAccountButton.setText("Создать новый");
+                                        }
+                                    });
+                        }
+                    }
+                });
+
             }
         });
 
@@ -391,228 +411,263 @@ public class SplashActivity extends AppCompatActivity {
         splashRegisterAccountTypeExecutor.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                registerAccountType = 1;
-                registerPasswordSame = splashRegisterPasswordField.getText().toString().trim().equals(splashRegisterReplyPasswordField.getText().toString().trim());
-                splashRegisterButton.setEnabled((registerEmailCorrect && registerPasswordCorrect && registerPasswordSame && registerAccountType != -1));
-            }
+                new ViewAnimator(splashRegisterAccountTypeExecutor).animateAction(200, new ViewAnimator.AnimatorListener() {
+                    @Override
+                    public void done() {
+                        registerAccountType = 1;
+                        registerPasswordSame = splashRegisterPasswordField.getText().toString().trim().equals(splashRegisterReplyPasswordField.getText().toString().trim());
+                        splashRegisterButton.setEnabled((registerEmailCorrect && registerPasswordCorrect && registerPasswordSame && registerAccountType != -1));
+
+                    }
+                });
+              }
         });
         splashRegisterAccountTypeClient.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                registerAccountType = 0;
-                registerPasswordSame = splashRegisterPasswordField.getText().toString().trim().equals(splashRegisterReplyPasswordField.getText().toString().trim());
-                splashRegisterButton.setEnabled((registerEmailCorrect && registerPasswordCorrect && registerPasswordSame && registerAccountType != -1));
-            }
+                new ViewAnimator(splashRegisterAccountTypeClient).animateAction(200, new ViewAnimator.AnimatorListener() {
+                    @Override
+                    public void done() {
+                        registerAccountType = 0;
+                        registerPasswordSame = splashRegisterPasswordField.getText().toString().trim().equals(splashRegisterReplyPasswordField.getText().toString().trim());
+                        splashRegisterButton.setEnabled((registerEmailCorrect && registerPasswordCorrect && registerPasswordSame && registerAccountType != -1));
+
+                    }
+                });
+             }
         });
 
 
         splashRegisterAddPhotoView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                CropImage.activity()
-                        .setGuidelines(CropImageView.Guidelines.ON)
-                        .setAspectRatio(1, 1)
-                        .start(SplashActivity.this);
+                new ViewAnimator(splashRegisterAddPhotoView).animateAction(200, new ViewAnimator.AnimatorListener() {
+                    @Override
+                    public void done() {
+
+                        CropImage.activity()
+                                .setGuidelines(CropImageView.Guidelines.ON)
+                                .setAspectRatio(1, 1)
+                                .start(SplashActivity.this);
+                    }
+                });
             }
         });
 
         splashForgotPassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (loginEmailCorrect) {
-                    final IndeterminateBottomSheetDialog resetPasswordDialog = new IndeterminateBottomSheetDialog(SplashActivity.this);
-                    resetPasswordDialog.setDialogTitle("Подождите");
-                    resetPasswordDialog.setDialogText("Идет обработка");
-                    resetPasswordDialog.create();
-                    firebaseAuth.sendPasswordResetEmail(splashLoginEmailField.getText().toString().trim()).addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            resetPasswordDialog.dismiss();
-                            if (task.isSuccessful()) {
-                                final SimpleBottomSheetDialog simpleBottomSheetDialog = new SimpleBottomSheetDialog(SplashActivity.this);
-                                simpleBottomSheetDialog.setDialogTitle("Восстановление пароля!");
-                                simpleBottomSheetDialog.setDialogText("На ваш E-Mail была выслана инструкция по восстановлению пароля");
-                                simpleBottomSheetDialog.setDialogDoneBtnText("ОК");
-                                simpleBottomSheetDialog.create();
-                            } else {
-                                final SimpleBottomSheetDialog simpleBottomSheetDialog = new SimpleBottomSheetDialog(SplashActivity.this);
-                                simpleBottomSheetDialog.setDialogTitle("Внимание!");
-                                simpleBottomSheetDialog.setDialogText("Произошла непредвиденная ошибка, попробуйте позже");
-                                simpleBottomSheetDialog.setDialogDoneBtnText("ОК");
-                                simpleBottomSheetDialog.create();
-                            }
+                new ViewAnimator(splashForgotPassword).animateAction(200, new ViewAnimator.AnimatorListener() {
+                    @Override
+                    public void done() {
+                        if (loginEmailCorrect) {
+                            final IndeterminateBottomSheetDialog resetPasswordDialog = new IndeterminateBottomSheetDialog(SplashActivity.this);
+                            resetPasswordDialog.setDialogTitle("Подождите");
+                            resetPasswordDialog.setDialogText("Идет обработка");
+                            resetPasswordDialog.create();
+                            firebaseAuth.sendPasswordResetEmail(splashLoginEmailField.getText().toString().trim()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    resetPasswordDialog.dismiss();
+                                    if (task.isSuccessful()) {
+                                        final SimpleBottomSheetDialog simpleBottomSheetDialog = new SimpleBottomSheetDialog(SplashActivity.this);
+                                        simpleBottomSheetDialog.setDialogTitle("Восстановление пароля!");
+                                        simpleBottomSheetDialog.setDialogText("На ваш E-Mail была выслана инструкция по восстановлению пароля");
+                                        simpleBottomSheetDialog.setDialogDoneBtnText("ОК");
+                                        simpleBottomSheetDialog.create();
+                                    } else {
+                                        final SimpleBottomSheetDialog simpleBottomSheetDialog = new SimpleBottomSheetDialog(SplashActivity.this);
+                                        simpleBottomSheetDialog.setDialogTitle("Внимание!");
+                                        simpleBottomSheetDialog.setDialogText("Произошла непредвиденная ошибка, попробуйте позже");
+                                        simpleBottomSheetDialog.setDialogDoneBtnText("ОК");
+                                        simpleBottomSheetDialog.create();
+                                    }
+                                }
+                            });
+                        } else {
+                            final SimpleBottomSheetDialog simpleBottomSheetDialog = new SimpleBottomSheetDialog(SplashActivity.this);
+                            simpleBottomSheetDialog.setDialogTitle("Внимание!");
+                            simpleBottomSheetDialog.setDialogText("Введите корректный E-Mail!");
+                            simpleBottomSheetDialog.setDialogDoneBtnText("ОК");
+                            simpleBottomSheetDialog.create();
                         }
-                    });
-                } else {
-                    final SimpleBottomSheetDialog simpleBottomSheetDialog = new SimpleBottomSheetDialog(SplashActivity.this);
-                    simpleBottomSheetDialog.setDialogTitle("Внимание!");
-                    simpleBottomSheetDialog.setDialogText("Введите корректный E-Mail!");
-                    simpleBottomSheetDialog.setDialogDoneBtnText("ОК");
-                    simpleBottomSheetDialog.create();
-                }
+                    }
+                });
+
             }
         });
 
         splashRegisterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final String userEmail = splashRegisterEmailField.getText().toString().trim();
-                final String userPassword = splashRegisterPasswordField.getText().toString().trim();
-                final String userNickName = splashRegisterNickNameField.getText().toString().trim();
-                final IndeterminateBottomSheetDialog registerDialog = new IndeterminateBottomSheetDialog(SplashActivity.this);
-                registerDialog.setDialogTitle("Подождите");
-                registerDialog.setDialogText("Выполняется регистрация");
-                registerDialog.create();
-                FirebaseHelper.checkUsersDatabaseExistValue(userEmail, "userEmail", new FirebaseHelper.IFirebaseDatabaseValueListener() {
+                new ViewAnimator(splashRegisterButton).animateAction(200, new ViewAnimator.AnimatorListener() {
                     @Override
-                    public void onValueExists() {
-                        registerDialog.dismiss();
-                        final SimpleBottomSheetDialog simpleBottomSheetDialog = new SimpleBottomSheetDialog(SplashActivity.this);
-                        simpleBottomSheetDialog.setDialogTitle("Внимание!");
-                        simpleBottomSheetDialog.setDialogText("Данный E-Mail уже используется");
-                        simpleBottomSheetDialog.setDialogDoneBtnText("ОК");
-                        simpleBottomSheetDialog.create();
-                    }
-
-                    @Override
-                    public void onValueNotFound() {
-                        FirebaseHelper.checkUsersDatabaseExistValue(userNickName, "userName", new FirebaseHelper.IFirebaseDatabaseValueListener() {
+                    public void done() {
+                        final String userEmail = splashRegisterEmailField.getText().toString().trim();
+                        final String userPassword = splashRegisterPasswordField.getText().toString().trim();
+                        final String userNickName = splashRegisterNickNameField.getText().toString().trim();
+                        final IndeterminateBottomSheetDialog registerDialog = new IndeterminateBottomSheetDialog(SplashActivity.this);
+                        registerDialog.setDialogTitle("Подождите");
+                        registerDialog.setDialogText("Выполняется регистрация");
+                        registerDialog.create();
+                        FirebaseHelper.checkUsersDatabaseExistValue(userEmail, "userEmail", new FirebaseHelper.IFirebaseDatabaseValueListener() {
                             @Override
                             public void onValueExists() {
                                 registerDialog.dismiss();
                                 final SimpleBottomSheetDialog simpleBottomSheetDialog = new SimpleBottomSheetDialog(SplashActivity.this);
                                 simpleBottomSheetDialog.setDialogTitle("Внимание!");
-                                simpleBottomSheetDialog.setDialogText("Данный никнейм уже используется");
+                                simpleBottomSheetDialog.setDialogText("Данный E-Mail уже используется");
                                 simpleBottomSheetDialog.setDialogDoneBtnText("ОК");
                                 simpleBottomSheetDialog.create();
                             }
 
                             @Override
                             public void onValueNotFound() {
-                                firebaseAuth.createUserWithEmailAndPassword(userEmail, userPassword).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                                FirebaseHelper.checkUsersDatabaseExistValue(userNickName, "userName", new FirebaseHelper.IFirebaseDatabaseValueListener() {
                                     @Override
-                                    public void onComplete(@NonNull Task<AuthResult> task) {
-                                        if (task.isSuccessful()) {
-                                            firebaseAuth.signOut();
-                                            firebaseAuth.signInWithEmailAndPassword(userEmail, userPassword).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                                                @Override
-                                                public void onComplete(@NonNull final Task<AuthResult> authResultTask) {
-                                                    if (authResultTask.isSuccessful()) {
-                                                        final DatabaseReference currentUserDatabase = firebaseDatabase.getReference().child("Users").child(Objects.requireNonNull(Objects.requireNonNull(authResultTask.getResult()).getUser()).getUid());
-                                                        usersDatabase.keepSynced(true);
-                                                        final StorageReference path = firebaseStorage.getReference().child("user_images").child(Objects.requireNonNull(firebaseAuth.getCurrentUser()).getUid()).child("profile_photos").child(userNickName + "_" + TextUtils.generateRandomString(10) + ".jpg");
-                                                        UploadTask uploadTask = path.putBytes(ImageUtils.getDrawableByteArray(splashRegisterProfilePhotoView.getDrawable()));
-                                                        uploadTask.addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
-                                                            @Override
-                                                            public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-                                                                if (task.isSuccessful()) {
-                                                                    path.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
-                                                                        @Override
-                                                                        public void onComplete(@NonNull Task<Uri> task) {
-                                                                            if (task.isSuccessful()) {
-                                                                                currentUserDatabase.child("userPhotoURL").setValue(Objects.requireNonNull(task.getResult()).toString());
-                                                                                currentUserDatabase.child("userUID").setValue(Objects.requireNonNull(authResultTask.getResult().getUser()).getUid());
-                                                                                currentUserDatabase.child("userEmail").setValue(userEmail);
-                                                                                currentUserDatabase.child("userPassword").setValue(userPassword);
-                                                                                currentUserDatabase.child("userName").setValue(userNickName);
-                                                                                currentUserDatabase.child("isClientAccount").setValue(registerAccountType == 0);
-                                                                                FirebaseUser currentUser = firebaseAuth.getCurrentUser();
-                                                                                currentUser.sendEmailVerification()
-                                                                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                                                            @Override
-                                                                                            public void onComplete(@NonNull Task<Void> task) {
-                                                                                                if (task.isSuccessful()) {
-                                                                                                    firebaseAuth.signOut();
-                                                                                                    registerDialog.dismiss();
+                                    public void onValueExists() {
+                                        registerDialog.dismiss();
+                                        final SimpleBottomSheetDialog simpleBottomSheetDialog = new SimpleBottomSheetDialog(SplashActivity.this);
+                                        simpleBottomSheetDialog.setDialogTitle("Внимание!");
+                                        simpleBottomSheetDialog.setDialogText("Данный никнейм уже используется");
+                                        simpleBottomSheetDialog.setDialogDoneBtnText("ОК");
+                                        simpleBottomSheetDialog.create();
+                                    }
 
-                                                                                                    final SimpleBottomSheetDialog simpleBottomSheetDialog = new SimpleBottomSheetDialog(SplashActivity.this);
-                                                                                                    simpleBottomSheetDialog.setDialogTitle("Регистрация прошла успешно!");
-                                                                                                    simpleBottomSheetDialog.setDialogText("На ваш E-Mail было выслано сообщение для подтверждения регистрации");
-                                                                                                    simpleBottomSheetDialog.setDialogDoneBtnText("ОК");
-                                                                                                    simpleBottomSheetDialog.setDoneClickListener(new View.OnClickListener() {
-                                                                                                        @Override
-                                                                                                        public void onClick(View view) {
-                                                                                                            simpleBottomSheetDialog.dismiss(true);
-                                                                                                            loginCardView.animate()
-                                                                                                                    .translationX(0)
-                                                                                                                    .alpha(1f)
-                                                                                                                    .setDuration(300)
-                                                                                                                    .setListener(new AnimatorListenerAdapter() {
+                                    @Override
+                                    public void onValueNotFound() {
+                                        firebaseAuth.createUserWithEmailAndPassword(userEmail, userPassword).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                                if (task.isSuccessful()) {
+                                                    firebaseAuth.signOut();
+                                                    firebaseAuth.signInWithEmailAndPassword(userEmail, userPassword).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                                                        @Override
+                                                        public void onComplete(@NonNull final Task<AuthResult> authResultTask) {
+                                                            if (authResultTask.isSuccessful()) {
+                                                                final DatabaseReference currentUserDatabase = firebaseDatabase.getReference().child("Users").child(Objects.requireNonNull(Objects.requireNonNull(authResultTask.getResult()).getUser()).getUid());
+                                                                usersDatabase.keepSynced(true);
+                                                                final StorageReference path = firebaseStorage.getReference().child("user_images").child(Objects.requireNonNull(firebaseAuth.getCurrentUser()).getUid()).child("profile_photos").child(userNickName + "_" + TextUtils.generateRandomString(10) + ".jpg");
+                                                                UploadTask uploadTask = path.putBytes(ImageUtils.getDrawableByteArray(splashRegisterProfilePhotoView.getDrawable()));
+                                                                uploadTask.addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                                                                    @Override
+                                                                    public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                                                                        if (task.isSuccessful()) {
+                                                                            path.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
+                                                                                @Override
+                                                                                public void onComplete(@NonNull Task<Uri> task) {
+                                                                                    if (task.isSuccessful()) {
+                                                                                        currentUserDatabase.child("userPhotoURL").setValue(Objects.requireNonNull(task.getResult()).toString());
+                                                                                        currentUserDatabase.child("userUID").setValue(Objects.requireNonNull(authResultTask.getResult().getUser()).getUid());
+                                                                                        currentUserDatabase.child("userEmail").setValue(userEmail);
+                                                                                        currentUserDatabase.child("userPassword").setValue(userPassword);
+                                                                                        currentUserDatabase.child("userName").setValue(userNickName);
+                                                                                        currentUserDatabase.child("isClientAccount").setValue(registerAccountType == 0);
+                                                                                        FirebaseUser currentUser = firebaseAuth.getCurrentUser();
+                                                                                        currentUser.sendEmailVerification()
+                                                                                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                                                    @Override
+                                                                                                    public void onComplete(@NonNull Task<Void> task) {
+                                                                                                        if (task.isSuccessful()) {
+                                                                                                            firebaseAuth.signOut();
+                                                                                                            registerDialog.dismiss();
+
+                                                                                                            final SimpleBottomSheetDialog simpleBottomSheetDialog = new SimpleBottomSheetDialog(SplashActivity.this);
+                                                                                                            simpleBottomSheetDialog.setDialogTitle("Регистрация прошла успешно!");
+                                                                                                            simpleBottomSheetDialog.setDialogText("На ваш E-Mail было выслано сообщение для подтверждения регистрации");
+                                                                                                            simpleBottomSheetDialog.setDialogDoneBtnText("ОК");
+                                                                                                            simpleBottomSheetDialog.setDoneClickListener(new View.OnClickListener() {
+                                                                                                                @Override
+                                                                                                                public void onClick(View view) {
+                                                                                                                    new ViewAnimator(view).animateAction(200, new ViewAnimator.AnimatorListener() {
                                                                                                                         @Override
-                                                                                                                        public void onAnimationEnd(Animator animation) {
-                                                                                                                            super.onAnimationEnd(animation);
-                                                                                                                            loginCardView.setVisibility(View.VISIBLE);
+                                                                                                                        public void done() {
+                                                                                                                            simpleBottomSheetDialog.dismiss(true);
+                                                                                                                            loginCardView.animate()
+                                                                                                                                    .translationX(0)
+                                                                                                                                    .alpha(1f)
+                                                                                                                                    .setDuration(300)
+                                                                                                                                    .setListener(new AnimatorListenerAdapter() {
+                                                                                                                                        @Override
+                                                                                                                                        public void onAnimationEnd(Animator animation) {
+                                                                                                                                            super.onAnimationEnd(animation);
+                                                                                                                                            loginCardView.setVisibility(View.VISIBLE);
+                                                                                                                                        }
+                                                                                                                                    });
+                                                                                                                            registerCardView.animate()
+                                                                                                                                    .translationX(registerCardView.getWidth())
+                                                                                                                                    .alpha(0.0f)
+                                                                                                                                    .setDuration(300)
+                                                                                                                                    .setListener(new AnimatorListenerAdapter() {
+                                                                                                                                        @Override
+                                                                                                                                        public void onAnimationEnd(Animator animation) {
+                                                                                                                                            super.onAnimationEnd(animation);
+                                                                                                                                            registerCardView.setVisibility(View.GONE);
+                                                                                                                                            splashRegisterEmailField.setText("");
+                                                                                                                                            splashRegisterPasswordField.setText("");
+                                                                                                                                            splashRegisterReplyPasswordField.setText("");
+                                                                                                                                            splashRegisterNickNameField.setText("");
+                                                                                                                                            splashRegisterProfilePhotoView.setImageResource(R.drawable.temp_user_photo);
+                                                                                                                                            splashRegisterEmailField.setText("");
+                                                                                                                                            splashRegisterEmailField.setText("");
+                                                                                                                                            splashRegisterEmailField.setText("");
+                                                                                                                                            registerAccountType = -1;
+                                                                                                                                            splashLoginEmailField.setText(userEmail);
+                                                                                                                                            splashLoginPasswordField.setText(userPassword);
+                                                                                                                                            splashCreateNewAccountButton.setText("Создать новый");
+                                                                                                                                        }
+                                                                                                                                    });
                                                                                                                         }
                                                                                                                     });
-                                                                                                            registerCardView.animate()
-                                                                                                                    .translationX(registerCardView.getWidth())
-                                                                                                                    .alpha(0.0f)
-                                                                                                                    .setDuration(300)
-                                                                                                                    .setListener(new AnimatorListenerAdapter() {
-                                                                                                                        @Override
-                                                                                                                        public void onAnimationEnd(Animator animation) {
-                                                                                                                            super.onAnimationEnd(animation);
-                                                                                                                            registerCardView.setVisibility(View.GONE);
-                                                                                                                            splashRegisterEmailField.setText("");
-                                                                                                                            splashRegisterPasswordField.setText("");
-                                                                                                                            splashRegisterReplyPasswordField.setText("");
-                                                                                                                            splashRegisterNickNameField.setText("");
-                                                                                                                            splashRegisterProfilePhotoView.setImageResource(R.drawable.temp_user_photo);
-                                                                                                                            splashRegisterEmailField.setText("");
-                                                                                                                            splashRegisterEmailField.setText("");
-                                                                                                                            splashRegisterEmailField.setText("");
-                                                                                                                            registerAccountType = -1;
-                                                                                                                            splashLoginEmailField.setText(userEmail);
-                                                                                                                            splashLoginPasswordField.setText(userPassword);
-                                                                                                                            splashCreateNewAccountButton.setText("Создать новый");
-                                                                                                                        }
-                                                                                                                    });
+
+                                                                                                                }
+                                                                                                            });
+                                                                                                            simpleBottomSheetDialog.create();
+                                                                                                        } else {
+                                                                                                            registerDialog.dismiss();
+                                                                                                            final SimpleBottomSheetDialog simpleBottomSheetDialog = new SimpleBottomSheetDialog(SplashActivity.this);
+                                                                                                            simpleBottomSheetDialog.setDialogTitle("Внимание!");
+                                                                                                            simpleBottomSheetDialog.setDialogText("Произошла ошибка при регистрации, попробуйте позже");
+                                                                                                            simpleBottomSheetDialog.setDialogDoneBtnText("ОК");
+                                                                                                            simpleBottomSheetDialog.create();
                                                                                                         }
-                                                                                                    });
-                                                                                                    simpleBottomSheetDialog.create();
-                                                                                                } else {
-                                                                                                    registerDialog.dismiss();
-                                                                                                    final SimpleBottomSheetDialog simpleBottomSheetDialog = new SimpleBottomSheetDialog(SplashActivity.this);
-                                                                                                    simpleBottomSheetDialog.setDialogTitle("Внимание!");
-                                                                                                    simpleBottomSheetDialog.setDialogText("Произошла ошибка при регистрации, попробуйте позже");
-                                                                                                    simpleBottomSheetDialog.setDialogDoneBtnText("ОК");
-                                                                                                    simpleBottomSheetDialog.create();
-                                                                                                }
-                                                                                            }
-                                                                                        });
+                                                                                                    }
+                                                                                                });
 
-                                                                            }
+                                                                                    }
+                                                                                }
+                                                                            });
+                                                                        } else {
+                                                                            registerDialog.dismiss();
+                                                                            final SimpleBottomSheetDialog simpleBottomSheetDialog = new SimpleBottomSheetDialog(SplashActivity.this);
+                                                                            simpleBottomSheetDialog.setDialogTitle("Внимание!");
+                                                                            simpleBottomSheetDialog.setDialogText("Произошла ошибка при регистрации, попробуйте позже");
+                                                                            simpleBottomSheetDialog.setDialogDoneBtnText("ОК");
+                                                                            simpleBottomSheetDialog.create();
                                                                         }
-                                                                    });
-                                                                } else {
-                                                                    registerDialog.dismiss();
-                                                                    final SimpleBottomSheetDialog simpleBottomSheetDialog = new SimpleBottomSheetDialog(SplashActivity.this);
-                                                                    simpleBottomSheetDialog.setDialogTitle("Внимание!");
-                                                                    simpleBottomSheetDialog.setDialogText("Произошла ошибка при регистрации, попробуйте позже");
-                                                                    simpleBottomSheetDialog.setDialogDoneBtnText("ОК");
-                                                                    simpleBottomSheetDialog.create();
-                                                                }
-                                                            }
-                                                        });
+                                                                    }
+                                                                });
 
-                                                    } else {
-                                                        registerDialog.dismiss();
-                                                        final SimpleBottomSheetDialog simpleBottomSheetDialog = new SimpleBottomSheetDialog(SplashActivity.this);
-                                                        simpleBottomSheetDialog.setDialogTitle("Внимание!");
-                                                        simpleBottomSheetDialog.setDialogText("Произошла ошибка при регистрации, попробуйте позже");
-                                                        simpleBottomSheetDialog.setDialogDoneBtnText("ОК");
-                                                        simpleBottomSheetDialog.create();
-                                                    }
+                                                            } else {
+                                                                registerDialog.dismiss();
+                                                                final SimpleBottomSheetDialog simpleBottomSheetDialog = new SimpleBottomSheetDialog(SplashActivity.this);
+                                                                simpleBottomSheetDialog.setDialogTitle("Внимание!");
+                                                                simpleBottomSheetDialog.setDialogText("Произошла ошибка при регистрации, попробуйте позже");
+                                                                simpleBottomSheetDialog.setDialogDoneBtnText("ОК");
+                                                                simpleBottomSheetDialog.create();
+                                                            }
+                                                        }
+                                                    });
+                                                } else {
+                                                    registerDialog.dismiss();
+                                                    final SimpleBottomSheetDialog simpleBottomSheetDialog = new SimpleBottomSheetDialog(SplashActivity.this);
+                                                    simpleBottomSheetDialog.setDialogTitle("Внимание!");
+                                                    simpleBottomSheetDialog.setDialogText("Произошла ошибка при регистрации, попробуйте позже");
+                                                    simpleBottomSheetDialog.setDialogDoneBtnText("ОК");
+                                                    simpleBottomSheetDialog.create();
                                                 }
-                                            });
-                                        } else {
-                                            registerDialog.dismiss();
-                                            final SimpleBottomSheetDialog simpleBottomSheetDialog = new SimpleBottomSheetDialog(SplashActivity.this);
-                                            simpleBottomSheetDialog.setDialogTitle("Внимание!");
-                                            simpleBottomSheetDialog.setDialogText("Произошла ошибка при регистрации, попробуйте позже");
-                                            simpleBottomSheetDialog.setDialogDoneBtnText("ОК");
-                                            simpleBottomSheetDialog.create();
-                                        }
+                                            }
+                                        });
                                     }
                                 });
                             }
@@ -621,33 +676,40 @@ public class SplashActivity extends AppCompatActivity {
                 });
 
 
+
             }
         });
 
         splashSighWithGoogle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                signWithGoogleDialog = new IndeterminateBottomSheetDialog(SplashActivity.this);
-                signWithGoogleDialog.setDialogTitle("Подождите");
-                signWithGoogleDialog.setDialogText("Выполняется вход в аккаунт");
-                signWithGoogleDialog.create();
-                firebaseAuth.signOut();
-                GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                        .requestIdToken(getString(R.string.default_web_client_id))
-                        .requestEmail()
-                        .build();
-                final GoogleApiClient googleApiClient = new GoogleApiClient.Builder(SplashActivity.this)
-                        .enableAutoManage(SplashActivity.this, new GoogleApiClient.OnConnectionFailedListener() {
-                            @Override
-                            public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+                new ViewAnimator(splashSighWithGoogle).animateAction(200, new ViewAnimator.AnimatorListener() {
+                    @Override
+                    public void done() {
+                        signWithGoogleDialog = new IndeterminateBottomSheetDialog(SplashActivity.this);
+                        signWithGoogleDialog.setDialogTitle("Подождите");
+                        signWithGoogleDialog.setDialogText("Выполняется вход в аккаунт");
+                        signWithGoogleDialog.create();
+                        firebaseAuth.signOut();
+                        GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                                .requestIdToken(getString(R.string.default_web_client_id))
+                                .requestEmail()
+                                .build();
+                        final GoogleApiClient googleApiClient = new GoogleApiClient.Builder(SplashActivity.this)
+                                .enableAutoManage(SplashActivity.this, new GoogleApiClient.OnConnectionFailedListener() {
+                                    @Override
+                                    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
-                            }
-                        })
-                        .addApi(Auth.GOOGLE_SIGN_IN_API, googleSignInOptions)
-                        .build();
+                                    }
+                                })
+                                .addApi(Auth.GOOGLE_SIGN_IN_API, googleSignInOptions)
+                                .build();
 
-                Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(googleApiClient);
-                startActivityForResult(signInIntent, 1058);
+                        Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(googleApiClient);
+                        startActivityForResult(signInIntent, 1058);
+                    }
+                });
+
             }
         });
 
@@ -693,7 +755,7 @@ public class SplashActivity extends AppCompatActivity {
                                         @Override
                                         public void onValueExists() {
                                             signWithGoogleDialog.dismiss();
-                                            startActivity(new Intent(SplashActivity.this, MainActivity.class));
+                                            startActivity(new Intent(SplashActivity.this, MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED|Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS));
                                             finish();
                                         }
 
@@ -719,7 +781,7 @@ public class SplashActivity extends AppCompatActivity {
                                                     if (userEmail != null) {
                                                         firebaseAuth.createUserWithEmailAndPassword(userEmail, TextUtils.generateRandomString(20));
                                                     }
-                                                    startActivity(new Intent(SplashActivity.this, MainActivity.class));
+                                                    startActivity(new Intent(SplashActivity.this, MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED|Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS));
                                                     finish();
                                                 }
                                             });

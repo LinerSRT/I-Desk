@@ -1,6 +1,9 @@
 package com.liner.i_desk.Utils.Views;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.view.MotionEvent;
+import android.view.inputmethod.InputMethodManager;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,6 +21,8 @@ import com.google.firebase.storage.StorageReference;
 import com.liner.i_desk.API.Data.User;
 import com.liner.i_desk.API.FirebaseHelper;
 import com.liner.i_desk.Utils.BroadcastManager;
+
+import java.util.Objects;
 
 public abstract class FirebaseActivity extends FragmentActivity {
     public FirebaseActivity firebaseActivity;
@@ -98,4 +103,14 @@ public abstract class FirebaseActivity extends FragmentActivity {
 
     public abstract void onFirebaseChanged(User user);
     public abstract void onUserObtained(User user);
+
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        if (getCurrentFocus() != null) {
+            InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            Objects.requireNonNull(inputMethodManager).hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+        }
+        return super.dispatchTouchEvent(ev);
+    }
 }

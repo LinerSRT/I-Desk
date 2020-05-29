@@ -14,6 +14,7 @@ import com.arthurivanets.bottomsheets.BaseBottomSheet;
 import com.arthurivanets.bottomsheets.config.BaseConfig;
 import com.arthurivanets.bottomsheets.config.Config;
 import com.liner.i_desk.R;
+import com.liner.i_desk.Utils.Animations.ViewAnimator;
 import com.liner.i_desk.Utils.ColorUtils;
 
 @SuppressLint("ViewConstructor")
@@ -81,7 +82,12 @@ public class SimpleBottomSheetDialog extends BaseBottomSheet {
             setDoneClickListener(new View.OnClickListener(){
                 @Override
                 public void onClick(View view) {
-                    dismiss(true);
+                    new ViewAnimator(simpleDialogDone).animateAction(200, new ViewAnimator.AnimatorListener() {
+                        @Override
+                        public void done() {
+                            dismiss(true);
+                        }
+                    });
                 }
             });
         }

@@ -24,7 +24,9 @@ import com.liner.i_desk.API.Data.User;
 import com.liner.i_desk.API.FirebaseHelper;
 import com.liner.i_desk.Adapters.RequestAdapter;
 import com.liner.i_desk.R;
+import com.liner.i_desk.UI.CreateRequestActivity;
 import com.liner.i_desk.UI.SplashActivity;
+import com.liner.i_desk.Utils.Animations.ViewAnimator;
 import com.liner.i_desk.Utils.TextUtils;
 import com.liner.i_desk.Utils.TimeUtils;
 import com.liner.i_desk.Utils.Views.FirebaseFragment;
@@ -77,6 +79,44 @@ public class MainFragment extends FirebaseFragment{
         accountActionsAddNewRequest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                new ViewAnimator(view).animateAction(200, new ViewAnimator.AnimatorListener() {
+                    @Override
+                    public void done() {
+                        final SimpleBottomSheetDialog createNewRequestDialog = new SimpleBottomSheetDialog(getActivity());
+                        createNewRequestDialog.setDialogTitle("Создать новую заявку?");
+                        createNewRequestDialog.setDialogText("Переход к окну создания новой заявки");
+                        createNewRequestDialog.setDialogCancelBtnText("Отмена");
+                        createNewRequestDialog.setDialogDoneBtnText("Создать");
+                        createNewRequestDialog.setDoneClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                new ViewAnimator(view).animateAction(200, new ViewAnimator.AnimatorListener() {
+                                    @Override
+                                    public void done() {
+
+                                        createNewRequestDialog.dismiss(true);
+                                        getContext().startActivity(new Intent(getContext(), CreateRequestActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+                                    }
+                                });
+                            }
+                        });
+                        createNewRequestDialog.setCancelClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                new ViewAnimator(view).animateAction(200, new ViewAnimator.AnimatorListener() {
+                                    @Override
+                                    public void done() {
+
+                                        createNewRequestDialog.dismiss(true);
+                                    }
+                                });
+                            }
+                        });
+                        createNewRequestDialog.create();
+                    }
+                });
+
+                /*
                 Request request = new Request();
                 request.setRequestText(TextUtils.generateRandomString(100));
                 request.setRequestName(TextUtils.generateRandomString(35));
@@ -86,13 +126,13 @@ public class MainFragment extends FirebaseFragment{
                 request.setRequestDeadline(TimeUtils.getTime(TimeUtils.Type.SERVER, 1, TimeUnit.HOURS));
                 switch (TextUtils.randInt(0, 2)){
                     case 0:
-                        request.setRequestType(Request.Type.Consultation);
+                        request.setRequestType(Request.Type.CONSULTATION);
                         break;
                     case 1:
-                        request.setRequestType(Request.Type.Service);
+                        request.setRequestType(Request.Type.SERVICE);
                         break;
                     case 2:
-                        request.setRequestType(Request.Type.Incident);
+                        request.setRequestType(Request.Type.INCIDENT);
                         break;
                 }
                 if(firebaseActivity.user.getRequestList() != null) {
@@ -114,6 +154,8 @@ public class MainFragment extends FirebaseFragment{
 
                     }
                 });
+
+                 */
             }
         });
 

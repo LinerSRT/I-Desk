@@ -8,7 +8,7 @@ import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 public class TimeUtils {
-    private static String SERVER_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZZZZ";
+    public static String SERVER_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZZZZ";
     private static String LOCAL_DATE_FORMAT = "dd.MM.YYYY HH:mm";
 
     public static String getCurrentTime(Type type) {
