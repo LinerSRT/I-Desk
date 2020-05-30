@@ -100,6 +100,7 @@ public class RequestCheckListView extends LinearLayout implements View.OnClickLi
                 ViewUtils.dpToPx(8),
                 ViewUtils.dpToPx(8)
         );
+        linearLayout.setMinimumHeight(0);
     }
 
 

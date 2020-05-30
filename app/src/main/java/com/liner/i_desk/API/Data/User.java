@@ -3,6 +3,10 @@ package com.liner.i_desk.API.Data;
 import java.util.List;
 
 public class User {
+    public enum Type{
+        CLIENT,
+        SERVICE
+    }
     private String userUID;
     private String userName;
     private String userEmail;
@@ -10,11 +14,19 @@ public class User {
     private String userPhotoURL;
     private String userAboutText;
     private String userAdditionalInformationText;
-    private long userLastOnlineTimeStamp;
-    private boolean isClientAccount = true;
+    private Type userAccountType;
+    private String userLastOnlineTimeStamp;
     private List<Request> requestList;
 
     public User() {
+    }
+
+    public Type getUserAccountType() {
+        return userAccountType;
+    }
+
+    public void setUserAccountType(Type userAccountType) {
+        this.userAccountType = userAccountType;
     }
 
     public String getUserUID() {
@@ -57,20 +69,12 @@ public class User {
         this.userPhotoURL = userPhotoURL;
     }
 
-    public long getUserLastOnlineTimeStamp() {
+    public String getUserLastOnlineTimeStamp() {
         return userLastOnlineTimeStamp;
     }
 
-    public void setUserLastOnlineTimeStamp(long userLastOnlineTimeStamp) {
+    public void setUserLastOnlineTimeStamp(String userLastOnlineTimeStamp) {
         this.userLastOnlineTimeStamp = userLastOnlineTimeStamp;
-    }
-
-    public boolean isClientAccount() {
-        return isClientAccount;
-    }
-
-    public void setClientAccount(boolean clientAccount) {
-        isClientAccount = clientAccount;
     }
 
 
@@ -110,8 +114,8 @@ public class User {
                 ", userPhotoURL='" + userPhotoURL + '\'' +
                 ", userAboutText='" + userAboutText + '\'' +
                 ", userAdditionalInformationText='" + userAdditionalInformationText + '\'' +
+                ", userAccountType=" + userAccountType +
                 ", userLastOnlineTimeStamp=" + userLastOnlineTimeStamp +
-                ", isClientAccount=" + isClientAccount +
                 ", requestList=" + requestList +
                 '}';
     }

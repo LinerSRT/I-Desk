@@ -40,7 +40,6 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class UserProfileFragment extends FirebaseFragment implements EditRegexTextView.IEditTextListener {
     private FirebaseActivity firebaseActivity;
-    private ImageView profileUserPhoto;
     private TextView profileUserName;
     private TextView profileUserType;
     private TextView profileUserAbout;
@@ -77,7 +76,6 @@ public class UserProfileFragment extends FirebaseFragment implements EditRegexTe
     @Override
     public View onCreateView(@NonNull final LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.user_profile_fragment, container, false);
-        profileUserPhoto = view.findViewById(R.id.profileUserPhoto);
         profileUserName = view.findViewById(R.id.profileUserName);
         profileUserType = view.findViewById(R.id.profileUserType);
         profileUserAbout = view.findViewById(R.id.profileUserAbout);
@@ -214,6 +212,12 @@ public class UserProfileFragment extends FirebaseFragment implements EditRegexTe
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
             if (resultCode == -1) {
+                if(data == null) {
+                    actionProgressDialog.close();
+                    showUploadPhotoErrorDialog();
+                    return;
+                }
+
                 Picasso.get().load(Objects.requireNonNull(CropImage.getActivityResult(data)).getUri()).into(new Target() {
                     @Override
                     public void onBitmapLoaded(final Bitmap bitmap, Picasso.LoadedFrom from) {
@@ -229,20 +233,30 @@ public class UserProfileFragment extends FirebaseFragment implements EditRegexTe
                             @Override
                             public void onUploadFinish(String fileURL) {
                                 uploadDialog.close();
-                                profileUserPhoto.setImageBitmap(bitmap);
                                 profileUserPhoto2.setImageBitmap(bitmap);
-                                final  SimpleBottomSheetDialog.Builder simpleDialog = new SimpleBottomSheetDialog.Builder(getActivity());
-                                simpleDialog.setTitleText("Фото обновлено")
-                                        .setDialogText("Ваша фотография была успешно обновлена")
-                                        .setDone("Готово", new View.OnClickListener() {
-                                            @Override
-                                            public void onClick(View view) {
-                                                simpleDialog.close();
-                                            }
-                                        }).build();
-                                simpleDialog.show();
-                            }
+                                FirebaseHelper.setUserValue(firebaseActivity.firebaseUser.getUid(), "userPhotoURL", fileURL, new FirebaseHelper.IFirebaseHelperListener() {
+                                    @Override
+                                    public void onSuccess(Object result) {
 
+                                        final  SimpleBottomSheetDialog.Builder simpleDialog = new SimpleBottomSheetDialog.Builder(getActivity());
+                                        simpleDialog.setTitleText("Фото обновлено")
+                                                .setDialogText("Ваша фотография была успешно обновлена")
+                                                .setDone("Готово", new View.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(View view) {
+                                                        simpleDialog.close();
+                                                    }
+                                                }).build();
+                                        simpleDialog.show();
+                                    }
+
+                                    @Override
+                                    public void onFail(String reason) {
+                                        uploadDialog.close();
+                                        showUploadPhotoErrorDialog();
+                                    }
+                                });
+                            }
                             @Override
                             public void onUploadFailed() {
                                 uploadDialog.close();
@@ -275,10 +289,16 @@ public class UserProfileFragment extends FirebaseFragment implements EditRegexTe
     }
 
     private void loadUserData() {
-        Picasso.get().load(firebaseActivity.user.getUserPhotoURL()).into(profileUserPhoto);
         Picasso.get().load(firebaseActivity.user.getUserPhotoURL()).into(profileUserPhoto2);
         profileUserName.setText(firebaseActivity.user.getUserName());
-        profileUserType.setText((firebaseActivity.user.isClientAccount()) ? "Заявитель" : "Исполнитель");
+        switch (firebaseActivity.user.getUserAccountType()){
+            case SERVICE:
+                profileUserType.setText("Исполнитель");
+                break;
+            case CLIENT:
+                profileUserType.setText("Заявитель");
+                break;
+        }
         profileUserName.setText(firebaseActivity.user.getUserName());
         profileUserAbout.setText(firebaseActivity.user.getUserAboutText());
         profileUserAdditionalInfo.setText(firebaseActivity.user.getUserAdditionalInformationText());

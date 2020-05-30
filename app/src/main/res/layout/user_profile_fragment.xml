@@ -7,7 +7,7 @@
     android:background="?backgroundColor">
 
     <ImageView
-        android:id="@+id/profileUserPhoto"
+        android:id="@+id/profileBackground"
         android:layout_width="match_parent"
         android:layout_height="250dp"
         android:adjustViewBounds="true"
@@ -20,7 +20,7 @@
         android:id="@+id/profileUserCard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/profileUserPhoto"
+        android:layout_below="@+id/profileBackground"
         android:layout_marginTop="-64dp"
         app:cardCornerRadius="@dimen/cardsCornerRadius"
         app:cardElevation="@dimen/cardElevation"

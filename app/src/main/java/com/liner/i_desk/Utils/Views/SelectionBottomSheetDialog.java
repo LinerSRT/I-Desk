@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 
 import com.arthurivanets.bottomsheets.BaseBottomSheet;
 import com.arthurivanets.bottomsheets.config.Config;
+import com.liner.i_desk.API.Data.User;
 import com.liner.i_desk.R;
 import com.liner.i_desk.Utils.ColorUtils;
 
@@ -62,7 +63,7 @@ public class SelectionBottomSheetDialog extends BaseBottomSheet {
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
                 int selection1ID = selection1.getId();
                 int selection2ID = selection2.getId();
-                listener.onSelected((i == selection1ID) ? 0:1, i, (i == selection1ID) ? selection1.getText().toString():selection2.getText().toString());
+                listener.onSelected((i == selection1ID) ? User.Type.CLIENT :User.Type.SERVICE, i, (i == selection1ID) ? selection1.getText().toString():selection2.getText().toString());
             }
         });
     }
@@ -72,6 +73,6 @@ public class SelectionBottomSheetDialog extends BaseBottomSheet {
     }
 
     public interface ISeledtionDialogListener{
-        void onSelected(int id, int viewID, String text);
+        void onSelected(User.Type id, int viewID, String text);
     }
 }

@@ -139,7 +139,16 @@ public class MainFragment extends FirebaseFragment{
     private void loadUserData() {
         Picasso.get().load(firebaseActivity.user.getUserPhotoURL()).into(userPhoto);
         userName.setText(firebaseActivity.user.getUserName());
-        userType.setText((firebaseActivity.user.isClientAccount()) ? "Заявитель" : "Исполнитель");
+
+        switch (firebaseActivity.user.getUserAccountType()){
+            case SERVICE:
+                userType.setText("Исполнитель");
+                break;
+            case CLIENT:
+                userType.setText("Заявитель");
+                break;
+        }
+
         if(firebaseActivity.user.getRequestList() != null) {
             requestAdapter = new RequestAdapter(getActivity(), firebaseActivity.user.getRequestList());
         } else {

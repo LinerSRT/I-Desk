@@ -45,7 +45,7 @@ public class ProgressBottomSheetDialog extends BaseBottomSheet {
     }
 
     public void setProgress(int value) {
-        progressDialogFileStatus.setVisibility(GONE);
+        progressDialogFileStatus.setVisibility(INVISIBLE);
         progressBar.setProgress(value);
     }
 
