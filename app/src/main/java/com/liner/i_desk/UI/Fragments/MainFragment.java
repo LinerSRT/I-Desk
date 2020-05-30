@@ -26,9 +26,6 @@ import com.liner.i_desk.Adapters.RequestAdapter;
 import com.liner.i_desk.R;
 import com.liner.i_desk.UI.CreateRequestActivity;
 import com.liner.i_desk.UI.SplashActivity;
-import com.liner.i_desk.Utils.Animations.ViewAnimator;
-import com.liner.i_desk.Utils.TextUtils;
-import com.liner.i_desk.Utils.TimeUtils;
 import com.liner.i_desk.Utils.Views.FirebaseFragment;
 import com.liner.i_desk.Utils.Views.SimpleBottomSheetDialog;
 import com.squareup.picasso.Picasso;
@@ -79,83 +76,24 @@ public class MainFragment extends FirebaseFragment{
         accountActionsAddNewRequest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new ViewAnimator(view).animateAction(200, new ViewAnimator.AnimatorListener() {
-                    @Override
-                    public void done() {
-                        final SimpleBottomSheetDialog createNewRequestDialog = new SimpleBottomSheetDialog(getActivity());
-                        createNewRequestDialog.setDialogTitle("Создать новую заявку?");
-                        createNewRequestDialog.setDialogText("Переход к окну создания новой заявки");
-                        createNewRequestDialog.setDialogCancelBtnText("Отмена");
-                        createNewRequestDialog.setDialogDoneBtnText("Создать");
-                        createNewRequestDialog.setDoneClickListener(new View.OnClickListener() {
+                final SimpleBottomSheetDialog.Builder createNewRequestDialog = new SimpleBottomSheetDialog.Builder(getActivity());
+                createNewRequestDialog.setTitleText("Создать новую заявку?")
+                        .setDialogText("Переход к окну создания новой заявки")
+                        .setCancel("Отмена", new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                new ViewAnimator(view).animateAction(200, new ViewAnimator.AnimatorListener() {
-                                    @Override
-                                    public void done() {
-
-                                        createNewRequestDialog.dismiss(true);
-                                        getContext().startActivity(new Intent(getContext(), CreateRequestActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
-                                    }
-                                });
+                                createNewRequestDialog.close();
                             }
-                        });
-                        createNewRequestDialog.setCancelClickListener(new View.OnClickListener() {
+                        })
+                        .setDone("Создать", new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                new ViewAnimator(view).animateAction(200, new ViewAnimator.AnimatorListener() {
-                                    @Override
-                                    public void done() {
-
-                                        createNewRequestDialog.dismiss(true);
-                                    }
-                                });
+                                createNewRequestDialog.close();
+                                getContext().startActivity(new Intent(getContext(), CreateRequestActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
                             }
-                        });
-                        createNewRequestDialog.create();
-                    }
-                });
+                        }).build();
+                createNewRequestDialog.show();
 
-                /*
-                Request request = new Request();
-                request.setRequestText(TextUtils.generateRandomString(100));
-                request.setRequestName(TextUtils.generateRandomString(35));
-                request.setRequestID(TextUtils.generateRandomString(64));
-                request.setRequestUserID(firebaseActivity.firebaseUser.getUid());
-                request.setRequestTime(TimeUtils.getCurrentTime(TimeUtils.Type.SERVER));
-                request.setRequestDeadline(TimeUtils.getTime(TimeUtils.Type.SERVER, 1, TimeUnit.HOURS));
-                switch (TextUtils.randInt(0, 2)){
-                    case 0:
-                        request.setRequestType(Request.Type.CONSULTATION);
-                        break;
-                    case 1:
-                        request.setRequestType(Request.Type.SERVICE);
-                        break;
-                    case 2:
-                        request.setRequestType(Request.Type.INCIDENT);
-                        break;
-                }
-                if(firebaseActivity.user.getRequestList() != null) {
-                    requestAdapter = new RequestAdapter(getActivity(), firebaseActivity.user.getRequestList());
-                } else {
-                    requestAdapter = new RequestAdapter(getActivity(), new ArrayList<Request>());
-                    firebaseActivity.user.setRequestList(new ArrayList<Request>());
-                }
-                requestRecyclerView.setAdapter(requestAdapter);
-                firebaseActivity.user.getRequestList().add(request);
-                FirebaseHelper.setUserValue(firebaseActivity.firebaseUser.getUid(), "requestList", firebaseActivity.user.getRequestList(), new FirebaseHelper.IFirebaseHelperListener() {
-                    @Override
-                    public void onSuccess(Object result) {
-
-                    }
-
-                    @Override
-                    public void onFail(String reason) {
-
-                    }
-                });
-
-                 */
             }
         });
 

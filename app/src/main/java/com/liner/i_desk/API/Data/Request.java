@@ -26,7 +26,7 @@ public class Request {
     private String requestCreationTime;
     private String requestDeadlineTime;
     private String requestTitle;
-    private String requestDescription;
+    private String requestUserDeviceDescription;
     private String requestShortDescription;
     private List<RequestCheckList> requestCheckList;
     private List<RequestFile> requestFiles;
@@ -101,12 +101,12 @@ public class Request {
         this.requestTitle = requestTitle;
     }
 
-    public String getRequestDescription() {
-        return requestDescription;
+    public String getRequestUserDeviceDescription() {
+        return requestUserDeviceDescription;
     }
 
-    public void setRequestDescription(String requestDescription) {
-        this.requestDescription = requestDescription;
+    public void setRequestUserDeviceDescription(String requestUserDeviceDescription) {
+        this.requestUserDeviceDescription = requestUserDeviceDescription;
     }
 
     public String getRequestShortDescription() {
@@ -153,7 +153,7 @@ public class Request {
                 ", requestCreationTime='" + requestCreationTime + '\'' +
                 ", requestDeadlineTime='" + requestDeadlineTime + '\'' +
                 ", requestTitle='" + requestTitle + '\'' +
-                ", requestDescription='" + requestDescription + '\'' +
+                ", requestUserDeviceDescription='" + requestUserDeviceDescription + '\'' +
                 ", requestShortDescription='" + requestShortDescription + '\'' +
                 ", requestCheckList=" + requestCheckList +
                 ", requestFiles=" + requestFiles +
@@ -222,7 +222,7 @@ public class Request {
                     '}';
         }
     }
-    public class RequestFile{
+    public static class RequestFile{
         private String fileUploadTime;
         private String filePath;
         private String fileID;
@@ -274,11 +274,16 @@ public class Request {
                     '}';
         }
     }
-    public class RequestCheckList{
+    public static class RequestCheckList{
         private String checkListText;
         private boolean checkFinished;
 
         public RequestCheckList() {
+        }
+
+        public RequestCheckList(String checkListText, boolean checkFinished) {
+            this.checkListText = checkListText;
+            this.checkFinished = checkFinished;
         }
 
         public String getCheckListText() {

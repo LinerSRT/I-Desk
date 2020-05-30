@@ -12,7 +12,6 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 
 import com.liner.i_desk.R;
-import com.liner.i_desk.Utils.Animations.ViewAnimator;
 import com.liner.i_desk.Utils.ColorUtils;
 import com.liner.i_desk.Utils.ViewUtils;
 
@@ -48,12 +47,7 @@ public class RequestCheckListView extends LinearLayout implements View.OnClickLi
                 if (view instanceof ImageView) {
                     if (view == requestListItems.get(i).getImageView()) {
                         final int finalI = i;
-                        new ViewAnimator(view).animateAction(200, new ViewAnimator.AnimatorListener() {
-                            @Override
-                            public void done() {
-                                onItemClickListener.onCloseClick(finalI);
-                            }
-                        });
+                        onItemClickListener.onCloseClick(finalI);
                     }
                 } else if (view instanceof TextView) {
                     if (view == requestListItems.get(i).getTextView()) {
@@ -126,7 +120,6 @@ public class RequestCheckListView extends LinearLayout implements View.OnClickLi
         ViewUtils.setMargins(itemLayout, 0, 0, 0, ViewUtils.dpToPx(16));
         requestListItems.add(new RequestListItem(itemLayout, textView, imageView));
         updateViews();
-        new ViewAnimator(itemLayout).animateAction(100);
     }
 
     public void updateViews() {

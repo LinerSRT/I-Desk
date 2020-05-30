@@ -12,7 +12,6 @@ import androidx.annotation.Nullable;
 
 import com.liner.i_desk.API.Data.Request;
 import com.liner.i_desk.R;
-import com.liner.i_desk.Utils.Animations.ViewAnimator;
 import com.liner.i_desk.Utils.ColorUtils;
 
 public class RequestTypeView extends LinearLayout implements View.OnClickListener{
@@ -92,14 +91,9 @@ public class RequestTypeView extends LinearLayout implements View.OnClickListene
                 type = Request.Type.INCIDENT;
                 break;
         }
-        new ViewAnimator(view).animateAction(200, new ViewAnimator.AnimatorListener() {
-            @Override
-            public void done() {
-                if(onTypeSelectedListener != null)
-                    onTypeSelectedListener.onSelected(type);
-                updateView(type);
-            }
-        });
+        if(onTypeSelectedListener != null)
+            onTypeSelectedListener.onSelected(type);
+        updateView(type);
     }
 
     public Request.Type getType() {

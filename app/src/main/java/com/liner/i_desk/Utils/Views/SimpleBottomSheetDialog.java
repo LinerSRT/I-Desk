@@ -11,10 +11,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 
 import com.arthurivanets.bottomsheets.BaseBottomSheet;
-import com.arthurivanets.bottomsheets.config.BaseConfig;
 import com.arthurivanets.bottomsheets.config.Config;
 import com.liner.i_desk.R;
-import com.liner.i_desk.Utils.Animations.ViewAnimator;
 import com.liner.i_desk.Utils.ColorUtils;
 
 @SuppressLint("ViewConstructor")
@@ -24,16 +22,80 @@ public class SimpleBottomSheetDialog extends BaseBottomSheet {
     private TextView simpleDialogText;
     private TextView simpleDialogCancel;
     private TextView simpleDialogDone;
-    private View.OnClickListener cancelClickListener;
-    private View.OnClickListener doneClickListener;
+    private String titleText;
+    private String dialogText;
+    private String cancelText;
+    private String doneText;
+    private OnClickListener cancelClickListener;
+    private OnClickListener doneClickListener;
 
-    public SimpleBottomSheetDialog(@NonNull Activity hostActivity) {
-        super(hostActivity, new Config.Builder(hostActivity)
-                .sheetBackgroundColor(ColorUtils.getThemeColor(hostActivity, R.attr.backgroundColor))
-                .dismissOnTouchOutside(false)
-                .build());
 
+    public static class Builder{
+        private @NonNull Activity activity;
+        private SimpleBottomSheetDialog dialog;
+        private boolean dismissOnTouchOutside = false;
+        private String titleText;
+        private String dialogText;
+        private String cancelText;
+        private String doneText;
+        private OnClickListener cancelClickListener;
+        private OnClickListener doneClickListener;
+
+        public Builder(@NonNull Activity activity) {
+            this.activity = activity;
+        }
+
+        public Builder setDismissTouchOutside(boolean value){
+            this.dismissOnTouchOutside = value;
+            return this;
+        }
+        public Builder setTitleText(String value){
+            this.titleText = value;
+            return this;
+        }
+        public Builder setDialogText(String value){
+            this.dialogText = value;
+            return this;
+        }
+        public Builder setDone(String text, View.OnClickListener clickListener){
+            this.doneText = text;
+            this.doneClickListener = clickListener;
+            return this;
+        }
+        public Builder setCancel(String text, View.OnClickListener clickListener){
+            this.cancelText = text;
+            this.cancelClickListener = clickListener;
+            return this;
+        }
+
+        public Builder build(){
+            this.dialog = new SimpleBottomSheetDialog(this);
+            return this;
+        }
+
+        public void show(){
+            if(dialog != null)
+                dialog.create();
+        }
+
+        public void close(){
+            if(dialog != null)
+                dialog.close();
+        }
     }
+    private SimpleBottomSheetDialog(Builder builder) {
+        super(builder.activity, new Config.Builder(builder.activity)
+                .sheetBackgroundColor(ColorUtils.getThemeColor(builder.activity, R.attr.backgroundColor))
+                .dismissOnTouchOutside(builder.dismissOnTouchOutside)
+                .build());
+        this.titleText = builder.titleText;
+        this.dialogText = builder.dialogText;
+        this.cancelText = builder.cancelText;
+        this.doneText = builder.doneText;
+        this.cancelClickListener = builder.cancelClickListener;
+        this.doneClickListener = builder.doneClickListener;
+    }
+
 
     @NonNull
     @Override
@@ -48,53 +110,34 @@ public class SimpleBottomSheetDialog extends BaseBottomSheet {
     }
 
 
-    public void setDialogTitle(String dialogTitle) {
-        simpleDialogTitle.setText(dialogTitle);
-    }
 
-    public void setDialogText(String dialogText) {
-        simpleDialogText.setText(dialogText);
-    }
 
-    public void setDialogDoneBtnText(String dialogDoneBtnText) {
-        simpleDialogDone.setText(dialogDoneBtnText);
-    }
-
-    public void setDialogCancelBtnText(String dialogCancelBtnText) {
-        simpleDialogCancel.setText(dialogCancelBtnText);
-    }
-
-    public void setCancelClickListener(OnClickListener cancelClickListener) {
-        this.cancelClickListener = cancelClickListener;
-        simpleDialogCancel.setOnClickListener(cancelClickListener);
-    }
-
-    public void setDoneClickListener(OnClickListener doneClickListener) {
-        this.doneClickListener = doneClickListener;
-        simpleDialogDone.setOnClickListener(doneClickListener);
-    }
 
     public void create(){
+        simpleDialogTitle.setText(titleText);
+        simpleDialogText.setText(dialogText);
         if(cancelClickListener == null){
             simpleDialogCancel.setVisibility(GONE);
+        } else {
+            simpleDialogCancel.setText(cancelText);
+            simpleDialogCancel.setOnClickListener(cancelClickListener);
         }
         if(doneClickListener == null){
-            setDoneClickListener(new View.OnClickListener(){
+            this.doneClickListener = new View.OnClickListener(){
                 @Override
                 public void onClick(View view) {
-                    new ViewAnimator(simpleDialogDone).animateAction(200, new ViewAnimator.AnimatorListener() {
-                        @Override
-                        public void done() {
-                            dismiss(true);
-                        }
-                    });
+                    dismiss(true);
                 }
-            });
+            };
         }
-        if(doneClickListener == null && cancelClickListener == null)
-            simpleDialogButtonLayout.setVisibility(GONE);
-
+        simpleDialogDone.setText(doneText);
+        simpleDialogDone.setOnClickListener(doneClickListener);
         show(true);
 
     }
+
+    public void close(){
+        dismiss(true);
+    }
+
 }

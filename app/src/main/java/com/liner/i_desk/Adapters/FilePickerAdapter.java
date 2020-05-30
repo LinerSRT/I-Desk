@@ -13,7 +13,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.liner.i_desk.R;
-import com.liner.i_desk.Utils.Animations.ViewAnimator;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -53,41 +52,31 @@ public class FilePickerAdapter extends RecyclerView.Adapter<FilePickerAdapter.Vi
             public void onClick(View view) {
                 if (item.getFile().isDirectory())
                     path.add(item.getFile().getAbsolutePath());
-                new ViewAnimator(holder.itemView).animateAction(200, new ViewAnimator.AnimatorListener() {
-                    @Override
-                    public void done() {
-                        if (!item.getFile().canRead()) return;
-                        if (item.getFile().isDirectory()) {
-                            if (item.getFile() != null && item.getFile().canRead()) {
-                                new AsyncFetchFiles(item.getFile()).execute();
-                            }
-                        } else {
-                            for (FileHolder items : fileList) {
-                                items.setSelected(false);
-                            }
-                            item.setSelected(true);
-                            listener.onFileSelected(item.getFile());
-                            notifyDataSetChanged();
-
-                        }
+                if (!item.getFile().canRead()) return;
+                if (item.getFile().isDirectory()) {
+                    if (item.getFile() != null && item.getFile().canRead()) {
+                        new AsyncFetchFiles(item.getFile()).execute();
                     }
-                });
+                } else {
+                    for (FileHolder items : fileList) {
+                        items.setSelected(false);
+                    }
+                    item.setSelected(true);
+                    listener.onFileSelected(item.getFile());
+                    notifyDataSetChanged();
+
+                }
             }
         });
         holder.fileCheck.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new ViewAnimator(holder.itemView).animateAction(200, new ViewAnimator.AnimatorListener() {
-                    @Override
-                    public void done() {
-                        for (FileHolder items : fileList) {
-                            items.setSelected(false);
-                        }
-                        item.setSelected(true);
-                        listener.onFileSelected(item.getFile());
-                        notifyDataSetChanged();
-                    }
-                });
+                for (FileHolder items : fileList) {
+                    items.setSelected(false);
+                }
+                item.setSelected(true);
+                listener.onFileSelected(item.getFile());
+                notifyDataSetChanged();
             }
         });
     }

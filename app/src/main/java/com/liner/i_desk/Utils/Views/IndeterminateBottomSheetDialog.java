@@ -19,6 +19,8 @@ import com.liner.i_desk.Utils.ColorUtils;
 public class IndeterminateBottomSheetDialog extends BaseBottomSheet {
     private TextView indeterminateDialogTitle;
     private TextView indeterminateDialogText;
+    private String titleText;
+    private String dialogText;
 
     public IndeterminateBottomSheetDialog(@NonNull Activity hostActivity) {
         super(hostActivity, new Config.Builder(hostActivity)
@@ -26,6 +28,61 @@ public class IndeterminateBottomSheetDialog extends BaseBottomSheet {
                 .dismissOnTouchOutside(false)
                 .build());
 
+    }
+
+    private IndeterminateBottomSheetDialog(Builder builder) {
+        super(builder.activity, new Config.Builder(builder.activity)
+                .sheetBackgroundColor(ColorUtils.getThemeColor(builder.activity, R.attr.backgroundColor))
+                .dismissOnTouchOutside(builder.dismissOnTouchOutside)
+                .build());
+        this.titleText = builder.titleText;
+        this.dialogText = builder.dialogText;
+    }
+
+
+    public static class Builder{
+        private IndeterminateBottomSheetDialog dialog;
+        private @NonNull Activity activity;
+        private boolean dismissOnTouchOutside = false;
+        private String titleText;
+        private String dialogText;
+
+        public Builder(@NonNull Activity activity) {
+            this.activity = activity;
+        }
+
+        public Builder setDismissTouchOutside(boolean value){
+            this.dismissOnTouchOutside = value;
+            return this;
+        }
+        public Builder setTitleText(String value){
+            this.titleText = value;
+            return this;
+        }
+        public Builder setDialogText(String value){
+            this.dialogText = value;
+            return this;
+        }
+
+        public Builder build(){
+            dialog = new IndeterminateBottomSheetDialog(this);
+            return this;
+        }
+
+
+        public void show(){
+            if(dialog != null)
+                dialog.create();
+        }
+
+        public void close(){
+            if(dialog != null)
+                dialog.close();
+        }
+
+        public IndeterminateBottomSheetDialog getDialog(){
+            return dialog;
+        }
     }
 
     @NonNull
@@ -38,16 +95,15 @@ public class IndeterminateBottomSheetDialog extends BaseBottomSheet {
     }
 
 
-    public void setDialogTitle(String dialogTitle) {
-        indeterminateDialogTitle.setText(dialogTitle);
-    }
 
-    public void setDialogText(String dialogText) {
-        indeterminateDialogText.setText(dialogText);
+    public void close(){
+        dismiss(true);
     }
 
 
     public void create(){
+        indeterminateDialogTitle.setText(titleText);
+        indeterminateDialogText.setText(dialogText);
         show(true);
     }
 }

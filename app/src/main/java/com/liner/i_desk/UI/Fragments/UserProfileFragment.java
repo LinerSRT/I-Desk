@@ -3,7 +3,6 @@ package com.liner.i_desk.UI.Fragments;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,17 +15,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.storage.OnProgressListener;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 import com.liner.i_desk.API.FirebaseHelper;
 import com.liner.i_desk.R;
 import com.liner.i_desk.UI.SplashActivity;
-import com.liner.i_desk.Utils.Animations.ViewAnimator;
 import com.liner.i_desk.Utils.ImageUtils;
 import com.liner.i_desk.Utils.TextUtils;
 import com.liner.i_desk.Utils.Views.EditRegexTextView;
@@ -42,6 +33,7 @@ import com.theartofdev.edmodo.cropper.CropImageView;
 
 import net.cachapa.expandablelayout.ExpandableLayout;
 
+import java.io.File;
 import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -58,7 +50,7 @@ public class UserProfileFragment extends FirebaseFragment implements EditRegexTe
     private LinearLayout profileUserChangeAbout;
     private LinearLayout profileUserChangeAdditionalInfo;
     private TextView profileUserSignOut;
-    private IndeterminateBottomSheetDialog actionProgressDialog;
+    private IndeterminateBottomSheetDialog.Builder actionProgressDialog;
 
     private ExpandableLayout profileAboutActionLayout;
     private ExpandableLayout profileAdditionalActionLayout;
@@ -101,9 +93,11 @@ public class UserProfileFragment extends FirebaseFragment implements EditRegexTe
         profileAdditionalActionText = view.findViewById(R.id.profileAdditionalActionText);
         profileAboutActionSubmit = view.findViewById(R.id.profileAboutActionSubmit);
         profileAdditionalActionSubmit = view.findViewById(R.id.profileAdditionalActionSubmit);
-        actionProgressDialog = new IndeterminateBottomSheetDialog(getActivity());
-        actionProgressDialog.setDialogTitle("Подождите");
-        actionProgressDialog.setDialogText("Идет обработка");
+        actionProgressDialog = new IndeterminateBottomSheetDialog.Builder(getActivity());
+        actionProgressDialog
+                .setTitleText("Подождите")
+                .setDialogText("Идет обработка")
+                .build();
         profileAboutActionText.setTextListener(this);
         profileAdditionalActionText.setTextListener(this);
         loadUserData();
@@ -111,16 +105,11 @@ public class UserProfileFragment extends FirebaseFragment implements EditRegexTe
         profileUserChangePhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new ViewAnimator(view).animateAction(200, new ViewAnimator.AnimatorListener() {
-                    @Override
-                    public void done() {
-                        actionProgressDialog.create();
-                        CropImage.activity()
-                                .setGuidelines(CropImageView.Guidelines.ON)
-                                .setAspectRatio(1, 1)
-                                .start(getContext(), UserProfileFragment.this);
-                    }
-                });
+                actionProgressDialog.show();
+                CropImage.activity()
+                        .setGuidelines(CropImageView.Guidelines.ON)
+                        .setAspectRatio(1, 1)
+                        .start(getContext(), UserProfileFragment.this);
 
 
             }
@@ -129,28 +118,18 @@ public class UserProfileFragment extends FirebaseFragment implements EditRegexTe
         profileUserChangeAbout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new ViewAnimator(view).animateAction(200, new ViewAnimator.AnimatorListener() {
-                    @Override
-                    public void done() {
 
-                        profileAboutActionLayout.toggle(true);
-                        profileAdditionalActionLayout.collapse(true);
-                    }
-                });
+                profileAboutActionLayout.toggle(true);
+                profileAdditionalActionLayout.collapse(true);
             }
         });
 
         profileUserChangeAdditionalInfo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new ViewAnimator(view).animateAction(200, new ViewAnimator.AnimatorListener() {
-                    @Override
-                    public void done() {
 
-                        profileAdditionalActionLayout.toggle(true);
-                        profileAboutActionLayout.collapse(true);
-                    }
-                });
+                profileAdditionalActionLayout.toggle(true);
+                profileAboutActionLayout.collapse(true);
             }
         });
 
@@ -158,25 +137,20 @@ public class UserProfileFragment extends FirebaseFragment implements EditRegexTe
         profileAboutActionSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new ViewAnimator(view).animateAction(200, new ViewAnimator.AnimatorListener() {
+                actionProgressDialog.show();
+                FirebaseHelper.setUserValue(firebaseActivity.firebaseUser.getUid(), "userAboutText", profileAboutActionText.getText().toString().trim(), new FirebaseHelper.IFirebaseHelperListener() {
                     @Override
-                    public void done() {
-                        actionProgressDialog.create();
-                        FirebaseHelper.setUserValue(firebaseActivity.firebaseUser.getUid(), "userAboutText", profileAboutActionText.getText().toString().trim(), new FirebaseHelper.IFirebaseHelperListener() {
-                            @Override
-                            public void onSuccess(Object result) {
-                                actionProgressDialog.dismiss(true);
-                                profileAboutActionText.setText(firebaseActivity.user.getUserAboutText());
-                                showUpdateDataDialog();
-                                profileAboutActionLayout.collapse(true);
-                            }
+                    public void onSuccess(Object result) {
+                        actionProgressDialog.close();
+                        profileAboutActionText.setText(firebaseActivity.user.getUserAboutText());
+                        showUpdateDataDialog();
+                        profileAboutActionLayout.collapse(true);
+                    }
 
-                            @Override
-                            public void onFail(String reason) {
-                                actionProgressDialog.dismiss(true);
-                                showErrorDialog();
-                            }
-                        });
+                    @Override
+                    public void onFail(String reason) {
+                        actionProgressDialog.close();
+                        showErrorDialog();
                     }
                 });
 
@@ -186,25 +160,20 @@ public class UserProfileFragment extends FirebaseFragment implements EditRegexTe
         profileAdditionalActionSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new ViewAnimator(view).animateAction(200, new ViewAnimator.AnimatorListener() {
+                actionProgressDialog.show();
+                FirebaseHelper.setUserValue(firebaseActivity.firebaseUser.getUid(), "userAdditionalInformationText", profileAdditionalActionText.getText().toString().trim(), new FirebaseHelper.IFirebaseHelperListener() {
                     @Override
-                    public void done() {
-                        actionProgressDialog.create();
-                        FirebaseHelper.setUserValue(firebaseActivity.firebaseUser.getUid(), "userAdditionalInformationText", profileAdditionalActionText.getText().toString().trim(), new FirebaseHelper.IFirebaseHelperListener() {
-                            @Override
-                            public void onSuccess(Object result) {
-                                actionProgressDialog.dismiss(true);
-                                showUpdateDataDialog();
-                                profileAdditionalActionText.setText(firebaseActivity.user.getUserAdditionalInformationText());
-                                profileAdditionalActionLayout.collapse(true);
-                            }
+                    public void onSuccess(Object result) {
+                        actionProgressDialog.close();
+                        showUpdateDataDialog();
+                        profileAdditionalActionText.setText(firebaseActivity.user.getUserAdditionalInformationText());
+                        profileAdditionalActionLayout.collapse(true);
+                    }
 
-                            @Override
-                            public void onFail(String reason) {
-                                actionProgressDialog.dismiss(true);
-                                showErrorDialog();
-                            }
-                        });
+                    @Override
+                    public void onFail(String reason) {
+                        actionProgressDialog.close();
+                        showErrorDialog();
                     }
                 });
 
@@ -214,44 +183,26 @@ public class UserProfileFragment extends FirebaseFragment implements EditRegexTe
         profileUserSignOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new ViewAnimator(view).animateAction(200, new ViewAnimator.AnimatorListener() {
-                    @Override
-                    public void done() {
-                        final SimpleBottomSheetDialog confirmDialog = new SimpleBottomSheetDialog(getActivity());
-                        confirmDialog.setDialogTitle("Выход");
-                        confirmDialog.setDialogText("Вы действительно хотите выйти из своего аккаунта?");
-                        confirmDialog.setDialogDoneBtnText("Выйти");
-                        confirmDialog.setDialogCancelBtnText("Отмена");
-                        confirmDialog.setCancelClickListener(new View.OnClickListener() {
+
+                final SimpleBottomSheetDialog.Builder confirmDialog = new SimpleBottomSheetDialog.Builder(getActivity());
+                confirmDialog.setTitleText("Выход")
+                        .setDialogText("Вы действительно хотите выйти из своего аккаунта?")
+                        .setCancel("Отмена", new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                new ViewAnimator(view).animateAction(200, new ViewAnimator.AnimatorListener() {
-                                    @Override
-                                    public void done() {
-
-                                        confirmDialog.dismiss(true);
-                                    }
-                                });
+                                confirmDialog.close();
                             }
-                        });
-                        confirmDialog.setDoneClickListener(new View.OnClickListener() {
+                        })
+                        .setDone("Выйти", new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                new ViewAnimator(view).animateAction(200, new ViewAnimator.AnimatorListener() {
-                                    @Override
-                                    public void done() {
-
-                                        firebaseActivity.firebaseAuth.signOut();
-                                        getContext().startActivity(new Intent(getContext(), SplashActivity.class));
-                                        getActivity().finish();
-                                    }
-                                });
+                                confirmDialog.close();
+                                firebaseActivity.firebaseAuth.signOut();
+                                getContext().startActivity(new Intent(getContext(), SplashActivity.class));
+                                getActivity().finish();
                             }
-                        });
-                        confirmDialog.create();
-                    }
-                });
-
+                        }).build();
+                confirmDialog.show();
             }
         });
         return view;
@@ -266,58 +217,41 @@ public class UserProfileFragment extends FirebaseFragment implements EditRegexTe
                 Picasso.get().load(Objects.requireNonNull(CropImage.getActivityResult(data)).getUri()).into(new Target() {
                     @Override
                     public void onBitmapLoaded(final Bitmap bitmap, Picasso.LoadedFrom from) {
-                        actionProgressDialog.dismiss(true);
-                        final ProgressBottomSheetDialog uploadDialog = new ProgressBottomSheetDialog(getActivity());
-                        uploadDialog.setDialogTitle("Загрузка");
-                        uploadDialog.setDialogText("Пожалуйста подождите, Ваше фото загружается");
-                        uploadDialog.create();
-                        final StorageReference path = firebaseActivity.storageReference.child("user_images").child(Objects.requireNonNull(firebaseActivity.firebaseAuth.getCurrentUser()).getUid()).child("profile_photos").child(firebaseActivity.user.getUserName() + "_" + TextUtils.generateRandomString(10) + ".jpg");
-                        final UploadTask uploadTask = path.putBytes(ImageUtils.getDrawableByteArray(bitmap));
-                        uploadTask.addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                        actionProgressDialog.close();
+                        final ProgressBottomSheetDialog.Builder uploadDialog = new ProgressBottomSheetDialog.Builder(getActivity());
+                        uploadDialog.setTitleText("Загрузка").setDialogText("Пожалуйста подождите, Ваше фото загружается").build();
+                        FirebaseHelper.uploadFile(ImageUtils.getDrawableByteArray(bitmap), "user_images"+ File.separator+firebaseActivity.firebaseUser.getUid()+File.separator+"profile_photos"+File.separator+firebaseActivity.user.getUserName() + "_" + TextUtils.generateRandomString(10) + ".jpg", new FirebaseHelper.IFirebaseUploadFileListener() {
                             @Override
-                            public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-                                if (task.isSuccessful()) {
-                                    path.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                        @Override
-                                        public void onSuccess(Uri uri) {
-                                            FirebaseHelper.setUserValue(firebaseActivity.firebaseAuth.getCurrentUser().getUid(), "userPhotoURL", uri.toString(), new FirebaseHelper.IFirebaseHelperListener() {
-                                                @Override
-                                                public void onSuccess(Object result) {
-                                                    uploadDialog.dismiss(true);
-                                                    profileUserPhoto.setImageBitmap(bitmap);
-                                                    profileUserPhoto2.setImageBitmap(bitmap);
-                                                    final SimpleBottomSheetDialog simpleBottomSheetDialog = new SimpleBottomSheetDialog(getActivity());
-                                                    simpleBottomSheetDialog.setDialogTitle("Фото обновлено");
-                                                    simpleBottomSheetDialog.setDialogText("Ваша фотография была успешно обновлена");
-                                                    simpleBottomSheetDialog.setDialogDoneBtnText("ОК");
-                                                    simpleBottomSheetDialog.create();
-                                                }
-
-                                                @Override
-                                                public void onFail(String reason) {
-                                                    uploadDialog.dismiss(true);
-                                                    showUploadPhotoErrorDialog();
-                                                }
-                                            });
-                                        }
-                                    }).addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e) {
-                                            uploadDialog.dismiss(true);
-                                            showUploadPhotoErrorDialog();
-                                        }
-                                    });
-
-
-                                } else {
-                                    uploadDialog.dismiss(true);
-                                    showUploadPhotoErrorDialog();
-                                }
+                            public void onUploadStart() {
+                                uploadDialog.show();
                             }
-                        }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+
                             @Override
-                            public void onProgress(@NonNull UploadTask.TaskSnapshot taskSnapshot) {
-                                uploadDialog.setProgress(Math.round(TextUtils.getPercent(taskSnapshot.getBytesTransferred(), taskSnapshot.getTotalByteCount())));
+                            public void onUploadFinish(String fileURL) {
+                                uploadDialog.close();
+                                profileUserPhoto.setImageBitmap(bitmap);
+                                profileUserPhoto2.setImageBitmap(bitmap);
+                                final  SimpleBottomSheetDialog.Builder simpleDialog = new SimpleBottomSheetDialog.Builder(getActivity());
+                                simpleDialog.setTitleText("Фото обновлено")
+                                        .setDialogText("Ваша фотография была успешно обновлена")
+                                        .setDone("Готово", new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View view) {
+                                                simpleDialog.close();
+                                            }
+                                        }).build();
+                                simpleDialog.show();
+                            }
+
+                            @Override
+                            public void onUploadFailed() {
+                                uploadDialog.close();
+                                showUploadPhotoErrorDialog();
+                            }
+
+                            @Override
+                            public void onUpload(int percent, long transferred, long total, String filename) {
+                                uploadDialog.getDialog().setProgress(percent);
                             }
                         });
                     }
@@ -335,7 +269,7 @@ public class UserProfileFragment extends FirebaseFragment implements EditRegexTe
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 showUploadPhotoErrorDialog();
             } else if (resultCode == 0) {
-                actionProgressDialog.dismiss(true);
+                actionProgressDialog.close();
             }
         }
     }
@@ -353,27 +287,42 @@ public class UserProfileFragment extends FirebaseFragment implements EditRegexTe
     }
 
     private void showUploadPhotoErrorDialog() {
-        final SimpleBottomSheetDialog simpleBottomSheetDialog = new SimpleBottomSheetDialog(getActivity());
-        simpleBottomSheetDialog.setDialogTitle("Внимание!");
-        simpleBottomSheetDialog.setDialogText("Невозможно загрузить фото, попробуйте выбрать другое");
-        simpleBottomSheetDialog.setDialogDoneBtnText("ОК");
-        simpleBottomSheetDialog.create();
+        final  SimpleBottomSheetDialog.Builder simpleDialog = new SimpleBottomSheetDialog.Builder(getActivity());
+        simpleDialog.setTitleText("Внимание!")
+                .setDialogText("Невозможно загрузить фото, попробуйте выбрать другое")
+                .setDone("Ок", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        simpleDialog.close();
+                    }
+                }).build();
+        simpleDialog.show();
     }
 
     private void showUpdateDataDialog() {
-        final SimpleBottomSheetDialog simpleBottomSheetDialog = new SimpleBottomSheetDialog(getActivity());
-        simpleBottomSheetDialog.setDialogTitle("Обновлено");
-        simpleBottomSheetDialog.setDialogText("Ваши данные были успешно обновлены");
-        simpleBottomSheetDialog.setDialogDoneBtnText("ОК");
-        simpleBottomSheetDialog.create();
+        final  SimpleBottomSheetDialog.Builder simpleDialog = new SimpleBottomSheetDialog.Builder(getActivity());
+        simpleDialog.setTitleText("Обновлено")
+                .setDialogText("Ваши данные были успешно обновлены")
+                .setDone("Ок", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        simpleDialog.close();
+                    }
+                }).build();
+        simpleDialog.show();
     }
 
     private void showErrorDialog() {
-        final SimpleBottomSheetDialog simpleBottomSheetDialog = new SimpleBottomSheetDialog(getActivity());
-        simpleBottomSheetDialog.setDialogTitle("Внимание!");
-        simpleBottomSheetDialog.setDialogText("Произошла ошибка, попробуйте позже");
-        simpleBottomSheetDialog.setDialogDoneBtnText("ОК");
-        simpleBottomSheetDialog.create();
+        final  SimpleBottomSheetDialog.Builder simpleDialog = new SimpleBottomSheetDialog.Builder(getActivity());
+        simpleDialog.setTitleText("Внимание!")
+                .setDialogText("Произошла ошибка, попробуйте позже")
+                .setDone("Ок", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        simpleDialog.close();
+                    }
+                }).build();
+        simpleDialog.show();
     }
 
     @Override

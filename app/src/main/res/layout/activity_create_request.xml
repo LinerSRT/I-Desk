@@ -81,6 +81,7 @@
                     android:textStyle="bold" />
 
                 <com.liner.i_desk.Utils.Views.EditRegexTextView
+                    android:id="@+id/createRequestTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/contentMargin"
@@ -101,6 +102,7 @@
                     android:textStyle="bold" />
 
                 <com.liner.i_desk.Utils.Views.EditRegexTextView
+                    android:id="@+id/createRequestShortDescription"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textCapSentences"
@@ -115,12 +117,13 @@
                     android:layout_height="wrap_content"
                     android:drawableStart="@drawable/content_icon"
                     android:gravity="center"
-                    android:text="Описание"
+                    android:text="Используемое оборудованиe"
                     android:textColor="?textColorDark"
                     android:textSize="@dimen/tipsTextSize"
                     android:textStyle="bold" />
 
                 <com.liner.i_desk.Utils.Views.EditRegexTextView
+                    android:id="@+id/createRequestUserDeviceDescription"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/contentMarginHalf"
@@ -131,7 +134,7 @@
                     app:ertv_regex=".{1,}" />
 
                 <com.liner.i_desk.Utils.Views.RequestCheckListView
-                    android:id="@+id/createRequestRequestCheckListView"
+                    android:id="@+id/createRequestCheckListView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/contentMarginHalf" />

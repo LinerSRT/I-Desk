@@ -37,7 +37,19 @@
             android:progressTint="?colorPrimaryDark"
             android:backgroundTint="?disabledColor"
             android:layout_gravity="center" />
-        
+
+        <TextView
+            android:id="@+id/progressDialogFileStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/contentMarginHalf"
+            android:layout_marginBottom="@dimen/contentMarginHalf"
+            android:textColor="?colorPrimaryDark"
+            android:layout_gravity="end"
+            android:gravity="end"
+            android:textSize="@dimen/tipsTextSize"/>
+
+
     </LinearLayout>
     <View
         android:layout_width="match_parent"
