@@ -12,6 +12,7 @@ public abstract class FirebaseFragment extends Fragment implements BroadcastMana
     public FirebaseActivity firebaseActivity;
     public BroadcastManager broadcastManager;
     public String FIREBASE_ACTION = "com.liner.i_desk.FIREBASE_CHANGED";
+    public String FIREBASE_ACTION_USER = "com.liner.i_desk.FIREBASE_ACTION_USER";
     
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -24,10 +25,13 @@ public abstract class FirebaseFragment extends Fragment implements BroadcastMana
 
 
     public abstract void onFirebaseChanged();
+    public abstract void onUserOptained();
 
     @Override
     public void onReceiveLocal(Intent intent) {
         if(intent.getAction().equals(FIREBASE_ACTION))
             onFirebaseChanged();
+        if(intent.getAction().equals(FIREBASE_ACTION_USER))
+            onUserOptained();
     }
 }

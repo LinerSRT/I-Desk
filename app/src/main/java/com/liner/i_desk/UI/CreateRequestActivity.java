@@ -14,6 +14,7 @@ import com.liner.i_desk.Utils.ViewUtils;
 import com.liner.i_desk.Utils.Views.DatePickerBottomSheetDialog;
 import com.liner.i_desk.Utils.Views.EditBottomSheetDialog;
 import com.liner.i_desk.Utils.Views.EditRegexTextView;
+import com.liner.i_desk.Utils.Views.ExtendedTextButton;
 import com.liner.i_desk.Utils.Views.FilePickerBottomSheetDialog;
 import com.liner.i_desk.Utils.Views.FirebaseActivity;
 import com.liner.i_desk.Utils.Views.ProgressBottomSheetDialog;
@@ -23,6 +24,7 @@ import com.liner.i_desk.Utils.Views.SimpleBottomSheetDialog;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import co.lujun.androidtagview.TagContainerLayout;
@@ -33,7 +35,7 @@ public class CreateRequestActivity extends FirebaseActivity {
     private EditRegexTextView createRequestShortDescription;
     private EditRegexTextView createRequestUserDeviceDescription;
     private TextView closeRequestCreatingActivity;
-    private TextView doneRequestCreatingActivity;
+    private ExtendedTextButton doneRequestCreatingActivity;
     private TextView createRequestDeadlineView;
     private TextView createRequestDeadlineText;
     private TextView createRequestFilePickerView;
@@ -46,6 +48,13 @@ public class CreateRequestActivity extends FirebaseActivity {
     private DatePickerBottomSheetDialog.Builder datePickerBottomSheetDialog;
     private Request newRequest = new Request();
     private List<Request> userRequests;
+
+    private boolean requestTitleDone = false;
+    private boolean requestShortDescDone = false;
+    private boolean requestUserDeviceDescDone = false;
+    private boolean requestDeadlineDone = false;
+    private boolean requestTypeDone = false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +79,41 @@ public class CreateRequestActivity extends FirebaseActivity {
             }
         });
 
+
+        createRequestShortDescription.setTextListener(new EditRegexTextView.IEditTextListener() {
+            @Override
+            public void onValid(String result) {
+                requestShortDescDone = true;
+            }
+
+            @Override
+            public void onNotValid() {
+                requestShortDescDone = false;
+            }
+        });
+        createRequestTitle.setTextListener(new EditRegexTextView.IEditTextListener() {
+            @Override
+            public void onValid(String result) {
+                requestTitleDone = true;
+            }
+
+            @Override
+            public void onNotValid() {
+                requestTitleDone = false;
+            }
+        });
+
+        createRequestUserDeviceDescription.setTextListener(new EditRegexTextView.IEditTextListener() {
+            @Override
+            public void onValid(String result) {
+                requestUserDeviceDescDone = true;
+            }
+
+            @Override
+            public void onNotValid() {
+                requestUserDeviceDescDone = false;
+            }
+        });
 
         createRequestCheckListView.setOnItemClickListener(new RequestCheckListView.onItemClickListener() {
             @Override
@@ -116,13 +160,13 @@ public class CreateRequestActivity extends FirebaseActivity {
                 final SimpleBottomSheetDialog.Builder dialogBuilder = new SimpleBottomSheetDialog.Builder(CreateRequestActivity.this);
                 dialogBuilder.setTitleText("Удаление")
                         .setDialogText("Удалить элемент?")
-                        .setCancel("", new View.OnClickListener() {
+                        .setCancel("Нет", new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
                                 dialogBuilder.close();
                             }
                         })
-                        .setDone("", new View.OnClickListener() {
+                        .setDone("Да", new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
                                 dialogBuilder.close();
@@ -137,7 +181,6 @@ public class CreateRequestActivity extends FirebaseActivity {
         createRequestAddCheckListItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 final EditBottomSheetDialog.Builder editDialogBuilder = new EditBottomSheetDialog.Builder(CreateRequestActivity.this);
                 editDialogBuilder.setTitleText("Введите текст элемента")
                         .setCancel("Отмена", new View.OnClickListener() {
@@ -160,7 +203,7 @@ public class CreateRequestActivity extends FirebaseActivity {
         createRequestTypeView.setOnTypeSelectedListener(new RequestTypeView.onTypeSelectedListener() {
             @Override
             public void onSelected(Request.Type type) {
-
+                requestTypeDone = true;
 
             }
         });
@@ -205,12 +248,14 @@ public class CreateRequestActivity extends FirebaseActivity {
                                 datePickerBottomSheetDialog.close();
                             }
                         })
+                        .setCurrentTime(new Date(System.currentTimeMillis()))
                         .setDone("Готово", new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
                                 datePickerBottomSheetDialog.close();
                                 createRequestDeadlineText.setVisibility(View.VISIBLE);
-                                createRequestDeadlineText.setText(TimeUtils.convertDate(datePickerBottomSheetDialog.getDialog().getPickedDate(), true));
+                                requestDeadlineDone = true;
+                                createRequestDeadlineText.setText(datePickerBottomSheetDialog.getDialog().getPickedDate());
 
                             }
                         }).build();
@@ -256,6 +301,26 @@ public class CreateRequestActivity extends FirebaseActivity {
     }
 
     private void submitRequest() {
+        if (!requestTitleDone) {
+            showMessage("Внимание!", "Укажите заголовок заявки");
+            return;
+        }
+        if (!requestShortDescDone) {
+            showMessage("Внимание!", "Укажите краткое описание заявки");
+            return;
+        }
+        if (!requestUserDeviceDescDone) {
+            showMessage("Внимание!", "Укажите оборудование заявки");
+            return;
+        }
+        if (!requestTypeDone) {
+            showMessage("Внимание!", "Укажите тип заявки");
+            return;
+        }
+        if (!requestDeadlineDone) {
+            showMessage("Внимание!", "Укажите дедлайн заявки");
+            return;
+        }
         if (user != null) {
             final SimpleBottomSheetDialog.Builder confirmDialog = new SimpleBottomSheetDialog.Builder(CreateRequestActivity.this);
             confirmDialog.setTitleText("Заявка создана")
@@ -296,7 +361,7 @@ public class CreateRequestActivity extends FirebaseActivity {
             newRequest.setRequestType(createRequestTypeView.getType());
             newRequest.setRequestCommentList(new ArrayList<Request.RequestComment>());
             newRequest.setRequestCreationTime(TimeUtils.getCurrentTime(TimeUtils.Type.SERVER));
-            newRequest.setRequestDeadlineTime(datePickerBottomSheetDialog.getDialog().getPickedDate());
+            newRequest.setRequestDeadlineTime(TimeUtils.convertDate(datePickerBottomSheetDialog.getDialog().getPickedDate()));
             newRequest.setRequestUserDeviceDescription(createRequestUserDeviceDescription.getText().toString().trim());
             newRequest.setRequestPriority(Request.Priority.MEDIUM);
             newRequest.setRequestShortDescription(createRequestShortDescription.getText().toString().trim());
@@ -305,54 +370,86 @@ public class CreateRequestActivity extends FirebaseActivity {
             for (RequestCheckListView.RequestListItem item : createRequestCheckListView.getRequestListItems()) {
                 newRequest.getRequestCheckList().add(new Request.RequestCheckList(item.getTextView().getText().toString().trim(), false));
             }
-            final ProgressBottomSheetDialog uploadFileDialog = ViewUtils.createProgressDialog(this, "Загрузка файлов", "Подождите, идет загрузка");
-            FirebaseHelper.uploadFile(fileList, "user_files" + File.separator + firebaseUser.getUid() + File.separator + "requests" + File.separator + newRequest.getRequestID(), new FirebaseHelper.IFirebaseUploadFilesListener() {
-                @Override
-                public void onUploadStart() {
-                    uploadFileDialog.create();
-                }
-
-                @Override
-                public void onUploadFinish(List<String> urls) {
-                    uploadFileDialog.dismiss(true);
-                    List<Request.RequestFile> requestFileList = new ArrayList<>();
-                    for (String url : urls) {
-                        final Request.RequestFile requestFile = new Request.RequestFile();
-                        requestFile.setFileOwnerID(firebaseUser.getUid());
-                        requestFile.setFileID(TextUtils.generateRandomString(20));
-                        requestFile.setFilePath(url);
-                        requestFile.setFileUploadTime(TimeUtils.getCurrentTime(TimeUtils.Type.SERVER));
-                        requestFileList.add(requestFile);
+            if (!fileList.isEmpty()) {
+                final ProgressBottomSheetDialog uploadFileDialog = ViewUtils.createProgressDialog(this, "Загрузка файлов", "Подождите, идет загрузка");
+                FirebaseHelper.uploadFile(fileList, "user_files" + File.separator + firebaseUser.getUid() + File.separator + "requests" + File.separator + newRequest.getRequestID(), new FirebaseHelper.IFirebaseUploadFilesListener() {
+                    @Override
+                    public void onUploadStart() {
+                        uploadFileDialog.create();
                     }
-                    newRequest.setRequestFiles(requestFileList);
-                    userRequests.add(newRequest);
-                    FirebaseHelper.setUserValue(firebaseUser.getUid(), "requestList", userRequests, new FirebaseHelper.IFirebaseHelperListener() {
-                        @Override
-                        public void onSuccess(Object result) {
-                            confirmDialog.show();
+
+                    @Override
+                    public void onUploadFinish(List<String> urls) {
+                        uploadFileDialog.dismiss(true);
+                        List<Request.RequestFile> requestFileList = new ArrayList<>();
+                        for (String url : urls) {
+                            final Request.RequestFile requestFile = new Request.RequestFile();
+                            requestFile.setFileOwnerID(firebaseUser.getUid());
+                            requestFile.setFileID(TextUtils.generateRandomString(20));
+                            requestFile.setFilePath(url);
+                            requestFile.setFileUploadTime(TimeUtils.getCurrentTime(TimeUtils.Type.SERVER));
+                            requestFileList.add(requestFile);
                         }
+                        newRequest.setRequestFiles(requestFileList);
+                        userRequests.add(newRequest);
+                        FirebaseHelper.setUserValue(firebaseUser.getUid(), "requestList", userRequests, new FirebaseHelper.IFirebaseHelperListener() {
+                            @Override
+                            public void onSuccess(Object result) {
+                                confirmDialog.show();
+                            }
 
-                        @Override
-                        public void onFail(String reason) {
-                            confirmDialog.close();
-                            errorDialog.show();
-                        }
-                    });
-                }
+                            @Override
+                            public void onFail(String reason) {
+                                confirmDialog.close();
+                                errorDialog.show();
+                            }
+                        });
+                    }
 
 
-                @Override
-                public void onUploadFailed() {
-                    uploadFileDialog.dismiss(true);
+                    @Override
+                    public void onUploadFailed() {
+                        uploadFileDialog.dismiss(true);
 
-                }
+                    }
 
-                @Override
-                public void onUpload(int percent, long transferred, long total, String filename) {
-                    uploadFileDialog.setProgress(percent, total, transferred, filename);
-                }
-            });
+                    @Override
+                    public void onUpload(int percent, long transferred, long total, String filename) {
+                        uploadFileDialog.setProgress(percent, total, transferred, filename);
+                    }
+                });
+            } else {
+                newRequest.setRequestFiles(new ArrayList<Request.RequestFile>());
+                userRequests.add(newRequest);
+                FirebaseHelper.setUserValue(firebaseUser.getUid(), "requestList", userRequests, new FirebaseHelper.IFirebaseHelperListener() {
+                    @Override
+                    public void onSuccess(Object result) {
+                        confirmDialog.show();
+                    }
+
+                    @Override
+                    public void onFail(String reason) {
+                        confirmDialog.close();
+                        errorDialog.show();
+                    }
+                });
+            }
 
         }
+    }
+
+    private void showMessage(String title, String text) {
+        final SimpleBottomSheetDialog.Builder dialog = new SimpleBottomSheetDialog.Builder(this);
+        dialog.setTitleText(title)
+                .setDialogText(text)
+                .setDone("Ок", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        dialog.close();
+                    }
+                }).build();
+        dialog.show();
+
+
     }
 }

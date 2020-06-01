@@ -63,10 +63,7 @@ public class MainFragment extends FirebaseFragment{
         requestRecyclerView = view.findViewById(R.id.requestRecyclerView);
         requestRefreshLayout = view.findViewById(R.id.requestRefreshLayout);
         requestRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        if(firebaseActivity.user.getRequestList() != null) {
-            requestAdapter = new RequestAdapter(getActivity(), firebaseActivity.user.getRequestList());
-            requestRecyclerView.setAdapter(requestAdapter);
-        }
+
 
         handler = new Handler();
 
@@ -136,26 +133,41 @@ public class MainFragment extends FirebaseFragment{
         loadUserData();
     }
 
+    @Override
+    public void onUserOptained() {
+        loadUserData();
+    }
+
+
     private void loadUserData() {
-        Picasso.get().load(firebaseActivity.user.getUserPhotoURL()).into(userPhoto);
-        userName.setText(firebaseActivity.user.getUserName());
+        try {
+            if(firebaseActivity.user.getRequestList() != null) {
+                requestAdapter = new RequestAdapter(getActivity(), firebaseActivity.user.getRequestList());
+                requestRecyclerView.setAdapter(requestAdapter);
+            }
+            Picasso.get().load(firebaseActivity.user.getUserPhotoURL()).into(userPhoto);
+            userName.setText(firebaseActivity.user.getUserName());
 
-        switch (firebaseActivity.user.getUserAccountType()){
-            case SERVICE:
-                userType.setText("Исполнитель");
-                break;
-            case CLIENT:
-                userType.setText("Заявитель");
-                break;
+            switch (firebaseActivity.user.getUserAccountType()){
+                case SERVICE:
+                    userType.setText("Исполнитель");
+                    break;
+                case CLIENT:
+                    userType.setText("Заявитель");
+                    break;
+            }
+
+            if(firebaseActivity.user.getRequestList() != null) {
+                requestAdapter = new RequestAdapter(getActivity(), firebaseActivity.user.getRequestList());
+            } else {
+                requestAdapter = new RequestAdapter(getActivity(), new ArrayList<Request>());
+            }
+            requestRecyclerView.setAdapter(requestAdapter);
+            requestRefreshLayout.setRefreshing(false);
+        } catch (NullPointerException e){
+            e.printStackTrace();
         }
 
-        if(firebaseActivity.user.getRequestList() != null) {
-            requestAdapter = new RequestAdapter(getActivity(), firebaseActivity.user.getRequestList());
-        } else {
-            requestAdapter = new RequestAdapter(getActivity(), new ArrayList<Request>());
-        }
-        requestRecyclerView.setAdapter(requestAdapter);
-        requestRefreshLayout.setRefreshing(false);
     }
 
 }

@@ -58,11 +58,11 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.ViewHold
 
         holder.requestName.setText(item.getRequestTitle());
         holder.requestText.setText(item.getRequestShortDescription());
-        holder.requestTimeCreation.setText(TimeUtils.convertDate(item.getRequestCreationTime(), true));
-        holder.requestTimeDeadline.setText(TimeUtils.convertDate(item.getRequestDeadlineTime(), true));
-        holder.requestTimeDeadlineProgress.setProgress((int) TimeUtils.getDeadlinePercent(item.getRequestCreationTime(), item.getRequestDeadlineTime()));
+        holder.requestTimeCreation.setText(TimeUtils.convertDate(item.getRequestCreationTime()));
+        holder.requestTimeDeadline.setText(TimeUtils.convertDate(item.getRequestDeadlineTime()));
+        holder.requestTimeDeadlineProgress.setProgress((int) TimeUtils.getDatesPercentage(item.getRequestCreationTime(), item.getRequestDeadlineTime(), TimeUtils.Type.SERVER));
         holder.requestTimeDeadlineProgress.getProgressDrawable().setColorFilter(ColorUtils.interpolateColor(ColorUtils.getThemeColor(context, R.attr.colorPrimaryDark), Color.RED, holder.requestTimeDeadlineProgress.getProgress()), PorterDuff.Mode.SRC_IN);
-        holder.requestDeadlineWarning.setVisibility((holder.requestTimeDeadlineProgress.getProgress() > 80)?View.VISIBLE:View.GONE);
+        holder.requestDeadlineWarning.setVisibility((holder.requestTimeDeadlineProgress.getProgress() > 80) ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -94,7 +94,6 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.ViewHold
         }
 
     }
-
 
 
 }

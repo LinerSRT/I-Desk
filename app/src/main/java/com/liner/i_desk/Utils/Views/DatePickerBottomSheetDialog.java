@@ -14,80 +14,25 @@ import com.arthurivanets.bottomsheets.config.Config;
 import com.liner.i_desk.R;
 import com.liner.i_desk.Utils.ColorUtils;
 import com.liner.i_desk.Utils.TimeUtils;
-import com.ycuwq.datepicker.date.DatePicker;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Locale;
-import java.util.Objects;
+import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 @SuppressLint("ViewConstructor")
 public class DatePickerBottomSheetDialog extends BaseBottomSheet {
     private TextView datePickerDialogTitle;
-    private DatePicker datePickerDialogView;
+    private DateHourPicker datePickerDialogView;
     private TextView datePickerDialogCancel;
-    private TextView datePickerDialogDone;
+    private ExtendedTextButton datePickerDialogDone;
     private String titleText;
     private String cancelText;
     private String doneText;
     private OnClickListener cancelClickListener;
     private OnClickListener doneClickListener;
+    private Date currentTime;
 
 
-    public static class Builder{
-        private DatePickerBottomSheetDialog dialog;
-        private @NonNull Activity activity;
-        private boolean dismissOnTouchOutside = false;
-        private String titleText;
-        private String cancelText;
-        private String doneText;
-        private OnClickListener cancelClickListener;
-        private OnClickListener doneClickListener;
-
-        public Builder(@NonNull Activity activity) {
-            this.activity = activity;
-        }
-
-        public Builder setDismissTouchOutside(boolean value){
-            this.dismissOnTouchOutside = value;
-            return this;
-        }
-        public Builder setTitleText(String value){
-            this.titleText = value;
-            return this;
-        }
-
-        public Builder setDone(String text, View.OnClickListener clickListener){
-            this.doneText = text;
-            this.doneClickListener = clickListener;
-            return this;
-        }
-        public Builder setCancel(String text, View.OnClickListener clickListener){
-            this.cancelText = text;
-            this.cancelClickListener = clickListener;
-            return this;
-        }
-
-        public Builder build(){
-            dialog = new DatePickerBottomSheetDialog(this);
-            return this;
-        }
-
-        public void show(){
-            if(dialog != null)
-                dialog.create();
-        }
-
-        public void close(){
-            if(dialog != null)
-                dialog.close();
-        }
-
-        public DatePickerBottomSheetDialog getDialog(){
-            return dialog;
-        }
-    }
 
     private DatePickerBottomSheetDialog(Builder builder) {
         super(builder.activity, new Config.Builder(builder.activity)
@@ -97,53 +42,122 @@ public class DatePickerBottomSheetDialog extends BaseBottomSheet {
         this.titleText = builder.titleText;
         this.cancelText = builder.cancelText;
         this.doneText = builder.doneText;
+        this.currentTime = builder.currentTime;
         this.cancelClickListener = builder.cancelClickListener;
         this.doneClickListener = builder.doneClickListener;
     }
-
 
     @NonNull
     @Override
     public final View onCreateSheetContentView(@NonNull Context context) {
         View view = LayoutInflater.from(context).inflate(R.layout.datepicker_dialog_layout, this, false);
         datePickerDialogTitle = view.findViewById(R.id.datePickerDialogTitle);
-        datePickerDialogView = view.findViewById(R.id.datePickerDialogView);
+        datePickerDialogView = view.findViewById(R.id.datePickerDialogViewPicker);
         datePickerDialogCancel = view.findViewById(R.id.datePickerDialogCancel);
         datePickerDialogDone = view.findViewById(R.id.datePickerDialogDone);
         return view;
     }
 
-    public String getPickedDate(){
-        return datePickerDialogView.getDate(new SimpleDateFormat(TimeUtils.SERVER_DATE_FORMAT, Locale.getDefault()));
+    public String getPickedDate() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(datePickerDialogView.getDateLong());
+        return TimeUtils.getTime(calendar, TimeUtils.Type.LOCAL);
     }
 
-    public void close(){
+    public void close() {
         dismiss(true);
     }
 
     public void create() {
-        if(cancelClickListener == null){
+        if (cancelClickListener == null) {
             datePickerDialogCancel.setVisibility(GONE);
         } else {
             datePickerDialogCancel.setText(cancelText);
             datePickerDialogCancel.setOnClickListener(cancelClickListener);
         }
-        if(doneClickListener == null){
-            this.doneClickListener = new View.OnClickListener(){
+        if (doneClickListener == null) {
+            this.doneClickListener = new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     dismiss(true);
                 }
             };
         }
+        datePickerDialogView.setIndicatorText("г","м", "д", "ч");
+        datePickerDialogView.setMaxDate(currentTime.getTime() + TimeUnit.DAYS.toMillis(Math.abs(30)));
+        datePickerDialogView.setMinDate(currentTime.getTime()+TimeUnit.HOURS.toMillis(Math.abs(1)));
         datePickerDialogTitle.setText(titleText);
         datePickerDialogDone.setText(doneText);
         datePickerDialogDone.setOnClickListener(doneClickListener);
-        datePickerDialogView.setMaxDate(Objects.requireNonNull(TimeUtils.getDate(TimeUtils.getTime(TimeUtils.Type.SERVER, 365, TimeUnit.DAYS))).getTime());
-        datePickerDialogView.setMinDate(Objects.requireNonNull(TimeUtils.getDate(TimeUtils.getTime(TimeUtils.Type.SERVER, 1, TimeUnit.DAYS))).getTime());
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(System.currentTimeMillis());
-        datePickerDialogView.setDate(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH), true);
         show(true);
+    }
+
+    public static class Builder {
+        private DatePickerBottomSheetDialog dialog;
+        private @NonNull
+        Activity activity;
+        private boolean dismissOnTouchOutside = false;
+        private boolean showHourPicker = false;
+        private String titleText;
+        private String cancelText;
+        private String doneText;
+        private OnClickListener cancelClickListener;
+        private OnClickListener doneClickListener;
+        private Date currentTime;
+
+
+        public Builder(@NonNull Activity activity) {
+            this.activity = activity;
+        }
+
+        public Builder setDismissTouchOutside(boolean value) {
+            this.dismissOnTouchOutside = value;
+            return this;
+        }
+
+        public Builder setShowHourPicker(boolean value) {
+            this.showHourPicker = value;
+            return this;
+        }
+
+        public Builder setTitleText(String value) {
+            this.titleText = value;
+            return this;
+        }
+        public Builder setCurrentTime(Date value) {
+            this.currentTime = value;
+            return this;
+        }
+
+        public Builder setDone(String text, View.OnClickListener clickListener) {
+            this.doneText = text;
+            this.doneClickListener = clickListener;
+            return this;
+        }
+
+        public Builder setCancel(String text, View.OnClickListener clickListener) {
+            this.cancelText = text;
+            this.cancelClickListener = clickListener;
+            return this;
+        }
+
+        public Builder build() {
+            dialog = new DatePickerBottomSheetDialog(this);
+            return this;
+        }
+
+        public void show() {
+            if (dialog != null)
+                dialog.create();
+        }
+
+        public void close() {
+            if (dialog != null)
+                dialog.close();
+        }
+
+        public DatePickerBottomSheetDialog getDialog() {
+            return dialog;
+        }
     }
 }

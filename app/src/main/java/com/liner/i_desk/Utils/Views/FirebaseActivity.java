@@ -34,6 +34,7 @@ public abstract class FirebaseActivity extends FragmentActivity {
     public User user;
     public BroadcastManager broadcastManager;
     public String FIREBASE_ACTION = "com.liner.i_desk.FIREBASE_CHANGED";
+    public String FIREBASE_ACTION_USER = "com.liner.i_desk.FIREBASE_ACTION_USER";
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         firebaseActivity = this;
@@ -48,6 +49,7 @@ public abstract class FirebaseActivity extends FragmentActivity {
             @Override
             public void onSuccess(Object result) {
                 user = (User) result;
+                broadcastManager.sendLocal(FIREBASE_ACTION_USER);
                 onUserObtained(user);
             }
 
@@ -61,8 +63,8 @@ public abstract class FirebaseActivity extends FragmentActivity {
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 if(dataSnapshot.getKey().equals(firebaseUser.getUid())){
                     user = dataSnapshot.getValue(User.class);
-                    onFirebaseChanged(user);
                     broadcastManager.sendLocal(FIREBASE_ACTION);
+                    onFirebaseChanged(user);
                 }
             }
 
@@ -70,8 +72,8 @@ public abstract class FirebaseActivity extends FragmentActivity {
             public void onChildChanged(@NonNull final DataSnapshot dataSnapshot, @Nullable String s) {
                 if(dataSnapshot.getKey().equals(firebaseUser.getUid())){
                     user = dataSnapshot.getValue(User.class);
-                    onFirebaseChanged(user);
                     broadcastManager.sendLocal(FIREBASE_ACTION);
+                    onFirebaseChanged(user);
                 }
             }
 
@@ -79,8 +81,8 @@ public abstract class FirebaseActivity extends FragmentActivity {
             public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
                 if(dataSnapshot.getKey().equals(firebaseUser.getUid())){
                     user = dataSnapshot.getValue(User.class);
-                    onFirebaseChanged(user);
                     broadcastManager.sendLocal(FIREBASE_ACTION);
+                    onFirebaseChanged(user);
                 }
             }
 

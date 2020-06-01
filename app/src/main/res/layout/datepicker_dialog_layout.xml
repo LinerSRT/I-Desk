@@ -1,69 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:padding="@dimen/contentMargin"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="@dimen/contentMargin">
 
     <TextView
         android:id="@+id/datePickerDialogTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:maxLines="2"
         android:textColor="?textColor"
         android:textSize="@dimen/primaryTextSizeLarge"
-        android:textStyle="bold"
-        android:maxLines="2"/>
+        android:textStyle="bold" />
 
-    <com.ycuwq.datepicker.date.DatePicker
-        android:id="@+id/datePickerDialogView"
-        android:background="?backgroundColor"
-        app:halfVisibleItemCount="2"
-        app:itemTextColor="?textColor"
-        app:selectedTextColor="?colorPrimaryDark"
-        android:layout_marginTop="@dimen/contentMarginHalf"
-        android:layout_marginBottom="@dimen/contentMarginHalf"
-        app:wheelCyclic="true"
-        app:zoomInSelectedItem="true"
-        app:wheelCurtainBorderColor="?backgroundColor"
-        app:itemHeightSpace="@dimen/secondaryTextSize"
-        app:wheelCurtain="true"
-        app:selectedTextSize="@dimen/primaryTextSizeLarge"
-        app:wheelCurtainBorder="false"
-        app:itemTextSize="@dimen/secondaryTextSize"
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <com.liner.i_desk.Utils.Views.DateHourPicker
+            android:id="@+id/datePickerDialogViewPicker"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/contentMarginHalf"
+            android:layout_marginBottom="@dimen/contentMarginHalf"
+            android:background="?backgroundColor"
+            app:halfVisibleItemCount="2"
+            app:itemHeightSpace="@dimen/secondaryTextSize"
+            app:itemTextColor="?textColor"
+            app:itemTextSize="@dimen/secondaryTextSize"
+            app:selectedTextSize="@dimen/primaryTextSizeLarge"
+            app:wheelCurtain="true"
+            app:wheelCurtainBorder="false"
+            app:indicatorTextColor="@color/color_white"
+            app:selectedTextColor="@color/color_white"
+            app:wheelCurtainColor="?colorPrimaryDark"
+            app:wheelCurtainBorderColor="?backgroundColor"
+            app:wheelCyclic="true"
+            app:zoomInSelectedItem="true" />
+
+    </LinearLayout>
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="16dp"/>
+        android:layout_height="16dp" />
 
     <LinearLayout
         android:id="@+id/datePickerDialogButtonLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="end"
-        android:paddingEnd="@dimen/contentMarginHalf"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingEnd="@dimen/contentMarginHalf">
+
         <TextView
             android:id="@+id/datePickerDialogCancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/contentMargin"
+            android:padding="@dimen/contentMarginHalf"
             android:textColor="@color/color_disable"
             android:textSize="@dimen/primaryTextSize"
-            android:padding="@dimen/contentMarginHalf"
-            android:layout_marginEnd="@dimen/contentMargin"
-            android:textStyle="bold"/>
-        <TextView
+            android:textStyle="bold" />
+
+        <com.liner.i_desk.Utils.Views.ExtendedTextButton
             android:id="@+id/datePickerDialogDone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="?colorPrimaryDark"
-            android:padding="@dimen/contentMarginHalf"
             android:layout_marginEnd="@dimen/contentMargin"
+            android:maxLines="2"
+            android:padding="@dimen/contentMarginHalf"
+            android:textColor="?colorPrimaryDark"
             android:textSize="@dimen/primaryTextSize"
-            android:textStyle="bold"
-            android:maxLines="2"/>
+            android:textStyle="bold" />
     </LinearLayout>
 
 </LinearLayout>

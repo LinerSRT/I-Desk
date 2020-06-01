@@ -256,7 +256,7 @@
                             android:layout_height="match_parent"
                             android:layout_weight="1" />
 
-                        <TextView
+                        <com.liner.i_desk.Utils.Views.ExtendedTextButton
                             android:id="@+id/doneRequestCreatingActivity"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"

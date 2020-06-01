@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -69,6 +70,11 @@ public class UserProfileFragment extends FirebaseFragment implements EditRegexTe
 
     @Override
     public void onFirebaseChanged() {
+        loadUserData();
+    }
+
+    @Override
+    public void onUserOptained() {
         loadUserData();
     }
 
@@ -289,21 +295,26 @@ public class UserProfileFragment extends FirebaseFragment implements EditRegexTe
     }
 
     private void loadUserData() {
-        Picasso.get().load(firebaseActivity.user.getUserPhotoURL()).into(profileUserPhoto2);
-        profileUserName.setText(firebaseActivity.user.getUserName());
-        switch (firebaseActivity.user.getUserAccountType()){
-            case SERVICE:
-                profileUserType.setText("Исполнитель");
-                break;
-            case CLIENT:
-                profileUserType.setText("Заявитель");
-                break;
+        try {
+            Picasso.get().load(firebaseActivity.user.getUserPhotoURL()).into(profileUserPhoto2);
+            profileUserName.setText(firebaseActivity.user.getUserName());
+            switch (firebaseActivity.user.getUserAccountType()){
+                case SERVICE:
+                    profileUserType.setText("Исполнитель");
+                    break;
+                case CLIENT:
+                    profileUserType.setText("Заявитель");
+                    break;
+            }
+            profileUserName.setText(firebaseActivity.user.getUserName());
+            profileUserAbout.setText(firebaseActivity.user.getUserAboutText());
+            profileUserAdditionalInfo.setText(firebaseActivity.user.getUserAdditionalInformationText());
+            profileAboutActionText.setText(firebaseActivity.user.getUserAboutText());
+            profileAdditionalActionText.setText(firebaseActivity.user.getUserAdditionalInformationText());
+        }catch (NullPointerException e){
+            e.printStackTrace();
         }
-        profileUserName.setText(firebaseActivity.user.getUserName());
-        profileUserAbout.setText(firebaseActivity.user.getUserAboutText());
-        profileUserAdditionalInfo.setText(firebaseActivity.user.getUserAdditionalInformationText());
-        profileAboutActionText.setText(firebaseActivity.user.getUserAboutText());
-        profileAdditionalActionText.setText(firebaseActivity.user.getUserAdditionalInformationText());
+
     }
 
     private void showUploadPhotoErrorDialog() {
