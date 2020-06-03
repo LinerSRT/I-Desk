@@ -179,9 +179,21 @@ public class Request implements Serializable {
         private String commentCreationTime;
         private String commentCreatorName;
         private String commentText;
+        private boolean commentReaded;
+
+
+
         private List<FileData> fileDataList;
 
         public RequestComment() {
+        }
+
+        public boolean isCommentReaded() {
+            return commentReaded;
+        }
+
+        public void setCommentReaded(boolean commentReaded) {
+            this.commentReaded = commentReaded;
         }
 
         public String getCommentCreatorName() {

@@ -56,6 +56,13 @@ public class AudioRecorder implements MediaRecorder.OnInfoListener, MediaRecorde
         }
     }
 
+    public int getAmplitude(){
+        if (audioRecorder != null) {
+           return audioRecorder.getMaxAmplitude();
+        }
+        return 0;
+    }
+
     @Override
     public void onError(MediaRecorder mediaRecorder, int i, int i1) {
 

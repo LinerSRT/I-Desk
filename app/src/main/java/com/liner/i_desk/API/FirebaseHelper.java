@@ -89,17 +89,22 @@ public class FirebaseHelper {
         });
     }
 
-    public static void setRequestCommentList(final String userID, final String requestID, final List<Request.RequestComment> commentList, final IFirebaseHelperListener helperListener) {
-        getUserDatabase(userID).child("requestList").addListenerForSingleValueEvent(new ValueEventListener() {
+
+    public static void addComment(final String requestID, final Request.RequestComment comment){
+        getUsersDatabase().addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot child : dataSnapshot.getChildren()) {
-                    for (DataSnapshot requestData : child.getChildren())
-                        if (requestData.getKey().equals("requestID") && requestData.getValue().equals(requestID)) {
-                            DatabaseReference reference = child.getRef().child("requestCommentList");
-                            reference.setValue(commentList);
-                            helperListener.onSuccess(commentList);
+                for(DataSnapshot usersChild:dataSnapshot.getChildren()){
+                    for(DataSnapshot requestChildList:usersChild.getChildren()){
+                        for(DataSnapshot requestChild:requestChildList.getChildren()) {
+                            Request fetchedRequest = requestChild.getValue(Request.class);
+                            if (fetchedRequest.getRequestID().equals(requestID)) {
+                                fetchedRequest.getRequestCommentList().add(comment);
+                                DatabaseReference requestReference = requestChild.getRef();
+                                requestReference.setValue(fetchedRequest);
+                            }
                         }
+                    }
                 }
             }
 
@@ -110,27 +115,50 @@ public class FirebaseHelper {
         });
     }
 
-    public static void addComment(final String userID, final String requestID, final Request.RequestComment comment){
-        getUserDatabase(userID).child("requestList").addListenerForSingleValueEvent(new ValueEventListener() {
+    public static void getRequests(final User currentUser, final IFirebaseHelperListener listener){
+        final List<Request> requestList = new ArrayList<>();
+        getUsersDatabase().addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot child : dataSnapshot.getChildren()) {
-                    for (DataSnapshot requestData : child.getChildren())
-                        if (requestData.getKey().equals("requestID") && requestData.getValue().equals(requestID)) {
-                            DatabaseReference reference = child.getRef().child("requestCommentList");
-                            List<Request.RequestComment> list = new ArrayList<>();
-                            for(DataSnapshot comment:child.child("requestCommentList").getChildren()){
-                                list.add(comment.getValue(Request.RequestComment.class));
-                            }
-                            list.add(comment);
-                            reference.setValue(list);
+                for(DataSnapshot usersChild:dataSnapshot.getChildren()){
+                    User fetchedUser = usersChild.getValue(User.class);
+                    if(currentUser.getUserAccountType() == User.Type.SERVICE){
+                        requestList.addAll(fetchedUser.getRequestList());
+                    } else {
+                        if(fetchedUser.getUserUID().equals(currentUser.getUserUID())){
+                            requestList.addAll(fetchedUser.getRequestList());
                         }
+                    }
+                }
+                listener.onSuccess(requestList);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                listener.onFail(databaseError.getMessage());
+            }
+        });
+    }
+
+    public static void getRequestByID(final String requestID, final IFirebaseHelperListener listener){
+        getUsersDatabase().addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot usersChild:dataSnapshot.getChildren()){
+                    for(DataSnapshot requestChildList:usersChild.getChildren()){
+                        for(DataSnapshot requestChild:requestChildList.getChildren()) {
+                            Request fetchedRequest = requestChild.getValue(Request.class);
+                            if (fetchedRequest.getRequestID().equals(requestID)) {
+                                listener.onSuccess(fetchedRequest);
+                            }
+                        }
+                    }
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                listener.onFail(databaseError.getMessage());
             }
         });
     }

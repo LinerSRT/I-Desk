@@ -34,7 +34,7 @@ public class VideoPlayerView extends RelativeLayout implements View.OnClickListe
     private int SCREEN_WIDTH;
     private int SCREEN_HEIGHT;
 
-
+    private onReadyCallback onReadyCallback;
 
     private float SCREEN_RATIO;
     private float cornerRadius = ViewUtils.dpToPx(8);
@@ -49,6 +49,10 @@ public class VideoPlayerView extends RelativeLayout implements View.OnClickListe
     private View layoutVideo;
     private VideoSurfaceView.OnPlayStateChangedListener onPlayStateChangedListener;
     private VideoSurfaceView.OnPlaybackEventListener onPlaybackEventListener;
+
+    public void setOnReadyCallback(VideoPlayerView.onReadyCallback onReadyCallback) {
+        this.onReadyCallback = onReadyCallback;
+    }
 
     public VideoPlayerView(Context context) {
         this(context, null);
@@ -76,8 +80,6 @@ public class VideoPlayerView extends RelativeLayout implements View.OnClickListe
         videoView = findViewById(R.id.bvv_video);
         layoutVideo = findViewById(R.id.layout_video);
         playPauseView = findViewById(R.id.playPauseView);
-
-
         loadingProgress = findViewById(R.id.loadingProgress);
         videoView.setOnPlaybackEventListener(this);
         videoView.setOnPlayStateChangedListener(this);
@@ -247,6 +249,9 @@ public class VideoPlayerView extends RelativeLayout implements View.OnClickListe
 
     @Override
     public void onPrepared() {
+        if(onReadyCallback != null){
+            onReadyCallback.onReady(VideoPlayerView.this);
+        }
         int videoWidth = videoView.getVideoWidth();
         int videoHeight = videoView.getVideoHeight();
         float ratioVideo = (float) videoWidth / videoHeight;
@@ -263,6 +268,7 @@ public class VideoPlayerView extends RelativeLayout implements View.OnClickListe
         if (onPlayStateChangedListener != null) {
             onPlayStateChangedListener.onPrepared();
         }
+        seekTo(1);
     }
 
     @Override
@@ -282,6 +288,9 @@ public class VideoPlayerView extends RelativeLayout implements View.OnClickListe
 
     @Override
     public void onReleased() {
+        if(onReadyCallback != null){
+            onReadyCallback.onRelease();
+        }
         if (onPlayStateChangedListener != null) {
             onPlayStateChangedListener.onReleased();
         }
@@ -327,5 +336,10 @@ public class VideoPlayerView extends RelativeLayout implements View.OnClickListe
         if (onPlaybackEventListener != null) {
             onPlaybackEventListener.onSeekComplete();
         }
+    }
+
+    public interface onReadyCallback{
+        void onReady(VideoPlayerView videoPlayerView);
+        void onRelease();
     }
 }

@@ -7,218 +7,249 @@
     android:orientation="vertical"
     tools:context=".UI.RequestDetailActivity">
 
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Заголовок заявки"
-        android:textColor="?textColor"
-        android:layout_marginTop="@dimen/contentMarginHalf"
-        android:gravity="center"
-        android:textSize="@dimen/primaryTextSize"/>
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/contentMarginHalf"
-        android:layout_marginEnd="@dimen/contentMarginHalf"
-        android:orientation="horizontal">
+        android:elevation="4dp"
+        android:background="?backgroundColor"
+        android:orientation="vertical">
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:background="@drawable/round_corner_left"
-            android:gravity="center"
-            android:orientation="vertical">
-            <com.liner.i_desk.Utils.Views.VerticalTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Сервис"
-                android:gravity="right|bottom"
-                android:padding="@dimen/contentMarginHalf"
-                android:textSize="@dimen/secondaryTextSizeSmall"
-                android:textStyle="bold"
-                android:textColor="@color/white"/>
-        </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="0dp"
+        <TextView
+            android:id="@+id/requestDetailTitle"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="?backgroundColorSecondary"
-            android:orientation="vertical">
+            android:layout_marginTop="@dimen/contentMarginHalf"
+            android:gravity="center"
+            android:text="Заголовок заявки"
+            android:textColor="?textColor"
+            android:textSize="@dimen/primaryTextSize" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Текст заявки который может быть очень длинным"
-                android:textColor="?textColor"
-                android:gravity="start"
-                android:padding="@dimen/contentMarginHalf"
-                android:textSize="@dimen/secondaryTextSize"/>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Оборудование заявки"
-                android:textColor="?textColor"
-                android:gravity="start"
-                android:padding="@dimen/contentMarginHalf"
-                android:textSize="@dimen/secondaryTextSize"/>
-
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/contentMarginHalf"
+            android:layout_marginEnd="@dimen/contentMarginHalf"
+            android:orientation="horizontal">
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:id="@+id/requestDetailTypeLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@drawable/round_corner_left"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <com.liner.i_desk.Utils.Views.VerticalTextView
+                    android:id="@+id/requestDetailTypeText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="right|bottom"
+                    android:padding="@dimen/contentMarginHalf"
+                    android:text="Сервис"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/secondaryTextSizeSmall"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:layout_weight="1"
+                android:background="?backgroundColorSecondary"
+                android:orientation="vertical">
+
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:id="@+id/requestDetailText"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Заявка создана: 20.20.2020 20:20"
+                    android:gravity="start"
+                    android:padding="@dimen/contentMarginHalf"
+                    android:text="Текст заявки который может быть очень длинным"
                     android:textColor="?textColor"
-                    android:gravity="start"
-                    android:padding="@dimen/contentMarginHalf"
-                    android:textSize="@dimen/tipsTextSize"/>
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"/>
+                    android:textSize="@dimen/secondaryTextSize" />
+
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:id="@+id/requestDetailDeviceText"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Дедлайн: 20.20.2020 20:20"
-                    android:textColor="@color/color_warning_red"
                     android:gravity="start"
                     android:padding="@dimen/contentMarginHalf"
-                    android:textSize="@dimen/tipsTextSize"/>
+                    android:text="Оборудование заявки"
+                    android:textColor="?textColor"
+                    android:textSize="@dimen/secondaryTextSize" />
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/requestDetailCreateTime"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="start"
+                        android:padding="@dimen/contentMarginHalf"
+                        android:text="Заявка создана: 20.20.2020 20:20"
+                        android:textColor="?textColor"
+                        android:textSize="@dimen/tipsTextSize" />
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1" />
+
+                    <TextView
+                        android:id="@+id/requestDetailDeadline"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="start"
+                        android:padding="@dimen/contentMarginHalf"
+                        android:text="Дедлайн: 20.20.2020 20:20"
+                        android:textColor="@color/color_warning_red"
+                        android:textSize="@dimen/tipsTextSize" />
+                </LinearLayout>
+
             </LinearLayout>
 
         </LinearLayout>
 
-    </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/requestDetailCloseRequest"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/contentHeight"
+                android:layout_margin="@dimen/contentMarginHalf"
+                android:background="@drawable/button_bg"
+                android:elevation="4dp"
+                android:enabled="true"
+                android:paddingStart="@dimen/contentMarginHalf"
+                android:paddingEnd="@dimen/contentMarginHalf"
+                android:text="Закрыть заявку"
+                android:textAllCaps="false"
+                android:textColor="@color/color_white"
+                android:textSize="@dimen/secondaryTextSize" />
+
+            <Button
+                android:id="@+id/requestDetailDeleteRequest"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/contentHeight"
+                android:layout_margin="@dimen/contentMarginHalf"
+                android:background="@drawable/button_bg"
+                android:elevation="4dp"
+                android:enabled="true"
+                android:paddingStart="@dimen/contentMarginHalf"
+                android:paddingEnd="@dimen/contentMarginHalf"
+                android:text="Удалить заявку"
+                android:textAllCaps="false"
+                android:textColor="@color/color_white"
+                android:textSize="@dimen/secondaryTextSize" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/contentMarginHalf"
+            android:gravity="center"
+            android:text="Чат"
+            android:textColor="?textColor"
+            android:textSize="@dimen/primaryTextSize" />
+
+
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="horizontal">
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/contentHeight"
-            android:layout_margin="@dimen/contentMarginHalf"
-            android:background="@drawable/button_bg"
-            android:elevation="4dp"
-            android:text="Закрыть заявку"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <com.stfalcon.chatkit.messages.MessagesList
+            android:id="@+id/messagesList"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@drawable/round_corner_background_top"
+            android:overScrollMode="never"
+            app:incomingDefaultBubbleColor="?colorPrimaryDark"
+            app:incomingDefaultBubblePressedColor="?colorPrimary"
+            app:incomingDefaultBubbleSelectedColor="?colorPrimary"
+            app:incomingTextColor="@color/white"
+            app:incomingTextLinkColor="?colorPrimary"
+            app:incomingTextSize="@dimen/secondaryTextSize"
+            app:incomingTimeTextColor="@color/color_white_dark"
+            app:incomingTimeTextSize="@dimen/tipsTextSize"
+            app:outcomingDefaultBubbleColor="?backgroundColor"
+            app:outcomingDefaultBubblePressedColor="?backgroundColor"
+            app:outcomingDefaultBubbleSelectedColor="?backgroundColor"
+            app:outcomingTextColor="?textColor"
+            app:outcomingTextLinkColor="?colorPrimary"
+            app:outcomingTextSize="@dimen/secondaryTextSize"
+            app:outcomingTimeTextColor="?textColorDark"
+            app:outcomingTimeTextSize="@dimen/tipsTextSize" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/contentMarginHalf"
+            android:background="?backgroundColorSecondary"
+            android:orientation="horizontal"
             android:paddingStart="@dimen/contentMarginHalf"
-            android:paddingEnd="@dimen/contentMarginHalf"
-            android:enabled="true"
-            android:textAllCaps="false"
-            android:textColor="@color/color_white"
-            android:textSize="@dimen/secondaryTextSize" />
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/contentHeight"
-            android:layout_margin="@dimen/contentMarginHalf"
-            android:background="@drawable/button_bg"
-            android:elevation="4dp"
-            android:text="Удалить заявку"
-            android:paddingStart="@dimen/contentMarginHalf"
-            android:paddingEnd="@dimen/contentMarginHalf"
-            android:enabled="true"
-            android:textAllCaps="false"
-            android:textColor="@color/color_white"
-            android:textSize="@dimen/secondaryTextSize" />
-    </LinearLayout>
+            android:paddingEnd="@dimen/contentMarginHalf">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Чат"
-        android:textColor="?textColor"
-        android:layout_marginTop="@dimen/contentMarginHalf"
-        android:gravity="center"
-        android:textSize="@dimen/primaryTextSize"/>
-
-    <com.stfalcon.chatkit.messages.MessagesList
-        android:id="@+id/messagesList"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:background="@drawable/round_corner_background_top"
-        android:overScrollMode="never"
-        app:incomingDefaultBubbleColor="?colorPrimaryDark"
-        app:incomingDefaultBubblePressedColor="?colorPrimary"
-        app:incomingDefaultBubbleSelectedColor="?colorPrimary"
-        app:incomingTextColor="@color/white"
-        app:incomingTextLinkColor="?colorPrimary"
-        app:incomingTextSize="@dimen/secondaryTextSize"
-        app:incomingTimeTextColor="@color/color_white_dark"
-        app:incomingTimeTextSize="@dimen/tipsTextSize"
-        app:outcomingDefaultBubbleColor="?backgroundColor"
-        app:outcomingDefaultBubblePressedColor="?backgroundColor"
-        app:outcomingDefaultBubbleSelectedColor="?backgroundColor"
-        app:outcomingTextColor="?textColor"
-        app:outcomingTextLinkColor="?colorPrimary"
-        app:outcomingTextSize="@dimen/secondaryTextSize"
-        app:outcomingTimeTextColor="?textColorDark"
-        app:outcomingTimeTextSize="@dimen/tipsTextSize" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingStart="@dimen/contentMarginHalf"
-        android:background="?backgroundColorSecondary"
-        android:paddingEnd="@dimen/contentMarginHalf"
-        android:layout_marginBottom="@dimen/contentMarginHalf"
-        android:orientation="horizontal">
-
-        <RelativeLayout
-            android:layout_width="0dp"
-            android:layout_height="64dp"
-            android:layout_weight="1">
-
-            <com.stfalcon.chatkit.messages.MessageInput
-                android:id="@+id/detailRequestInputMessage"
-                android:layout_width="match_parent"
+            <RelativeLayout
+                android:layout_width="0dp"
                 android:layout_height="64dp"
-                app:attachmentButtonBackground="@drawable/round_corner_background_light"
-                app:attachmentButtonDefaultIconColor="?colorPrimaryDark"
-                app:attachmentButtonDefaultIconDisabledColor="?disabledColor"
-                app:attachmentButtonDefaultIconPressedColor="?colorPrimary"
-                app:delayTypingStatus="1000"
-                app:inputButtonBackground="@drawable/round_corner_background_light"
-                app:inputBackground="@drawable/round_corner_background_light"
-                app:inputButtonDefaultIconColor="?colorPrimaryDark"
-                app:inputButtonDefaultIconDisabledColor="?disabledColor"
-                app:inputButtonDefaultIconPressedColor="?colorPrimary"
-                app:inputButtonHeight="40dp"
-                app:inputButtonWidth="40dp"
-                app:inputHint="Сообщение"
-                app:inputHintColor="?textColorDark"
-                app:inputMaxLines="2"
-                app:inputTextColor="?textColor"
-                app:inputTextSize="@dimen/secondaryTextSize"
-                app:showAttachmentButton="true" />
+                android:layout_weight="1">
 
-            <com.liner.i_desk.Utils.Views.AudioRecord.RecordView
-                android:id="@+id/record_view"
-                android:layout_width="match_parent"
-                android:layout_height="64dp"
-                android:layout_alignParentBottom="true"
-                app:counter_time_color="?colorPrimary"
-                app:slide_to_cancel_arrow="@drawable/arrow_left" />
+                <com.stfalcon.chatkit.messages.MessageInput
+                    android:id="@+id/detailRequestInputMessage"
+                    android:layout_width="match_parent"
+                    android:layout_height="64dp"
+                    app:attachmentButtonBackground="@drawable/round_corner_background_light"
+                    app:attachmentButtonDefaultIconColor="?colorPrimaryDark"
+                    app:attachmentButtonDefaultIconDisabledColor="?disabledColor"
+                    app:attachmentButtonDefaultIconPressedColor="?colorPrimary"
+                    app:delayTypingStatus="1000"
+                    app:inputBackground="@drawable/round_corner_background_light"
+                    app:inputButtonBackground="@drawable/round_corner_background_light"
+                    app:inputButtonDefaultIconColor="?colorPrimaryDark"
+                    app:inputButtonDefaultIconDisabledColor="?disabledColor"
+                    app:inputButtonDefaultIconPressedColor="?colorPrimary"
+                    app:inputButtonHeight="40dp"
+                    app:inputButtonWidth="40dp"
+                    app:inputHint="Сообщение"
+                    app:inputHintColor="?textColorDark"
+                    app:inputMaxLines="2"
+                    app:inputTextColor="?textColor"
+                    app:inputTextSize="@dimen/secondaryTextSize"
+                    app:showAttachmentButton="true" />
 
-        </RelativeLayout>
+                <com.liner.i_desk.Utils.Views.AudioRecord.RecordView
+                    android:id="@+id/record_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="64dp"
+                    android:layout_alignParentBottom="true"
+                    app:counter_time_color="?colorPrimary"
+                    app:slide_to_cancel_arrow="@drawable/arrow_left" />
 
-        <com.liner.i_desk.Utils.Views.AudioRecord.RecordButton
-            android:id="@+id/record_button"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_gravity="center"
-            android:background="@drawable/round_corner_background_light"
-            android:scaleType="centerInside"
-            app:mic_icon="@drawable/microphone_icon" />
+            </RelativeLayout>
+
+            <com.liner.i_desk.Utils.Views.AudioRecord.RecordButton
+                android:id="@+id/record_button"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center"
+                android:background="@drawable/round_corner_background_light"
+                android:scaleType="centerInside"
+                app:mic_icon="@drawable/microphone_icon" />
+        </LinearLayout>
+
     </LinearLayout>
-
 </LinearLayout>

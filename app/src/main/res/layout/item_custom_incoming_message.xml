@@ -16,11 +16,26 @@
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp" />
 
+
+    <TextView
+        android:id="@+id/messageUserName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="UserNickName"
+        android:layout_toEndOf="@id/messageUserAvatar"
+        android:layout_toRightOf="@id/messageUserAvatar"
+        android:textSize="@dimen/secondaryTextSizeSmall"
+        android:textColor="?colorPrimaryDark"
+        android:textStyle="bold"
+        />
+
     <com.google.android.flexbox.FlexboxLayout
         android:id="@id/bubble"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/messageUserName"
         android:layout_marginEnd="@dimen/message_incoming_bubble_margin_right"
+        android:layout_marginTop="@dimen/contentMarginHalf"
         android:layout_marginRight="@dimen/message_incoming_bubble_margin_right"
         android:layout_toEndOf="@id/messageUserAvatar"
         android:layout_toRightOf="@id/messageUserAvatar"
@@ -29,84 +44,71 @@
         app:alignContent="stretch"
         app:alignItems="stretch"
         app:flexWrap="wrap"
-        app:justifyContent="flex_end">
+        app:justifyContent="flex_start">
 
         <TextView
             android:id="@id/messageText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:autoLink="all"
             android:textColor="@color/white"
             android:textSize="@dimen/secondaryTextSize" />
 
 
-        <com.github.florent37.shapeofview.shapes.RoundRectView
-            android:layout_width="wrap_content"
+        <com.liner.i_desk.Utils.Messages.ImageMessageView
+            android:id="@+id/incomingImageMessageView"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/contentMarginHalf" />
+
+
+        <com.liner.i_desk.Utils.Messages.VideoMessageView
+            android:id="@+id/incomingVideoMessageView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/contentMarginHalf" />
+
+        <me.jagar.chatvoiceplayerlibrary.VoicePlayerView
+            android:id="@+id/incomingVoicePlayerView"
+            android:layout_width="match_parent"
+            android:layout_height="75dp"
             android:layout_marginTop="@dimen/contentMarginHalf"
-            app:shape_roundRect_bottomLeftRadius="8dp"
-            app:shape_roundRect_bottomRightRadius="8dp"
-            app:shape_roundRect_topLeftRadius="8dp"
-            app:shape_roundRect_topRightRadius="8dp">
+            android:gravity="center"
+            android:visibility="gone"
+            app:enableVisualizer="false"
+            app:playPauseBackgroundColor="?colorPrimary"
+            app:playPauseCornerRadius="100"
+            app:playProgressbarColor="?colorPrimary"
+            app:progressTimeColor="@color/white"
+            app:seekBarProgressColor="?colorPrimary"
+            app:seekBarThumbColor="?colorPrimary"
+            app:showShareButton="false"
+            app:showTiming="true"
+            app:timingBackgroundColor="?colorPrimary"
+            app:viewBackground="?backgroundColor"
+            app:viewCornerRadius="32"
+            app:visualizationNotPlayedColor="@color/color_white_dark"
+            app:visualizationPlayedColor="?colorPrimary" />
 
-            <ImageView
-                android:id="@+id/incomingImagesHolder"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
-        </com.github.florent37.shapeofview.shapes.RoundRectView>
-
-
-        <FrameLayout
-            android:layout_width="wrap_content"
+        <com.liner.i_desk.Utils.Messages.FileMessageView
+            android:id="@+id/incomingMessageView"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/contentMarginHalf">
-
-            <com.liner.i_desk.Utils.Views.VideoPlayerView
-                android:id="@+id/incomingVideoPlayerView"
-                android:layout_width="match_parent"
-                android:layout_height="300dp"
-                android:elevation="1dp"
-                android:visibility="gone" />
-        </FrameLayout>
-
+            android:layout_marginTop="@dimen/contentMarginHalf" />
 
         <TextView
             android:id="@id/messageTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/messageText"
-            android:layout_marginTop="@dimen/contentMarginHalf"
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
+            android:layout_marginTop="@dimen/contentMarginHalf"
             android:textColor="@color/white"
             android:textSize="@dimen/secondaryTextSizeSmall"
             app:layout_alignSelf="center" />
 
-
-        <me.jagar.chatvoiceplayerlibrary.VoicePlayerView
-            android:id="@+id/incomingVoicePlayerView"
-            android:layout_width="match_parent"
-            android:layout_height="75dp"
-            android:gravity="center"
-            app:enableVisualizer="false"
-            app:playPauseBackgroundColor="?colorPrimary"
-            app:playPauseCornerRadius="100"
-            app:playProgressbarColor="?colorPrimary"
-            android:visibility="gone"
-            app:progressTimeColor="@color/white"
-            app:timingBackgroundColor="?colorPrimary"
-            app:seekBarProgressColor="?colorPrimary"
-            app:seekBarThumbColor="?colorPrimary"
-            app:showShareButton="false"
-            app:showTiming="true"
-            app:viewBackground="?backgroundColor"
-            app:viewCornerRadius="32"
-            app:visualizationNotPlayedColor="@color/color_white_dark"
-            app:visualizationPlayedColor="?colorPrimary" />
-
     </com.google.android.flexbox.FlexboxLayout>
-
-
 
 
 </RelativeLayout>

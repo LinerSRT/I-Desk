@@ -1,14 +1,13 @@
 package com.liner.i_desk.UI;
 
 import android.annotation.SuppressLint;
-import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -18,7 +17,6 @@ import com.liner.i_desk.API.Data.User;
 import com.liner.i_desk.API.FirebaseHelper;
 import com.liner.i_desk.R;
 import com.liner.i_desk.Utils.AudioRecorder;
-import com.liner.i_desk.Utils.ColorUtils;
 import com.liner.i_desk.Utils.Messages.CustomIncomingViewHolder;
 import com.liner.i_desk.Utils.Messages.CustomOutcomingViewHolder;
 import com.liner.i_desk.Utils.TextUtils;
@@ -54,16 +52,65 @@ public class RequestDetailActivity extends FirebaseActivity implements MessageIn
     private List<File> fileList = new ArrayList<>();
 
 
+    private TextView requestDetailTitle;
+    private LinearLayout requestDetailTypeLayout;
+    private VerticalTextView requestDetailTypeText;
+    private TextView requestDetailText;
+    private TextView requestDetailDeviceText;
+    private TextView requestDetailCreateTime;
+    private TextView requestDetailDeadline;
+    private Button requestDetailCloseRequest;
+    private Button requestDetailDeleteRequest;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_request_detail);
+        hideKeyboard = false;
         messagesList = findViewById(R.id.messagesList);
         messageInput = findViewById(R.id.detailRequestInputMessage);
+
+        requestDetailTitle = findViewById(R.id.requestDetailTitle);
+        requestDetailTypeLayout = findViewById(R.id.requestDetailTypeLayout);
+        requestDetailTypeText = findViewById(R.id.requestDetailTypeText);
+        requestDetailText = findViewById(R.id.requestDetailText);
+        requestDetailDeviceText = findViewById(R.id.requestDetailDeviceText);
+        requestDetailCreateTime = findViewById(R.id.requestDetailCreateTime);
+        requestDetailDeadline = findViewById(R.id.requestDetailDeadline);
+        requestDetailCloseRequest = findViewById(R.id.requestDetailCloseRequest);
+        requestDetailDeleteRequest = findViewById(R.id.requestDetailDeleteRequest);
+
         request = (Request) getIntent().getSerializableExtra("requestObject");
         requestID = request.getRequestID();
+
+
+
         if(request == null)
             finish();
+        requestDetailTitle.setText(request.getRequestTitle());
+        switch (request.getRequestType()) {
+            case SERVICE:
+                requestDetailTypeText.setText("Сервис");
+                requestDetailTypeLayout.getBackground().setColorFilter(getResources().getColor(R.color.request_service), PorterDuff.Mode.SRC_IN);
+                break;
+            case INCIDENT:
+                requestDetailTypeText.setText("Инцидент");
+                requestDetailTypeLayout.getBackground().setColorFilter(getResources().getColor(R.color.request_incident), PorterDuff.Mode.SRC_IN);
+                break;
+            case CONSULTATION:
+                requestDetailTypeText.setText("Консультация");
+                requestDetailTypeLayout.getBackground().setColorFilter(getResources().getColor(R.color.request_consultation), PorterDuff.Mode.SRC_IN);
+                break;
+        }
+        requestDetailText.setText(request.getRequestShortDescription());
+        requestDetailDeviceText.setText(request.getRequestUserDeviceDescription());
+        requestDetailCreateTime.setText(TimeUtils.convertDate(request.getRequestCreationTime()));
+        requestDetailDeadline.setText(TimeUtils.convertDate(request.getRequestDeadlineTime()));
+
+
+
+
+
 
 
 
@@ -165,13 +212,13 @@ public class RequestDetailActivity extends FirebaseActivity implements MessageIn
 
     @Override
     public void onFirebaseChanged() {
-        FirebaseHelper.getRequestCommentList(requestID, new FirebaseHelper.IFirebaseHelperListener() {
+        FirebaseHelper.getRequestByID(requestID, new FirebaseHelper.IFirebaseHelperListener() {
             @Override
             public void onSuccess(Object result) {
-                List<Request.RequestComment> comments = (List<Request.RequestComment>) result;
-                if(comments != null && !comments.isEmpty()){
-                    messagesListAdapter.clear();
-                    for(Request.RequestComment comment:comments){
+                request = (Request) result;
+                messagesListAdapter.clear();
+                if(request.getRequestCommentList() != null && !request.getRequestCommentList().isEmpty()){
+                    for(Request.RequestComment comment:request.getRequestCommentList()){
                         messagesListAdapter.addToStart(comment, false);
                     }
                 }
@@ -192,16 +239,16 @@ public class RequestDetailActivity extends FirebaseActivity implements MessageIn
 
     @Override
     public boolean onSubmit(CharSequence input) {
-        createComment(user.getUserName(), user.getUserUID(), input.toString().trim(), fileList);
+        createComment(user.getUserName(), user.getUserUID(), request.getRequestID(), input.toString().trim(), fileList);
         return true;
     }
 
-    private void createComment(final String creatorName, final String creatorID, final String commentText, List<File> commentFiles){
+    private void createComment(final String creatorName, final String creatorID, final String requestID, final String commentText, List<File> commentFiles){
         final ProgressBottomSheetDialog uploadFileDialog = ViewUtils.createProgressDialog(this, "Загрузка файлов", "Подождите, идет загрузка");
         if(commentFiles.size() != 0){
             uploadFileDialog.create();
         }
-        FirebaseHelper.uploadFileList(commentFiles, "user_files/" + firebaseUser.getUid() + "/requests/" + requestID, new FirebaseHelper.UploadListListener() {
+        FirebaseHelper.uploadFileList(commentFiles, "user_files/" + request.getRequestCreatorID() + "/requests/" + requestID, new FirebaseHelper.UploadListListener() {
             @Override
             public void onFileUploading(int percent, long transferred, long total, String filename) {
                 uploadFileDialog.setProgress(percent, total, transferred, filename);
@@ -218,7 +265,7 @@ public class RequestDetailActivity extends FirebaseActivity implements MessageIn
                 comment.setCommentText(commentText);
                 comment.setFileDataList(fileDataList);
                 comment.setCommentID(TextUtils.generateRandomString(20));
-                FirebaseHelper.addComment(creatorID, requestID, comment);
+                FirebaseHelper.addComment(requestID, comment);
                 fileList.clear();
             }
 
@@ -237,7 +284,7 @@ public class RequestDetailActivity extends FirebaseActivity implements MessageIn
                 comment.setCommentText(commentText);
                 comment.setFileDataList(new ArrayList<Request.FileData>());
                 comment.setCommentID(TextUtils.generateRandomString(20));
-                FirebaseHelper.addComment(creatorID, requestID, comment);
+                FirebaseHelper.addComment(requestID, comment);
             }
         });
     }

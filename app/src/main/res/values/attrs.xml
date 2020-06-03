@@ -1,30 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="AppTheme">
-        <attr name="backgroundColor" format="color"/>
-        <attr name="backgroundColorSecondary" format="color"/>
-        <attr name="colorPrimary" format="color"/>
-        <attr name="colorPrimaryDark" format="color" />
-        <attr name="textColor" format="color" />
-        <attr name="textColorDark" format="color" />
-        <attr name="disabledColor" format="color" />
+        <attr name="backgroundColor" format="color|reference" />
+        <attr name="backgroundColorSecondary" format="color|reference" />
+        <attr name="colorPrimary" format="color|reference" />
+        <attr name="colorPrimaryDark" format="color|reference" />
+        <attr name="textColor" format="color|reference" />
+        <attr name="textColorDark" format="color|reference" />
+        <attr name="disabledColor" format="color|reference" />
     </declare-styleable>
 
     <declare-styleable name="EditRegexTextView">
-        <attr name="ertv_left_icon" format="integer|reference"/>
-        <attr name="ertv_regex" format="string"/>
+        <attr name="ertv_left_icon" format="integer|reference" />
+        <attr name="ertv_regex" format="string" />
     </declare-styleable>
 
 
     <declare-styleable name="VideoPlayerView">
-        <attr name="toFullScreenIcon" format="reference"/>
-        <attr name="toBaseScreenIcon" format="reference"/>
-        <attr name="playIcon" format="reference"/>
-        <attr name="pauseIcon" format="reference"/>
-        <attr name="seekBarProgressDrawable" format="reference"/>
-        <attr name="seekBarThumb" format="reference"/>
-        <attr name="currentPositionColor" format="color"/>
-        <attr name="durationColor" format="color"/>
+        <attr name="toFullScreenIcon" format="reference" />
+        <attr name="toBaseScreenIcon" format="reference" />
+        <attr name="playIcon" format="reference" />
+        <attr name="pauseIcon" format="reference" />
+        <attr name="seekBarProgressDrawable" format="reference" />
+        <attr name="seekBarThumb" format="reference" />
+        <attr name="currentPositionColor" format="color|reference" />
+        <attr name="durationColor" format="color|reference" />
     </declare-styleable>
 
     <declare-styleable name="RecordView">
@@ -32,14 +32,25 @@
         <attr name="slide_to_cancel_arrow" format="reference" />
         <attr name="slide_to_cancel_margin_right" format="dimension" />
         <attr name="slide_to_cancel_bounds" format="dimension" />
-        <attr name="slide_to_cancel_arrow_color" format="color" />
-        <attr name="counter_time_color" format="color" />
+        <attr name="slide_to_cancel_arrow_color" format="color|reference" />
+        <attr name="counter_time_color" format="color|reference" />
 
     </declare-styleable>
 
     <declare-styleable name="RecordButton">
-
         <attr name="mic_icon" format="reference" />
-
     </declare-styleable>
+
+    <declare-styleable name="CircleProgressBar">
+        <attr name="progressMin" format="integer" />
+        <attr name="progressMax" format="integer" />
+        <attr name="progress" format="integer" />
+        <attr name="progressStartAngle" format="integer" />
+        <attr name="progressBarColor" format="color|reference" />
+        <attr name="progressBarBackgroundColor" format="color|reference" />
+        <attr name="progressBarThickness" format="dimension|reference" />
+        <attr name="progressBarPadding" format="dimension|reference"/>
+        <attr name="progressBarIconPadding" format="dimension|reference"/>
+    </declare-styleable>
+
 </resources>

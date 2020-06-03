@@ -33,6 +33,7 @@ import com.squareup.picasso.Picasso;
 import net.cachapa.expandablelayout.ExpandableLayout;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -47,7 +48,6 @@ public class MainFragment extends FirebaseFragment{
 
 
     private TextView accountActionsAddNewRequest;
-
     private RecyclerView requestRecyclerView;
     private RequestAdapter requestAdapter;
     private PullRefreshLayout requestRefreshLayout;
@@ -94,7 +94,6 @@ public class MainFragment extends FirebaseFragment{
             }
         });
 
-
         //accountBadge = new QBadgeView(getContext()).bindTarget(userPhoto)
         //        .setBadgePadding(0f, true)
         //        .setBadgeGravity(Gravity.END | Gravity.TOP)
@@ -103,24 +102,16 @@ public class MainFragment extends FirebaseFragment{
         //        .setBadgeNumber(3);
 
 
+
         requestRefreshLayout.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                FirebaseHelper.getUserModel(new FirebaseHelper.IFirebaseHelperListener() {
-                    @Override
-                    public void onSuccess(Object result) {
-                        firebaseActivity.user = (User) result;
-                        firebaseActivity.onFirebaseChanged();
-                        broadcastManager.sendLocal(FIREBASE_ACTION);
-                    }
-
-                    @Override
-                    public void onFail(String reason) {
-
-                    }
-                });
+                firebaseActivity.updateUserList();
             }
         });
+
+
+
         return view;
     }
 
@@ -156,9 +147,8 @@ public class MainFragment extends FirebaseFragment{
                     userType.setText("Заявитель");
                     break;
             }
-
-            if(firebaseActivity.user.getRequestList() != null) {
-                requestAdapter = new RequestAdapter(getActivity(), firebaseActivity.user.getRequestList());
+            if(firebaseActivity.userRequestList != null) {
+                requestAdapter = new RequestAdapter(getActivity(), firebaseActivity.userRequestList);
             } else {
                 requestAdapter = new RequestAdapter(getActivity(), new ArrayList<Request>());
             }

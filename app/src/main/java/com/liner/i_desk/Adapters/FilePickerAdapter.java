@@ -75,12 +75,9 @@ public class FilePickerAdapter extends RecyclerView.Adapter<FilePickerAdapter.Vi
 
                         }
                     });
-        } else if(item.getFile().getName().endsWith(".mp4") || item.getFile().getName().endsWith(".MP4")){
-            new AsyncLoadVideoThumb(item.getFile(), holder.fileItem).execute();
         } else {
             holder.fileItem.setCompoundDrawablesWithIntrinsicBounds((item.getFile().isDirectory()) ? context.getDrawable(R.drawable.folder_icon) : context.getDrawable(R.drawable.file_icon), null, null, null);
         }
-
         holder.fileItem.setCompoundDrawablePadding(ViewUtils.dpToPx(8));
         holder.fileCheck.setVisibility((item.getFile().isDirectory()) ? View.GONE : View.VISIBLE);
         holder.fileItem.setText(item.getFile().getName());
@@ -254,26 +251,6 @@ public class FilePickerAdapter extends RecyclerView.Adapter<FilePickerAdapter.Vi
                     }
                 });
             notifyDataSetChanged();
-        }
-    }
-
-    private class AsyncLoadVideoThumb extends AsyncTask<Object, Object, BitmapDrawable> {
-        private File file;
-        private TextView textView;
-
-        public AsyncLoadVideoThumb(File file, TextView textView) {
-            this.file = file;
-            this.textView = textView;
-        }
-
-        @Override
-        protected BitmapDrawable doInBackground(Object... objects) {
-            return ImageUtils.getVideoThumbnail(context, file, 200, 200);
-        }
-
-        @Override
-        protected void onPostExecute(BitmapDrawable result) {
-            textView.setCompoundDrawablesWithIntrinsicBounds(result, null, null, null);
         }
     }
 }

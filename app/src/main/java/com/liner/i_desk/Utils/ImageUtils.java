@@ -1,6 +1,7 @@
 package com.liner.i_desk.Utils;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -8,8 +9,11 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
+import android.os.Build;
 import android.provider.MediaStore;
 import android.widget.ImageView;
+
+import androidx.core.content.FileProvider;
 
 import com.liner.i_desk.R;
 import com.squareup.picasso.Picasso;
@@ -59,9 +63,6 @@ public class ImageUtils {
     public static BitmapDrawable getVideoThumbnail(Context context, File file, int width, int height) {
         return new BitmapDrawable(context.getResources(), resizeBitmap(ThumbnailUtils.createVideoThumbnail(file.getAbsolutePath(), MediaStore.Images.Thumbnails.MINI_KIND), width, height));
     }
-
-
-
 
 
 }

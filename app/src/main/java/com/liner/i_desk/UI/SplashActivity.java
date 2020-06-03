@@ -239,7 +239,7 @@ public class SplashActivity extends AppCompatActivity {
                 firebaseAuth.signInWithEmailAndPassword(splashLoginEmailField.getText().toString().trim(), splashLoginPasswordField.getText().toString().trim()).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                     @Override
                     public void onSuccess(AuthResult authResult) {
-                        if (Objects.requireNonNull(authResult.getUser()).isEmailVerified()) {
+                        if (!Objects.requireNonNull(authResult.getUser()).isEmailVerified()) {
                             loginDialog.close();
                             startActivity(new Intent(SplashActivity.this, MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS));
                             finish();
@@ -518,6 +518,7 @@ public class SplashActivity extends AppCompatActivity {
                                                                         FirebaseHelper.setUserModel(user.getUserUID(), user, new FirebaseHelper.IFirebaseHelperListener() {
                                                                             @Override
                                                                             public void onSuccess(Object result) {
+                                                                                registerDialog.close();
                                                                                 authResultTask.getResult().getUser().sendEmailVerification();
                                                                                 final SimpleBottomSheetDialog.Builder simpleDialog = new SimpleBottomSheetDialog.Builder(SplashActivity.this);
                                                                                 simpleDialog.setTitleText("Регистрация прошла успешно!")

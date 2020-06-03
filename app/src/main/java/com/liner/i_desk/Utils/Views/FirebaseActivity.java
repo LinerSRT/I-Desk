@@ -18,10 +18,13 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.liner.i_desk.API.Data.Request;
 import com.liner.i_desk.API.Data.User;
 import com.liner.i_desk.API.FirebaseHelper;
 import com.liner.i_desk.Utils.BroadcastManager;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public abstract class FirebaseActivity extends FragmentActivity {
@@ -35,6 +38,12 @@ public abstract class FirebaseActivity extends FragmentActivity {
     public BroadcastManager broadcastManager;
     public String FIREBASE_ACTION = "com.liner.i_desk.FIREBASE_CHANGED";
     public String FIREBASE_ACTION_USER = "com.liner.i_desk.FIREBASE_ACTION_USER";
+
+
+    public List<Request> userRequestList = new ArrayList<>();
+
+
+    public boolean hideKeyboard = true;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         firebaseActivity = this;
@@ -49,8 +58,21 @@ public abstract class FirebaseActivity extends FragmentActivity {
             @Override
             public void onSuccess(Object result) {
                 user = (User) result;
-                broadcastManager.sendLocal(FIREBASE_ACTION_USER);
-                onUserObtained(user);
+                FirebaseHelper.getRequests(user, new FirebaseHelper.IFirebaseHelperListener() {
+                    @Override
+                    public void onSuccess(Object result) {
+                        userRequestList = (List<Request>) result;
+                        broadcastManager.sendLocal(FIREBASE_ACTION_USER);
+                        onUserObtained(user);
+                    }
+
+                    @Override
+                    public void onFail(String reason) {
+                        broadcastManager.sendLocal(FIREBASE_ACTION_USER);
+                        onUserObtained(user);
+                    }
+                });
+
             }
 
             @Override
@@ -106,9 +128,27 @@ public abstract class FirebaseActivity extends FragmentActivity {
     public abstract void onFirebaseChanged();
     public abstract void onUserObtained(User user);
 
+    public void updateUserList(){
+        FirebaseHelper.getRequests(user, new FirebaseHelper.IFirebaseHelperListener() {
+            @Override
+            public void onSuccess(Object result) {
+                userRequestList = (List<Request>) result;
+                broadcastManager.sendLocal(FIREBASE_ACTION_USER);
+                onUserObtained(user);
+            }
+
+            @Override
+            public void onFail(String reason) {
+                broadcastManager.sendLocal(FIREBASE_ACTION_USER);
+                onUserObtained(user);
+            }
+        });
+    }
+
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
+        if(hideKeyboard)
         if (getCurrentFocus() != null) {
             InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             Objects.requireNonNull(inputMethodManager).hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
