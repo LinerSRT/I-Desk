@@ -110,7 +110,7 @@ public class MainFragment extends FirebaseFragment{
                     @Override
                     public void onSuccess(Object result) {
                         firebaseActivity.user = (User) result;
-                        firebaseActivity.onFirebaseChanged(firebaseActivity.user);
+                        firebaseActivity.onFirebaseChanged();
                         broadcastManager.sendLocal(FIREBASE_ACTION);
                     }
 

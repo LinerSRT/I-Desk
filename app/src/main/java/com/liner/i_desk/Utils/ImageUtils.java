@@ -1,11 +1,22 @@
 package com.liner.i_desk.Utils;
 
+import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.media.ThumbnailUtils;
+import android.net.Uri;
+import android.provider.MediaStore;
+import android.widget.ImageView;
+
+import com.liner.i_desk.R;
+import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 
 public class ImageUtils {
     public static Bitmap drawableToBitmap(Drawable drawable) {
@@ -26,15 +37,31 @@ public class ImageUtils {
         drawable.draw(canvas);
         return bitmap;
     }
-    public static byte[] getDrawableByteArray(Drawable drawable){
+
+    public static byte[] getDrawableByteArray(Drawable drawable) {
         Bitmap bitmap = drawableToBitmap(drawable);
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
         return stream.toByteArray();
     }
-    public static byte[] getDrawableByteArray(Bitmap bitmap){
+
+    public static byte[] getDrawableByteArray(Bitmap bitmap) {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
         return stream.toByteArray();
     }
+
+
+    public static Bitmap resizeBitmap(Bitmap image, int width, int height) {
+        return Bitmap.createScaledBitmap(image, width, height, false);
+    }
+
+    public static BitmapDrawable getVideoThumbnail(Context context, File file, int width, int height) {
+        return new BitmapDrawable(context.getResources(), resizeBitmap(ThumbnailUtils.createVideoThumbnail(file.getAbsolutePath(), MediaStore.Images.Thumbnails.MINI_KIND), width, height));
+    }
+
+
+
+
+
 }

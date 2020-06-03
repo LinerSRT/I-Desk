@@ -42,6 +42,7 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
+import com.liner.i_desk.API.Data.Request;
 import com.liner.i_desk.API.Data.User;
 import com.liner.i_desk.API.FirebaseHelper;
 import com.liner.i_desk.R;
@@ -135,7 +136,7 @@ public class SplashActivity extends AppCompatActivity {
         handler = new Handler();
 
 
-        String[] permissions = {Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE};
+        String[] permissions = {Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.RECORD_AUDIO};
         Permissions.check(this, permissions, null, null, new PermissionHandler() {
             @Override
             public void onGranted() {
@@ -154,7 +155,7 @@ public class SplashActivity extends AppCompatActivity {
                                                 startActivity(new Intent(SplashActivity.this, MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS));
                                                 finish();
                                             }
-                                        }, 600);
+                                        }, 0);
                                     }
 
                                     @Override
@@ -496,93 +497,89 @@ public class SplashActivity extends AppCompatActivity {
                                                     if (authResultTask.isSuccessful()) {
                                                         final User user = new User();
                                                         user.setUserUID(Objects.requireNonNull(authResultTask.getResult().getUser()).getUid());
-                                                        FirebaseHelper.uploadFile(ImageUtils.getDrawableByteArray(splashRegisterProfilePhotoView.getDrawable()), "user_images" + File.separator + firebaseAuth.getCurrentUser().getUid() + File.separator + "profile_photos" + File.separator + userNickName + "_" + TextUtils.generateRandomString(10) + ".jpg", new FirebaseHelper.IFirebaseUploadFileListener() {
-                                                            @Override
-                                                            public void onUpload(int percent, long transferred, long total, String filename) {
 
-                                                            }
-
-                                                            @Override
-                                                            public void onUploadFailed() {
-
-                                                                registerDialog.close();
-                                                                showDialogMessage("Внимание!", "Произошла ошибка при регистрации, попробуйте позже");
-                                                            }
-
-                                                            @Override
-                                                            public void onUploadFinish(String fileURL) {
-                                                                user.setUserPhotoURL(fileURL);
-                                                                user.setUserPassword(userPassword);
-                                                                user.setUserName(userNickName);
-                                                                user.setUserLastOnlineTimeStamp(TimeUtils.getCurrentTime(TimeUtils.Type.SERVER));
-                                                                user.setUserEmail(userEmail);
-                                                                user.setUserAccountType(registerAccountType);
-                                                                FirebaseHelper.setUserModel(user.getUserUID(), user, new FirebaseHelper.IFirebaseHelperListener() {
+                                                        FirebaseHelper.uploadByteArray(ImageUtils.getDrawableByteArray(splashRegisterProfilePhotoView.getDrawable()),
+                                                                userNickName + "_" + TextUtils.generateRandomString(10) + ".jpg",
+                                                                "user_images" + File.separator + firebaseAuth.getCurrentUser().getUid() + File.separator + "profile_photos",
+                                                                new FirebaseHelper.UploadListener() {
                                                                     @Override
-                                                                    public void onSuccess(Object result) {
-                                                                        authResultTask.getResult().getUser().sendEmailVerification();
-                                                                        final SimpleBottomSheetDialog.Builder simpleDialog = new SimpleBottomSheetDialog.Builder(SplashActivity.this);
-                                                                        simpleDialog.setTitleText("Регистрация прошла успешно!")
-                                                                                .setDialogText("На ваш E-Mail было выслано сообщение для подтверждения регистрации")
-                                                                                .setDone("Ок", new View.OnClickListener() {
-                                                                                    @Override
-                                                                                    public void onClick(View view) {
-                                                                                        simpleDialog.close();
-                                                                                        loginCardView.animate()
-                                                                                                .translationX(0)
-                                                                                                .alpha(1f)
-                                                                                                .setDuration(300)
-                                                                                                .setListener(new AnimatorListenerAdapter() {
-                                                                                                    @Override
-                                                                                                    public void onAnimationEnd(Animator animation) {
-                                                                                                        super.onAnimationEnd(animation);
-                                                                                                        loginCardView.setVisibility(View.VISIBLE);
-                                                                                                    }
-                                                                                                });
-                                                                                        registerCardView.animate()
-                                                                                                .translationX(registerCardView.getWidth())
-                                                                                                .alpha(0.0f)
-                                                                                                .setDuration(300)
-                                                                                                .setListener(new AnimatorListenerAdapter() {
-                                                                                                    @Override
-                                                                                                    public void onAnimationEnd(Animator animation) {
-                                                                                                        super.onAnimationEnd(animation);
-                                                                                                        registerCardView.setVisibility(View.GONE);
-                                                                                                        splashRegisterEmailField.setText("");
-                                                                                                        splashRegisterPasswordField.setText("");
-                                                                                                        splashRegisterReplyPasswordField.setText("");
-                                                                                                        splashRegisterNickNameField.setText("");
-                                                                                                        splashRegisterProfilePhotoView.setImageResource(R.drawable.temp_user_photo);
-                                                                                                        splashRegisterEmailField.setText("");
-                                                                                                        splashRegisterEmailField.setText("");
-                                                                                                        splashRegisterEmailField.setText("");
-                                                                                                        registerAccountType = null;
-                                                                                                        splashLoginEmailField.setText(userEmail);
-                                                                                                        splashLoginPasswordField.setText(userPassword);
-                                                                                                        splashCreateNewAccountButton.setText("Создать новый");
-                                                                                                    }
-                                                                                                });
-                                                                                    }
-                                                                                }).build();
-                                                                        simpleDialog.show();
+                                                                    public void onFileUploading(int percent, long transferred, long total, String filename) {
+
                                                                     }
 
                                                                     @Override
-                                                                    public void onFail(String reason) {
+                                                                    public void onFileUploaded(Request.FileData fileData) {
+                                                                        user.setUserPhotoURL(fileData.getDownloadURL());
+                                                                        user.setUserPassword(userPassword);
+                                                                        user.setUserName(userNickName);
+                                                                        user.setUserLastOnlineTimeStamp(TimeUtils.getCurrentTime(TimeUtils.Type.SERVER));
+                                                                        user.setUserEmail(userEmail);
+                                                                        user.setUserAccountType(registerAccountType);
+                                                                        FirebaseHelper.setUserModel(user.getUserUID(), user, new FirebaseHelper.IFirebaseHelperListener() {
+                                                                            @Override
+                                                                            public void onSuccess(Object result) {
+                                                                                authResultTask.getResult().getUser().sendEmailVerification();
+                                                                                final SimpleBottomSheetDialog.Builder simpleDialog = new SimpleBottomSheetDialog.Builder(SplashActivity.this);
+                                                                                simpleDialog.setTitleText("Регистрация прошла успешно!")
+                                                                                        .setDialogText("На ваш E-Mail было выслано сообщение для подтверждения регистрации")
+                                                                                        .setDone("Ок", new View.OnClickListener() {
+                                                                                            @Override
+                                                                                            public void onClick(View view) {
+                                                                                                simpleDialog.close();
+                                                                                                loginCardView.animate()
+                                                                                                        .translationX(0)
+                                                                                                        .alpha(1f)
+                                                                                                        .setDuration(300)
+                                                                                                        .setListener(new AnimatorListenerAdapter() {
+                                                                                                            @Override
+                                                                                                            public void onAnimationEnd(Animator animation) {
+                                                                                                                super.onAnimationEnd(animation);
+                                                                                                                loginCardView.setVisibility(View.VISIBLE);
+                                                                                                            }
+                                                                                                        });
+                                                                                                registerCardView.animate()
+                                                                                                        .translationX(registerCardView.getWidth())
+                                                                                                        .alpha(0.0f)
+                                                                                                        .setDuration(300)
+                                                                                                        .setListener(new AnimatorListenerAdapter() {
+                                                                                                            @Override
+                                                                                                            public void onAnimationEnd(Animator animation) {
+                                                                                                                super.onAnimationEnd(animation);
+                                                                                                                registerCardView.setVisibility(View.GONE);
+                                                                                                                splashRegisterEmailField.setText("");
+                                                                                                                splashRegisterPasswordField.setText("");
+                                                                                                                splashRegisterReplyPasswordField.setText("");
+                                                                                                                splashRegisterNickNameField.setText("");
+                                                                                                                splashRegisterProfilePhotoView.setImageResource(R.drawable.temp_user_photo);
+                                                                                                                splashRegisterEmailField.setText("");
+                                                                                                                splashRegisterEmailField.setText("");
+                                                                                                                splashRegisterEmailField.setText("");
+                                                                                                                registerAccountType = null;
+                                                                                                                splashLoginEmailField.setText(userEmail);
+                                                                                                                splashLoginPasswordField.setText(userPassword);
+                                                                                                                splashCreateNewAccountButton.setText("Создать новый");
+                                                                                                            }
+                                                                                                        });
+                                                                                            }
+                                                                                        }).build();
+                                                                                simpleDialog.show();
+                                                                            }
 
+                                                                            @Override
+                                                                            public void onFail(String reason) {
+
+                                                                                registerDialog.close();
+                                                                                showDialogMessage("Внимание!", "Произошла ошибка при регистрации, попробуйте позже");
+                                                                            }
+                                                                        });
+                                                                    }
+
+                                                                    @Override
+                                                                    public void onFileUploadFail(String reason) {
                                                                         registerDialog.close();
                                                                         showDialogMessage("Внимание!", "Произошла ошибка при регистрации, попробуйте позже");
                                                                     }
                                                                 });
-                                                            }
-
-                                                            @Override
-                                                            public void onUploadStart() {
-
-                                                            }
-                                                        });
-
-
                                                     } else {
                                                         registerDialog.close();
                                                         showDialogMessage("Внимание!", "Произошла ошибка при регистрации, попробуйте позже");

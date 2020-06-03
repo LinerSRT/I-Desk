@@ -63,36 +63,36 @@ public abstract class FirebaseActivity extends FragmentActivity {
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 if(dataSnapshot.getKey().equals(firebaseUser.getUid())){
                     user = dataSnapshot.getValue(User.class);
-                    broadcastManager.sendLocal(FIREBASE_ACTION);
-                    onFirebaseChanged(user);
                 }
+                onFirebaseChanged();
+                broadcastManager.sendLocal(FIREBASE_ACTION);
             }
 
             @Override
             public void onChildChanged(@NonNull final DataSnapshot dataSnapshot, @Nullable String s) {
                 if(dataSnapshot.getKey().equals(firebaseUser.getUid())){
                     user = dataSnapshot.getValue(User.class);
-                    broadcastManager.sendLocal(FIREBASE_ACTION);
-                    onFirebaseChanged(user);
                 }
+                onFirebaseChanged();
+                broadcastManager.sendLocal(FIREBASE_ACTION);
             }
 
             @Override
             public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
                 if(dataSnapshot.getKey().equals(firebaseUser.getUid())){
                     user = dataSnapshot.getValue(User.class);
-                    broadcastManager.sendLocal(FIREBASE_ACTION);
-                    onFirebaseChanged(user);
                 }
+                onFirebaseChanged();
+                broadcastManager.sendLocal(FIREBASE_ACTION);
             }
 
             @Override
             public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 if(dataSnapshot.getKey().equals(firebaseUser.getUid())){
                     user = dataSnapshot.getValue(User.class);
-                    onFirebaseChanged(user);
-                    broadcastManager.sendLocal(FIREBASE_ACTION);
                 }
+                onFirebaseChanged();
+                broadcastManager.sendLocal(FIREBASE_ACTION);
             }
 
             @Override
@@ -103,7 +103,7 @@ public abstract class FirebaseActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
     }
 
-    public abstract void onFirebaseChanged(User user);
+    public abstract void onFirebaseChanged();
     public abstract void onUserObtained(User user);
 
 

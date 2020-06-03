@@ -1,8 +1,19 @@
 package com.liner.i_desk.API.Data;
 
+import androidx.annotation.Nullable;
+
+import com.google.firebase.storage.StorageMetadata;
+import com.liner.i_desk.Utils.TimeUtils;
+import com.stfalcon.chatkit.commons.models.IMessage;
+import com.stfalcon.chatkit.commons.models.IUser;
+import com.stfalcon.chatkit.commons.models.MessageContentType;
+
+import java.io.File;
+import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
-public class Request {
+public class Request implements Serializable {
     public enum Type {
         INCIDENT,
         SERVICE,
@@ -29,7 +40,7 @@ public class Request {
     private String requestUserDeviceDescription;
     private String requestShortDescription;
     private List<RequestCheckList> requestCheckList;
-    private List<RequestFile> requestFiles;
+    private List<FileData> requestFiles;
     private List<RequestComment> requestCommentList;
 
 
@@ -125,11 +136,11 @@ public class Request {
         this.requestCheckList = requestCheckList;
     }
 
-    public List<RequestFile> getRequestFiles() {
+    public List<FileData> getRequestFiles() {
         return requestFiles;
     }
 
-    public void setRequestFiles(List<RequestFile> requestFiles) {
+    public void setRequestFiles(List<FileData> requestFiles) {
         this.requestFiles = requestFiles;
     }
 
@@ -161,14 +172,24 @@ public class Request {
                 '}';
     }
 
-    public class RequestComment{
+    public static class RequestComment implements Serializable, IMessage, MessageContentType {
         private String commentID;
         private String commentCreatorID;
+        private String commentCreatorPhotoURL;
         private String commentCreationTime;
+        private String commentCreatorName;
         private String commentText;
-        private List<RequestFile> commentFiles;
+        private List<FileData> fileDataList;
 
         public RequestComment() {
+        }
+
+        public String getCommentCreatorName() {
+            return commentCreatorName;
+        }
+
+        public void setCommentCreatorName(String commentCreatorName) {
+            this.commentCreatorName = commentCreatorName;
         }
 
         public String getCommentID() {
@@ -203,12 +224,20 @@ public class Request {
             this.commentText = commentText;
         }
 
-        public List<RequestFile> getCommentFiles() {
-            return commentFiles;
+        public String getCommentCreatorPhotoURL() {
+            return commentCreatorPhotoURL;
         }
 
-        public void setCommentFiles(List<RequestFile> commentFiles) {
-            this.commentFiles = commentFiles;
+        public void setCommentCreatorPhotoURL(String commentCreatorPhotoURL) {
+            this.commentCreatorPhotoURL = commentCreatorPhotoURL;
+        }
+
+        public List<FileData> getFileDataList() {
+            return fileDataList;
+        }
+
+        public void setFileDataList(List<FileData> fileDataList) {
+            this.fileDataList = fileDataList;
         }
 
         @Override
@@ -216,28 +245,109 @@ public class Request {
             return "RequestComment{" +
                     "commentID='" + commentID + '\'' +
                     ", commentCreatorID='" + commentCreatorID + '\'' +
+                    ", commentCreatorPhotoURL='" + commentCreatorPhotoURL + '\'' +
                     ", commentCreationTime='" + commentCreationTime + '\'' +
+                    ", commentCreatorName='" + commentCreatorName + '\'' +
                     ", commentText='" + commentText + '\'' +
-                    ", commentFiles=" + commentFiles +
+                    ", fileDataList=" + fileDataList +
                     '}';
         }
+
+        @Override
+        public IUser getUser() {
+            return new IUser() {
+                @Override
+                public String getId() {
+                    return getCommentCreatorID();
+                }
+
+                @Override
+                public String getName() {
+                    return getCommentCreatorName();
+                }
+
+                @Override
+                public String getAvatar() {
+                    return getCommentCreatorPhotoURL();
+                }
+            };
+        }
+
+        @Override
+        public String getId() {
+            return getCommentCreatorID();
+        }
+
+        @Override
+        public String getText() {
+            return getCommentText();
+        }
+
+        @Override
+        public Date getCreatedAt() {
+            return TimeUtils.getTime(TimeUtils.convertDate(getCommentCreationTime())).getTime();
+        }
+
+
+//        @Nullable
+//        @Override
+//        public String getImageUrl() {
+//            if(getCommentFiles() != null && !getCommentFiles().isEmpty()){
+//                for(RequestFile file:getCommentFiles()){
+//                    return file.getFilePath();
+//                }
+//            } else {
+//                return null;
+//            }
+//        }
     }
-    public static class RequestFile{
-        private String fileUploadTime;
+
+    public static class FileData implements Serializable{
+        private String downloadURL;
+        private String fileName;
         private String filePath;
-        private String fileID;
-        private String fileOwnerID;
+        private String contentType;
+        private String contentEncoding;
+        private long fileByteSize;
+        private long fileCreationTime;
+        private File file;
 
-        public RequestFile(){
 
+        public FileData() {
         }
 
-        public String getFileUploadTime() {
-            return fileUploadTime;
+        public FileData(String downloadURL, String fileName, String filePath, String contentType, String contentEncoding, long fileByteSize, long fileCreationTime) {
+            this.downloadURL = downloadURL;
+            this.fileName = fileName;
+            this.filePath = filePath;
+            this.contentType = contentType;
+            this.contentEncoding = contentEncoding;
+            this.fileByteSize = fileByteSize;
+            this.fileCreationTime = fileCreationTime;
         }
 
-        public void setFileUploadTime(String fileUploadTime) {
-            this.fileUploadTime = fileUploadTime;
+        public File getFile() {
+            return file;
+        }
+
+        public void setFile(File file) {
+            this.file = file;
+        }
+
+        public String getDownloadURL() {
+            return downloadURL;
+        }
+
+        public void setDownloadURL(String downloadURL) {
+            this.downloadURL = downloadURL;
+        }
+
+        public String getFileName() {
+            return fileName;
+        }
+
+        public void setFileName(String fileName) {
+            this.fileName = fileName;
         }
 
         public String getFilePath() {
@@ -248,33 +358,54 @@ public class Request {
             this.filePath = filePath;
         }
 
-        public String getFileID() {
-            return fileID;
+        public String getContentType() {
+            return contentType;
         }
 
-        public void setFileID(String fileID) {
-            this.fileID = fileID;
+        public void setContentType(String contentType) {
+            this.contentType = contentType;
         }
 
-        public String getFileOwnerID() {
-            return fileOwnerID;
+        public String getContentEncoding() {
+            return contentEncoding;
         }
 
-        public void setFileOwnerID(String fileOwnerID) {
-            this.fileOwnerID = fileOwnerID;
+        public void setContentEncoding(String contentEncoding) {
+            this.contentEncoding = contentEncoding;
+        }
+
+        public long getFileByteSize() {
+            return fileByteSize;
+        }
+
+        public void setFileByteSize(long fileByteSize) {
+            this.fileByteSize = fileByteSize;
+        }
+
+        public long getFileCreationTime() {
+            return fileCreationTime;
+        }
+
+        public void setFileCreationTime(long fileCreationTime) {
+            this.fileCreationTime = fileCreationTime;
         }
 
         @Override
         public String toString() {
-            return "RequestFile{" +
-                    "fileUploadTime='" + fileUploadTime + '\'' +
+            return "FileData{" +
+                    "downloadURL='" + downloadURL + '\'' +
+                    ", fileName='" + fileName + '\'' +
                     ", filePath='" + filePath + '\'' +
-                    ", fileID='" + fileID + '\'' +
-                    ", fileOwnerID='" + fileOwnerID + '\'' +
+                    ", contentType='" + contentType + '\'' +
+                    ", contentEncoding='" + contentEncoding + '\'' +
+                    ", fileByteSize=" + fileByteSize +
+                    ", fileCreationTime=" + fileCreationTime +
                     '}';
         }
     }
-    public static class RequestCheckList{
+
+
+    public static class RequestCheckList implements Serializable{
         private String checkListText;
         private boolean checkFinished;
 

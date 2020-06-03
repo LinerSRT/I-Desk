@@ -1,6 +1,7 @@
 package com.liner.i_desk.Adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.view.LayoutInflater;
@@ -16,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.liner.i_desk.API.Data.Request;
 import com.liner.i_desk.R;
+import com.liner.i_desk.UI.RequestDetailActivity;
 import com.liner.i_desk.Utils.ColorUtils;
 import com.liner.i_desk.Utils.TimeUtils;
 import com.liner.i_desk.Utils.Views.VerticalTextView;
@@ -55,7 +57,6 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.ViewHold
                 break;
         }
 
-
         holder.requestName.setText(item.getRequestTitle());
         holder.requestText.setText(item.getRequestShortDescription());
         holder.requestTimeCreation.setText(TimeUtils.convertDate(item.getRequestCreationTime()));
@@ -63,6 +64,8 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.ViewHold
         holder.requestTimeDeadlineProgress.setProgress((int) TimeUtils.getDatesPercentage(item.getRequestCreationTime(), item.getRequestDeadlineTime(), TimeUtils.Type.SERVER));
         holder.requestTimeDeadlineProgress.getProgressDrawable().setColorFilter(ColorUtils.interpolateColor(ColorUtils.getThemeColor(context, R.attr.colorPrimaryDark), Color.RED, holder.requestTimeDeadlineProgress.getProgress()), PorterDuff.Mode.SRC_IN);
         holder.requestDeadlineWarning.setVisibility((holder.requestTimeDeadlineProgress.getProgress() > 80) ? View.VISIBLE : View.GONE);
+
+
     }
 
     @Override
@@ -91,6 +94,14 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.ViewHold
             requestAccentLayout = view.findViewById(R.id.requestAccentLayout);
             requestTimeDeadlineProgress = view.findViewById(R.id.requestTimeDeadlineProgress);
             requestDeadlineWarning = view.findViewById(R.id.requestDeadlineWarning);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(context, RequestDetailActivity.class);
+                    intent.putExtra("requestObject", requestList.get(getAdapterPosition()));
+                    context.startActivity(intent);
+                }
+            });
         }
 
     }

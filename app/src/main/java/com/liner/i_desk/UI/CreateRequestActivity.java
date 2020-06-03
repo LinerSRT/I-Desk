@@ -291,7 +291,7 @@ public class CreateRequestActivity extends FirebaseActivity {
     }
 
     @Override
-    public void onFirebaseChanged(User user) {
+    public void onFirebaseChanged() {
 
     }
 
@@ -357,7 +357,7 @@ public class CreateRequestActivity extends FirebaseActivity {
             newRequest.setRequestID(TextUtils.generateRandomString(20));
             newRequest.setRequestCreatorID(firebaseUser.getUid());
             newRequest.setRequestCheckList(new ArrayList<Request.RequestCheckList>());
-            newRequest.setRequestFiles(new ArrayList<Request.RequestFile>());
+            newRequest.setRequestFiles(new ArrayList<Request.FileData>());
             newRequest.setRequestType(createRequestTypeView.getType());
             newRequest.setRequestCommentList(new ArrayList<Request.RequestComment>());
             newRequest.setRequestCreationTime(TimeUtils.getCurrentTime(TimeUtils.Type.SERVER));
@@ -372,25 +372,18 @@ public class CreateRequestActivity extends FirebaseActivity {
             }
             if (!fileList.isEmpty()) {
                 final ProgressBottomSheetDialog uploadFileDialog = ViewUtils.createProgressDialog(this, "Загрузка файлов", "Подождите, идет загрузка");
-                FirebaseHelper.uploadFile(fileList, "user_files" + File.separator + firebaseUser.getUid() + File.separator + "requests" + File.separator + newRequest.getRequestID(), new FirebaseHelper.IFirebaseUploadFilesListener() {
+                uploadFileDialog.create();
+                FirebaseHelper.uploadFileList(fileList, "user_files" + File.separator + firebaseUser.getUid() + File.separator + "requests" + File.separator + newRequest.getRequestID(), new FirebaseHelper.UploadListListener() {
                     @Override
-                    public void onUploadStart() {
-                        uploadFileDialog.create();
+                    public void onFileUploading(int percent, long transferred, long total, String filename) {
+
+                        uploadFileDialog.setProgress(percent, total, transferred, filename);
                     }
 
                     @Override
-                    public void onUploadFinish(List<String> urls) {
+                    public void onFilesUploaded(List<Request.FileData> fileDataList) {
                         uploadFileDialog.dismiss(true);
-                        List<Request.RequestFile> requestFileList = new ArrayList<>();
-                        for (String url : urls) {
-                            final Request.RequestFile requestFile = new Request.RequestFile();
-                            requestFile.setFileOwnerID(firebaseUser.getUid());
-                            requestFile.setFileID(TextUtils.generateRandomString(20));
-                            requestFile.setFilePath(url);
-                            requestFile.setFileUploadTime(TimeUtils.getCurrentTime(TimeUtils.Type.SERVER));
-                            requestFileList.add(requestFile);
-                        }
-                        newRequest.setRequestFiles(requestFileList);
+                        newRequest.setRequestFiles(fileDataList);
                         userRequests.add(newRequest);
                         FirebaseHelper.setUserValue(firebaseUser.getUid(), "requestList", userRequests, new FirebaseHelper.IFirebaseHelperListener() {
                             @Override
@@ -406,20 +399,20 @@ public class CreateRequestActivity extends FirebaseActivity {
                         });
                     }
 
-
                     @Override
-                    public void onUploadFailed() {
-                        uploadFileDialog.dismiss(true);
-
+                    public void onFileUploadFail(String reason) {
+                        confirmDialog.close();
+                        errorDialog.show();
                     }
 
                     @Override
-                    public void onUpload(int percent, long transferred, long total, String filename) {
-                        uploadFileDialog.setProgress(percent, total, transferred, filename);
+                    public void onListEmpty() {
+
                     }
                 });
+
             } else {
-                newRequest.setRequestFiles(new ArrayList<Request.RequestFile>());
+                newRequest.setRequestFiles(new ArrayList<Request.FileData>());
                 userRequests.add(newRequest);
                 FirebaseHelper.setUserValue(firebaseUser.getUid(), "requestList", userRequests, new FirebaseHelper.IFirebaseHelperListener() {
                     @Override

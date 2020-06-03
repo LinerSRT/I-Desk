@@ -16,6 +16,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.liner.i_desk.API.Data.Request;
 import com.liner.i_desk.API.FirebaseHelper;
 import com.liner.i_desk.R;
 import com.liner.i_desk.UI.SplashActivity;
@@ -230,50 +231,47 @@ public class UserProfileFragment extends FirebaseFragment implements EditRegexTe
                         actionProgressDialog.close();
                         final ProgressBottomSheetDialog.Builder uploadDialog = new ProgressBottomSheetDialog.Builder(getActivity());
                         uploadDialog.setTitleText("Загрузка").setDialogText("Пожалуйста подождите, Ваше фото загружается").build();
-                        FirebaseHelper.uploadFile(ImageUtils.getDrawableByteArray(bitmap), "user_images"+ File.separator+firebaseActivity.firebaseUser.getUid()+File.separator+"profile_photos"+File.separator+firebaseActivity.user.getUserName() + "_" + TextUtils.generateRandomString(10) + ".jpg", new FirebaseHelper.IFirebaseUploadFileListener() {
-                            @Override
-                            public void onUploadStart() {
-                                uploadDialog.show();
-                            }
-
-                            @Override
-                            public void onUploadFinish(String fileURL) {
-                                uploadDialog.close();
-                                profileUserPhoto2.setImageBitmap(bitmap);
-                                FirebaseHelper.setUserValue(firebaseActivity.firebaseUser.getUid(), "userPhotoURL", fileURL, new FirebaseHelper.IFirebaseHelperListener() {
+                        FirebaseHelper.uploadByteArray(ImageUtils.getDrawableByteArray(bitmap), File.separator + firebaseActivity.user.getUserName() + "_" + TextUtils.generateRandomString(10) + ".jpg",
+                                "user_images" + File.separator + firebaseActivity.firebaseUser.getUid() + File.separator + "profile_photos",
+                                new FirebaseHelper.UploadListener() {
                                     @Override
-                                    public void onSuccess(Object result) {
-
-                                        final  SimpleBottomSheetDialog.Builder simpleDialog = new SimpleBottomSheetDialog.Builder(getActivity());
-                                        simpleDialog.setTitleText("Фото обновлено")
-                                                .setDialogText("Ваша фотография была успешно обновлена")
-                                                .setDone("Готово", new View.OnClickListener() {
-                                                    @Override
-                                                    public void onClick(View view) {
-                                                        simpleDialog.close();
-                                                    }
-                                                }).build();
-                                        simpleDialog.show();
+                                    public void onFileUploading(int percent, long transferred, long total, String filename) {
+                                        uploadDialog.getDialog().setProgress(percent);
                                     }
 
                                     @Override
-                                    public void onFail(String reason) {
+                                    public void onFileUploaded(Request.FileData fileData) {
                                         uploadDialog.close();
-                                        showUploadPhotoErrorDialog();
+                                        profileUserPhoto2.setImageBitmap(bitmap);
+                                        FirebaseHelper.setUserValue(firebaseActivity.firebaseUser.getUid(), "userPhotoURL", fileData.getDownloadURL(), new FirebaseHelper.IFirebaseHelperListener() {
+                                            @Override
+                                            public void onSuccess(Object result) {
+
+                                                final  SimpleBottomSheetDialog.Builder simpleDialog = new SimpleBottomSheetDialog.Builder(getActivity());
+                                                simpleDialog.setTitleText("Фото обновлено")
+                                                        .setDialogText("Ваша фотография была успешно обновлена")
+                                                        .setDone("Готово", new View.OnClickListener() {
+                                                            @Override
+                                                            public void onClick(View view) {
+                                                                simpleDialog.close();
+                                                            }
+                                                        }).build();
+                                                simpleDialog.show();
+                                            }
+
+                                            @Override
+                                            public void onFail(String reason) {
+                                                uploadDialog.close();
+                                                showUploadPhotoErrorDialog();
+                                            }
+                                        });
+                                    }
+
+                                    @Override
+                                    public void onFileUploadFail(String reason) {
+
                                     }
                                 });
-                            }
-                            @Override
-                            public void onUploadFailed() {
-                                uploadDialog.close();
-                                showUploadPhotoErrorDialog();
-                            }
-
-                            @Override
-                            public void onUpload(int percent, long transferred, long total, String filename) {
-                                uploadDialog.getDialog().setProgress(percent);
-                            }
-                        });
                     }
 
                     @Override

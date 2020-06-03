@@ -9,6 +9,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -45,10 +46,14 @@ public class MainActivity extends FirebaseActivity {
         setContentView(R.layout.activity_main);
         extendedViewPager = findViewById(R.id.mainPager);
         bottomBar = findViewById(R.id.bottomBar);
+
+
+
+
     }
 
     @Override
-    public void onFirebaseChanged(User user) {
+    public void onFirebaseChanged() {
 
     }
 

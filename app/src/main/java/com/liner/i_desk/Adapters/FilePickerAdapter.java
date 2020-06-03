@@ -1,6 +1,9 @@
 package com.liner.i_desk.Adapters;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.view.LayoutInflater;
@@ -13,6 +16,11 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.liner.i_desk.R;
+import com.liner.i_desk.Utils.ImageUtils;
+import com.liner.i_desk.Utils.ViewUtils;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -26,12 +34,14 @@ public class FilePickerAdapter extends RecyclerView.Adapter<FilePickerAdapter.Vi
     private List<FileHolder> fileList = new ArrayList<>();
     private ArrayList<String> path = new ArrayList<>();
     private IPickerListener listener;
+    private ImageLoader imageLoader;
 
     public FilePickerAdapter(Context context, IPickerListener listener) {
         this.context = context;
         this.listener = listener;
         new AsyncFetchFiles(Environment.getExternalStorageDirectory()).execute();
         path.add(Environment.getExternalStorageDirectory().getAbsolutePath());
+        imageLoader = ImageLoader.getInstance();
     }
 
     @NonNull
@@ -43,7 +53,35 @@ public class FilePickerAdapter extends RecyclerView.Adapter<FilePickerAdapter.Vi
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
         final FileHolder item = fileList.get(position);
-        holder.fileItem.setCompoundDrawablesWithIntrinsicBounds((item.getFile().isDirectory()) ? context.getDrawable(R.drawable.folder_icon) : context.getDrawable(R.drawable.file_icon), null, null, null);
+        holder.fileItem.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
+        if(item.getFile().getName().endsWith(".jpg")){
+            Picasso.get()
+                    .load(item.getFile())
+                    .resize(200, 200)
+                    .centerCrop()
+                    .into(new Target() {
+                        @Override
+                        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                            holder.fileItem.setCompoundDrawablesWithIntrinsicBounds(new BitmapDrawable(context.getResources(), bitmap), null, null, null);
+                        }
+
+                        @Override
+                        public void onBitmapFailed(Exception e, Drawable errorDrawable) {
+
+                        }
+
+                        @Override
+                        public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+                        }
+                    });
+        } else if(item.getFile().getName().endsWith(".mp4") || item.getFile().getName().endsWith(".MP4")){
+            new AsyncLoadVideoThumb(item.getFile(), holder.fileItem).execute();
+        } else {
+            holder.fileItem.setCompoundDrawablesWithIntrinsicBounds((item.getFile().isDirectory()) ? context.getDrawable(R.drawable.folder_icon) : context.getDrawable(R.drawable.file_icon), null, null, null);
+        }
+
+        holder.fileItem.setCompoundDrawablePadding(ViewUtils.dpToPx(8));
         holder.fileCheck.setVisibility((item.getFile().isDirectory()) ? View.GONE : View.VISIBLE);
         holder.fileItem.setText(item.getFile().getName());
         holder.fileCheck.setChecked(item.isSelected);
@@ -216,6 +254,26 @@ public class FilePickerAdapter extends RecyclerView.Adapter<FilePickerAdapter.Vi
                     }
                 });
             notifyDataSetChanged();
+        }
+    }
+
+    private class AsyncLoadVideoThumb extends AsyncTask<Object, Object, BitmapDrawable> {
+        private File file;
+        private TextView textView;
+
+        public AsyncLoadVideoThumb(File file, TextView textView) {
+            this.file = file;
+            this.textView = textView;
+        }
+
+        @Override
+        protected BitmapDrawable doInBackground(Object... objects) {
+            return ImageUtils.getVideoThumbnail(context, file, 200, 200);
+        }
+
+        @Override
+        protected void onPostExecute(BitmapDrawable result) {
+            textView.setCompoundDrawablesWithIntrinsicBounds(result, null, null, null);
         }
     }
 }
