@@ -63,6 +63,7 @@ dependencies {
     implementation 'com.github.JagarYousef:ChatVoicePlayer:1.0.7'
     implementation 'com.liulishuo.filedownloader:library:1.7.7'
     implementation 'io.supercharge:shimmerlayout:2.1.0'
+    implementation 'com.firebaseui:firebase-ui-database:6.2.1'
 
 
 }
