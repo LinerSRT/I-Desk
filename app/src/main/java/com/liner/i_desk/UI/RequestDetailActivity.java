@@ -220,6 +220,12 @@ public class RequestDetailActivity extends FirebaseActivity implements MessageIn
 
     }
 
+    @Override
+    public void onSomethingChanged() {
+
+    }
+
+
 
     @SuppressLint("DefaultLocale")
     private String getHumanTimeText(long milliseconds) {
@@ -254,47 +260,41 @@ public class RequestDetailActivity extends FirebaseActivity implements MessageIn
 
 
 
-    @Override
-    public void onFirebaseChanged() {
-        FirebaseHelper.getRequestByID(requestID, new FirebaseHelper.IFirebaseHelperListener() {
-            @Override
-            public void onSuccess(Object result) {
-                request = (Request) result;
-                if(request.getRequestStatus() == Request.Status.CLOSED){
-                    chatLayout.setVisibility(View.GONE);
-                    requestDetailCloseRequest.setVisibility(View.GONE);
-                } else {
-                    if(user.getUserAccountType() == User.Type.SERVICE) {
-                        requestDetailCloseRequest.setVisibility(View.VISIBLE);
-                    } else {
-                        requestDetailCloseRequest.setVisibility(View.GONE);
-                    }
-                    chatLayout.setVisibility(View.VISIBLE);
-                    messagesListAdapter.clear();
-                    if (request.getMessageList() != null && !request.getMessageList().isEmpty()) {
-                        for (Message message : request.getMessageList()) {
-                            messagesListAdapter.addToStart(message, false);
-                        }
-                    }
-                }
-            }
-
-            @Override
-            public void onFail(String reason) {
-
-            }
-        });
-    }
-
-    @Override
-    public void onUserObtained(User user) {
-
-    }
-
+//    @Override
+//    public void onFirebaseChanged() {
+//        FirebaseHelper.getRequestByID(requestID, new FirebaseHelper.IFirebaseHelperListener() {
+//            @Override
+//            public void onSuccess(Object result) {
+//                request = (Request) result;
+//                if(request.getRequestStatus() == Request.Status.CLOSED){
+//                    chatLayout.setVisibility(View.GONE);
+//                    requestDetailCloseRequest.setVisibility(View.GONE);
+//                } else {
+//                    if(user.getUserAccountType() == User.Type.SERVICE) {
+//                        requestDetailCloseRequest.setVisibility(View.VISIBLE);
+//                    } else {
+//                        requestDetailCloseRequest.setVisibility(View.GONE);
+//                    }
+//                    chatLayout.setVisibility(View.VISIBLE);
+//                    messagesListAdapter.clear();
+//                    if (request.getMessageList() != null && !request.getMessageList().isEmpty()) {
+//                        for (Message message : request.getMessageList()) {
+//                            messagesListAdapter.addToStart(message, false);
+//                        }
+//                    }
+//                }
+//            }
+//
+//            @Override
+//            public void onFail(String reason) {
+//
+//            }
+//        });
+//    }
 
     @Override
     public boolean onSubmit(CharSequence input) {
-        createComment(user.getUserName(), user.getUserUID(), request.getRequestID(), input.toString().trim(), fileList);
+        createComment(getCurrentUser().getUserName(), getCurrentUser().getUserUID(), request.getRequestID(), input.toString().trim(), fileList);
         return true;
     }
 
@@ -317,7 +317,7 @@ public class RequestDetailActivity extends FirebaseActivity implements MessageIn
                 message.setMessageCreationTime(TimeUtils.getCurrentTime(TimeUtils.Type.SERVER));
                 message.setMessageCreatorName(creatorName);
                 message.setMessageCreatorID(creatorID);
-                message.setMessageCreatorPhotoURL(user.getUserPhotoURL());
+                message.setMessageCreatorPhotoURL(getCurrentUser().getUserPhotoURL());
                 message.setMessageText(messageText);
                 message.setFileDataList(fileDataList);
                 message.setMessageReaded(false);
@@ -338,7 +338,7 @@ public class RequestDetailActivity extends FirebaseActivity implements MessageIn
                 message.setMessageCreationTime(TimeUtils.getCurrentTime(TimeUtils.Type.SERVER));
                 message.setMessageCreatorName(creatorName);
                 message.setMessageCreatorID(creatorID);
-                message.setMessageCreatorPhotoURL(user.getUserPhotoURL());
+                message.setMessageCreatorPhotoURL(getCurrentUser().getUserPhotoURL());
                 message.setMessageText(messageText);
                 message.setMessageReaded(false);
                 message.setFileDataList(new ArrayList<Request.FileData>());

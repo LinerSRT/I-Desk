@@ -17,8 +17,17 @@ public class User {
     private Type userAccountType;
     private String userLastOnlineTimeStamp;
     private List<Request> requestList;
+    private long lastOnlineTimestamp;
 
     public User() {
+    }
+
+    public long getLastOnlineTimestamp() {
+        return lastOnlineTimestamp;
+    }
+
+    public void setLastOnlineTimestamp(long lastOnlineTimestamp) {
+        this.lastOnlineTimestamp = lastOnlineTimestamp;
     }
 
     public Type getUserAccountType() {

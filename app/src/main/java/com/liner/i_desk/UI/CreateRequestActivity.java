@@ -49,7 +49,6 @@ public class CreateRequestActivity extends FirebaseActivity {
     private FilePickerBottomSheetDialog.Builder filePickerBottomSheetDialog;
     private DatePickerBottomSheetDialog.Builder datePickerBottomSheetDialog;
     private Request newRequest = new Request();
-    private List<Request> userRequests;
 
     private IndeterminateBottomSheetDialog.Builder actionProgressDialog;
     private boolean requestTitleDone = false;
@@ -300,12 +299,7 @@ public class CreateRequestActivity extends FirebaseActivity {
     }
 
     @Override
-    public void onFirebaseChanged() {
-
-    }
-
-    @Override
-    public void onUserObtained(User user) {
+    public void onSomethingChanged() {
 
     }
 
@@ -330,7 +324,7 @@ public class CreateRequestActivity extends FirebaseActivity {
             showMessage("Внимание!", "Укажите дедлайн заявки");
             return;
         }
-        if (user != null) {
+        if (getCurrentUser() != null) {
             actionProgressDialog.show();
             final SimpleBottomSheetDialog.Builder confirmDialog = new SimpleBottomSheetDialog.Builder(CreateRequestActivity.this);
             confirmDialog.setTitleText("Заявка создана")
@@ -361,9 +355,6 @@ public class CreateRequestActivity extends FirebaseActivity {
                         }
                     }).build();
 
-            userRequests = user.getRequestList();
-            if (userRequests == null)
-                userRequests = new ArrayList<>();
             newRequest.setRequestID(TextUtils.generateRandomString(20));
             newRequest.setRequestCreatorID(firebaseUser.getUid());
             newRequest.setRequestCheckList(new ArrayList<Request.RequestCheckList>());
@@ -394,21 +385,27 @@ public class CreateRequestActivity extends FirebaseActivity {
                 public void onFilesUploaded(List<Request.FileData> fileDataList) {
                     uploadFileDialog.dismiss(true);
                     newRequest.setRequestFiles(fileDataList);
-                    userRequests.add(newRequest);
-                    FirebaseHelper.setUserValue(firebaseUser.getUid(), "requestList", userRequests, new FirebaseHelper.IFirebaseHelperListener() {
-                        @Override
-                        public void onSuccess(Object result) {
-                            actionProgressDialog.close();
-                            confirmDialog.show();
-                        }
+                    if(getCurrentUser().getRequestList() == null)
+                        getCurrentUser().setRequestList(new ArrayList<Request>());
+                    getCurrentUser().getRequestList().add(newRequest);
+                    setUser(getCurrentUser());
+                    actionProgressDialog.close();
+                    confirmDialog.show();
 
-                        @Override
-                        public void onFail(String reason) {
-                            actionProgressDialog.close();
-                            confirmDialog.close();
-                            errorDialog.show();
-                        }
-                    });
+//
+//                    userRequests.add(newRequest);
+//                    FirebaseHelper.setUserValue(firebaseUser.getUid(), "requestList", userRequests, new FirebaseHelper.IFirebaseHelperListener() {
+//                        @Override
+//                        public void onSuccess(Object result) {
+//                        }
+//
+//                        @Override
+//                        public void onFail(String reason) {
+//                            actionProgressDialog.close();
+//                            confirmDialog.close();
+//                            errorDialog.show();
+//                        }
+//                    });
                 }
 
                 @Override
@@ -420,22 +417,28 @@ public class CreateRequestActivity extends FirebaseActivity {
 
                 @Override
                 public void onListEmpty() {
-                    newRequest.setRequestFiles(new ArrayList<Request.FileData>());
-                    userRequests.add(newRequest);
-                    FirebaseHelper.setUserValue(firebaseUser.getUid(), "requestList", userRequests, new FirebaseHelper.IFirebaseHelperListener() {
-                        @Override
-                        public void onSuccess(Object result) {
-                            actionProgressDialog.close();
-                            confirmDialog.show();
-                        }
-
-                        @Override
-                        public void onFail(String reason) {
-                            actionProgressDialog.close();
-                            confirmDialog.close();
-                            errorDialog.show();
-                        }
-                    });
+//                    newRequest.setRequestFiles(new ArrayList<Request.FileData>());
+//                    userRequests.add(newRequest);
+//                    FirebaseHelper.setUserValue(firebaseUser.getUid(), "requestList", userRequests, new FirebaseHelper.IFirebaseHelperListener() {
+//                        @Override
+//                        public void onSuccess(Object result) {
+//                            actionProgressDialog.close();
+//                            confirmDialog.show();
+//                        }
+//
+//                        @Override
+//                        public void onFail(String reason) {
+//                            actionProgressDialog.close();
+//                            confirmDialog.close();
+//                            errorDialog.show();
+//                        }
+//                    });
+                    if(getCurrentUser().getRequestList() == null)
+                        getCurrentUser().setRequestList(new ArrayList<Request>());
+                    getCurrentUser().getRequestList().add(newRequest);
+                    setUser(getCurrentUser());
+                    actionProgressDialog.close();
+                    confirmDialog.show();
                 }
             });
 
