@@ -61,7 +61,7 @@ public class HourPickerView extends WheelPicker<Integer> {
     public void setMinimumHour(long time) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date(time));
-        this.minimumHour = calendar.get(Calendar.HOUR_OF_DAY);
+        this.minimumHour = calendar.get(Calendar.HOUR_OF_DAY)+1;
         this.selectedHour = minimumHour;
         updateHour();
     }

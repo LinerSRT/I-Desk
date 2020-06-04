@@ -6,6 +6,21 @@
     android:animateLayoutChanges="true"
     android:background="?backgroundColor">
 
+    <TextView
+        android:id="@+id/profileActionBack"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/appBarHeight"
+        android:background="@drawable/round_corner_bottom"
+        android:gravity="center_vertical"
+        android:text="Назад"
+        android:elevation="4dp"
+        android:paddingStart="@dimen/contentMargin"
+        android:drawableStart="@drawable/arrow_back"
+        android:textColor="@color/color_white"
+        android:textSize="@dimen/primaryTextSize" />
+
+
+
     <ImageView
         android:id="@+id/profileBackground"
         android:layout_width="match_parent"

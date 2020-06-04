@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
+import com.liner.i_desk.API.Data.Message;
 import com.liner.i_desk.API.Data.Request;
 import com.liner.i_desk.API.Data.User;
 import com.liner.i_desk.API.FirebaseHelper;
@@ -17,6 +18,7 @@ import com.liner.i_desk.Utils.Views.EditRegexTextView;
 import com.liner.i_desk.Utils.Views.ExtendedTextButton;
 import com.liner.i_desk.Utils.Views.FilePickerBottomSheetDialog;
 import com.liner.i_desk.Utils.Views.FirebaseActivity;
+import com.liner.i_desk.Utils.Views.IndeterminateBottomSheetDialog;
 import com.liner.i_desk.Utils.Views.ProgressBottomSheetDialog;
 import com.liner.i_desk.Utils.Views.RequestCheckListView;
 import com.liner.i_desk.Utils.Views.RequestTypeView;
@@ -49,6 +51,7 @@ public class CreateRequestActivity extends FirebaseActivity {
     private Request newRequest = new Request();
     private List<Request> userRequests;
 
+    private IndeterminateBottomSheetDialog.Builder actionProgressDialog;
     private boolean requestTitleDone = false;
     private boolean requestShortDescDone = false;
     private boolean requestUserDeviceDescDone = false;
@@ -79,6 +82,12 @@ public class CreateRequestActivity extends FirebaseActivity {
             }
         });
 
+
+        actionProgressDialog = new IndeterminateBottomSheetDialog.Builder(this);
+        actionProgressDialog
+                .setTitleText("Подождите")
+                .setDialogText("Идет обработка")
+                .build();
 
         createRequestShortDescription.setTextListener(new EditRegexTextView.IEditTextListener() {
             @Override
@@ -322,6 +331,7 @@ public class CreateRequestActivity extends FirebaseActivity {
             return;
         }
         if (user != null) {
+            actionProgressDialog.show();
             final SimpleBottomSheetDialog.Builder confirmDialog = new SimpleBottomSheetDialog.Builder(CreateRequestActivity.this);
             confirmDialog.setTitleText("Заявка создана")
                     .setDialogText("Ваша заявка была успешно создана")
@@ -359,7 +369,7 @@ public class CreateRequestActivity extends FirebaseActivity {
             newRequest.setRequestCheckList(new ArrayList<Request.RequestCheckList>());
             newRequest.setRequestFiles(new ArrayList<Request.FileData>());
             newRequest.setRequestType(createRequestTypeView.getType());
-            newRequest.setRequestCommentList(new ArrayList<Request.RequestComment>());
+            newRequest.setMessageList(new ArrayList<Message>());
             newRequest.setRequestCreationTime(TimeUtils.getCurrentTime(TimeUtils.Type.SERVER));
             newRequest.setRequestDeadlineTime(TimeUtils.convertDate(datePickerBottomSheetDialog.getDialog().getPickedDate()));
             newRequest.setRequestUserDeviceDescription(createRequestUserDeviceDescription.getText().toString().trim());
@@ -370,63 +380,64 @@ public class CreateRequestActivity extends FirebaseActivity {
             for (RequestCheckListView.RequestListItem item : createRequestCheckListView.getRequestListItems()) {
                 newRequest.getRequestCheckList().add(new Request.RequestCheckList(item.getTextView().getText().toString().trim(), false));
             }
-            if (!fileList.isEmpty()) {
-                final ProgressBottomSheetDialog uploadFileDialog = ViewUtils.createProgressDialog(this, "Загрузка файлов", "Подождите, идет загрузка");
+            final ProgressBottomSheetDialog uploadFileDialog = ViewUtils.createProgressDialog(this, "Загрузка файлов", "Подождите, идет загрузка");
+            if(!fileList.isEmpty())
                 uploadFileDialog.create();
-                FirebaseHelper.uploadFileList(fileList, "user_files" + File.separator + firebaseUser.getUid() + File.separator + "requests" + File.separator + newRequest.getRequestID(), new FirebaseHelper.UploadListListener() {
-                    @Override
-                    public void onFileUploading(int percent, long transferred, long total, String filename) {
+            FirebaseHelper.uploadFileList(fileList, "user_files" + File.separator + firebaseUser.getUid() + File.separator + "requests" + File.separator + newRequest.getRequestID(), new FirebaseHelper.UploadListListener() {
+                @Override
+                public void onFileUploading(int percent, long transferred, long total, String filename) {
 
-                        uploadFileDialog.setProgress(percent, total, transferred, filename);
-                    }
+                    uploadFileDialog.setProgress(percent, total, transferred, filename);
+                }
 
-                    @Override
-                    public void onFilesUploaded(List<Request.FileData> fileDataList) {
-                        uploadFileDialog.dismiss(true);
-                        newRequest.setRequestFiles(fileDataList);
-                        userRequests.add(newRequest);
-                        FirebaseHelper.setUserValue(firebaseUser.getUid(), "requestList", userRequests, new FirebaseHelper.IFirebaseHelperListener() {
-                            @Override
-                            public void onSuccess(Object result) {
-                                confirmDialog.show();
-                            }
+                @Override
+                public void onFilesUploaded(List<Request.FileData> fileDataList) {
+                    uploadFileDialog.dismiss(true);
+                    newRequest.setRequestFiles(fileDataList);
+                    userRequests.add(newRequest);
+                    FirebaseHelper.setUserValue(firebaseUser.getUid(), "requestList", userRequests, new FirebaseHelper.IFirebaseHelperListener() {
+                        @Override
+                        public void onSuccess(Object result) {
+                            actionProgressDialog.close();
+                            confirmDialog.show();
+                        }
 
-                            @Override
-                            public void onFail(String reason) {
-                                confirmDialog.close();
-                                errorDialog.show();
-                            }
-                        });
-                    }
+                        @Override
+                        public void onFail(String reason) {
+                            actionProgressDialog.close();
+                            confirmDialog.close();
+                            errorDialog.show();
+                        }
+                    });
+                }
 
-                    @Override
-                    public void onFileUploadFail(String reason) {
-                        confirmDialog.close();
-                        errorDialog.show();
-                    }
+                @Override
+                public void onFileUploadFail(String reason) {
+                    actionProgressDialog.close();
+                    confirmDialog.close();
+                    errorDialog.show();
+                }
 
-                    @Override
-                    public void onListEmpty() {
+                @Override
+                public void onListEmpty() {
+                    newRequest.setRequestFiles(new ArrayList<Request.FileData>());
+                    userRequests.add(newRequest);
+                    FirebaseHelper.setUserValue(firebaseUser.getUid(), "requestList", userRequests, new FirebaseHelper.IFirebaseHelperListener() {
+                        @Override
+                        public void onSuccess(Object result) {
+                            actionProgressDialog.close();
+                            confirmDialog.show();
+                        }
 
-                    }
-                });
-
-            } else {
-                newRequest.setRequestFiles(new ArrayList<Request.FileData>());
-                userRequests.add(newRequest);
-                FirebaseHelper.setUserValue(firebaseUser.getUid(), "requestList", userRequests, new FirebaseHelper.IFirebaseHelperListener() {
-                    @Override
-                    public void onSuccess(Object result) {
-                        confirmDialog.show();
-                    }
-
-                    @Override
-                    public void onFail(String reason) {
-                        confirmDialog.close();
-                        errorDialog.show();
-                    }
-                });
-            }
+                        @Override
+                        public void onFail(String reason) {
+                            actionProgressDialog.close();
+                            confirmDialog.close();
+                            errorDialog.show();
+                        }
+                    });
+                }
+            });
 
         }
     }

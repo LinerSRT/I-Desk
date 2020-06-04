@@ -19,6 +19,7 @@ import androidx.annotation.Nullable;
 import com.liner.i_desk.API.Data.Request;
 import com.liner.i_desk.API.FirebaseHelper;
 import com.liner.i_desk.R;
+import com.liner.i_desk.UI.MainActivity;
 import com.liner.i_desk.UI.SplashActivity;
 import com.liner.i_desk.Utils.ImageUtils;
 import com.liner.i_desk.Utils.TextUtils;
@@ -46,6 +47,7 @@ public class UserProfileFragment extends FirebaseFragment implements EditRegexTe
     private TextView profileUserType;
     private TextView profileUserAbout;
     private TextView profileUserAdditionalInfo;
+    private TextView profileActionBack;
     private CircleImageView profileUserPhoto2;
     private LinearLayout profileUserChangePhoto;
     private LinearLayout profileUserChangeAbout;
@@ -75,7 +77,7 @@ public class UserProfileFragment extends FirebaseFragment implements EditRegexTe
     }
 
     @Override
-    public void onUserOptained() {
+    public void onUserObtained() {
         loadUserData();
     }
 
@@ -98,6 +100,13 @@ public class UserProfileFragment extends FirebaseFragment implements EditRegexTe
         profileAdditionalActionText = view.findViewById(R.id.profileAdditionalActionText);
         profileAboutActionSubmit = view.findViewById(R.id.profileAboutActionSubmit);
         profileAdditionalActionSubmit = view.findViewById(R.id.profileAdditionalActionSubmit);
+        profileActionBack = view.findViewById(R.id.profileActionBack);
+        profileActionBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                MainActivity.extendedViewPager.setCurrentItem(0);
+            }
+        });
         actionProgressDialog = new IndeterminateBottomSheetDialog.Builder(getActivity());
         actionProgressDialog
                 .setTitleText("Подождите")
@@ -231,6 +240,7 @@ public class UserProfileFragment extends FirebaseFragment implements EditRegexTe
                         actionProgressDialog.close();
                         final ProgressBottomSheetDialog.Builder uploadDialog = new ProgressBottomSheetDialog.Builder(getActivity());
                         uploadDialog.setTitleText("Загрузка").setDialogText("Пожалуйста подождите, Ваше фото загружается").build();
+                        uploadDialog.show();
                         FirebaseHelper.uploadByteArray(ImageUtils.getDrawableByteArray(bitmap), File.separator + firebaseActivity.user.getUserName() + "_" + TextUtils.generateRandomString(10) + ".jpg",
                                 "user_images" + File.separator + firebaseActivity.firebaseUser.getUid() + File.separator + "profile_photos",
                                 new FirebaseHelper.UploadListener() {

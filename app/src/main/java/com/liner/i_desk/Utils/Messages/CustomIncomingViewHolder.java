@@ -11,7 +11,9 @@ import android.widget.MediaController;
 import android.widget.TextView;
 import android.widget.VideoView;
 
+import com.liner.i_desk.API.Data.Message;
 import com.liner.i_desk.API.Data.Request;
+import com.liner.i_desk.API.FirebaseHelper;
 import com.liner.i_desk.IDesk;
 import com.liner.i_desk.R;
 import com.liner.i_desk.Utils.FileUtils;
@@ -24,7 +26,7 @@ import java.io.File;
 import me.jagar.chatvoiceplayerlibrary.VoicePlayerView;
 
 
-public class CustomIncomingViewHolder extends MessagesListAdapter.IncomingMessageViewHolder<Request.RequestComment>{
+public class CustomIncomingViewHolder extends MessagesListAdapter.IncomingMessageViewHolder<Message>{
     private VoicePlayerView voicePlayerView;
     private FileMessageView fileMessageView;
     private VideoMessageView videoMessageView;
@@ -42,13 +44,15 @@ public class CustomIncomingViewHolder extends MessagesListAdapter.IncomingMessag
     }
 
     @Override
-    public void onBind(Request.RequestComment message) {
+    public void onBind(Message message) {
         super.onBind(message);
         userNickName.setText(message.getUser().getName());
         voicePlayerView.setVisibility(View.GONE);
         videoMessageView.hideView();
         fileMessageView.hideView();
         imageMessageView.hideView();
+        message.setMessageReaded(true);
+        //FirebaseHelper.updateMessage(message.getRequestID(), message);
         if (message.getFileDataList() != null && !message.getFileDataList().isEmpty()) {
             for (Request.FileData fileData : message.getFileDataList()) {
                 fileMessageView.setup(fileData);

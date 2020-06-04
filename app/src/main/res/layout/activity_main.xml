@@ -17,22 +17,4 @@
         android:layout_weight="1"/>
 
 
-    <me.ibrahimsn.lib.SmoothBottomBar
-        android:id="@+id/bottomBar"
-        android:elevation="@dimen/cardElevation"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/appBarHeight"
-        app:backgroundColor="?backgroundColorSecondary"
-        app:indicatorColor="?colorPrimaryDark"
-        app:duration="300"
-        app:iconTint="?colorPrimaryDark"
-        app:iconTintActive="@color/color_white"
-        app:iconSize="18dp"
-        app:menu="@menu/app_menu"
-        app:textColor="@color/color_white"
-        app:textSize="0sp"
-        app:cornerRadius="@dimen/cardsCornerRadius"
-        app:indicatorRadius="10dp"
-        tools:ignore="SmallSp" />
-
 </LinearLayout>

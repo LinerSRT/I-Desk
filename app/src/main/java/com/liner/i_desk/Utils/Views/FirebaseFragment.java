@@ -19,19 +19,20 @@ public abstract class FirebaseFragment extends Fragment implements BroadcastMana
         firebaseActivity = (FirebaseActivity) getActivity();
         broadcastManager = new BroadcastManager(getContext());
         broadcastManager.registerListener(FIREBASE_ACTION, this);
+        broadcastManager.registerListener(FIREBASE_ACTION_USER, this);
         super.onCreate(savedInstanceState);
 
     }
 
 
     public abstract void onFirebaseChanged();
-    public abstract void onUserOptained();
+    public abstract void onUserObtained();
 
     @Override
     public void onReceiveLocal(Intent intent) {
         if(intent.getAction().equals(FIREBASE_ACTION))
             onFirebaseChanged();
         if(intent.getAction().equals(FIREBASE_ACTION_USER))
-            onUserOptained();
+            onUserObtained();
     }
 }

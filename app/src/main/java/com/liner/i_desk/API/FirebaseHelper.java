@@ -21,6 +21,7 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.liner.i_desk.API.Data.Message;
 import com.liner.i_desk.API.Data.Request;
 import com.liner.i_desk.API.Data.User;
 import com.liner.i_desk.Utils.FileUtils;
@@ -28,7 +29,6 @@ import com.liner.i_desk.Utils.TextUtils;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -68,29 +68,7 @@ public class FirebaseHelper {
     }
 
 
-
-    public static void getRequestCommentList(final String requestID, final IFirebaseHelperListener helperListener) {
-        getUserDatabase().addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                User user = dataSnapshot.getValue(User.class);
-                if(user.getRequestList() != null)
-                for(Request request:user.getRequestList()){
-                    if(request.getRequestID().equals(requestID)){
-                        helperListener.onSuccess(request.getRequestCommentList());
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-    }
-
-
-    public static void addComment(final String requestID, final Request.RequestComment comment){
+    public static void addNewMessage(final String requestID, final Message message){
         getUsersDatabase().addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -99,7 +77,9 @@ public class FirebaseHelper {
                         for(DataSnapshot requestChild:requestChildList.getChildren()) {
                             Request fetchedRequest = requestChild.getValue(Request.class);
                             if (fetchedRequest.getRequestID().equals(requestID)) {
-                                fetchedRequest.getRequestCommentList().add(comment);
+                                if(fetchedRequest.getMessageList() == null)
+                                    fetchedRequest.setMessageList(new ArrayList<Message>());
+                                fetchedRequest.getMessageList().add(message);
                                 DatabaseReference requestReference = requestChild.getRef();
                                 requestReference.setValue(fetchedRequest);
                             }
@@ -115,6 +95,60 @@ public class FirebaseHelper {
         });
     }
 
+    public static void updateMessage(final String requestID, final Message message){
+        getUsersDatabase().addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot usersChild:dataSnapshot.getChildren()){
+                    for(DataSnapshot requestChildList:usersChild.getChildren()){
+                        int id = 0;
+                        for(DataSnapshot requestChild:requestChildList.getChildren()) {
+                            Request fetchedRequest = requestChild.getValue(Request.class);
+                            if (fetchedRequest.getRequestID().equals(requestID)) {
+                                fetchedRequest.getMessageList().set(id, message);
+                                DatabaseReference requestReference = requestChild.getRef();
+                                requestReference.setValue(fetchedRequest);
+                            }
+                            id ++;
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    public static void updateRequest(final String requestID, final Request request, final IFirebaseHelperListener listener){
+        getUsersDatabase().addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot usersChild:dataSnapshot.getChildren()){
+                    for(DataSnapshot requestChildList:usersChild.getChildren()){
+                        for(DataSnapshot requestChild:requestChildList.getChildren()) {
+                            Request fetchedRequest = requestChild.getValue(Request.class);
+                            if (fetchedRequest.getRequestID().equals(requestID)) {
+                                DatabaseReference requestReference = requestChild.getRef();
+                                requestReference.setValue(request);
+                            }
+                        }
+                    }
+                }
+                listener.onSuccess(null);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+
+
     public static void getRequests(final User currentUser, final IFirebaseHelperListener listener){
         final List<Request> requestList = new ArrayList<>();
         getUsersDatabase().addListenerForSingleValueEvent(new ValueEventListener() {
@@ -123,10 +157,12 @@ public class FirebaseHelper {
                 for(DataSnapshot usersChild:dataSnapshot.getChildren()){
                     User fetchedUser = usersChild.getValue(User.class);
                     if(currentUser.getUserAccountType() == User.Type.SERVICE){
-                        requestList.addAll(fetchedUser.getRequestList());
+                        if(fetchedUser.getRequestList() != null)
+                            requestList.addAll(fetchedUser.getRequestList());
                     } else {
                         if(fetchedUser.getUserUID().equals(currentUser.getUserUID())){
-                            requestList.addAll(fetchedUser.getRequestList());
+                            if(fetchedUser.getRequestList() != null)
+                                requestList.addAll(fetchedUser.getRequestList());
                         }
                     }
                 }
@@ -228,11 +264,6 @@ public class FirebaseHelper {
     public static DatabaseReference getUsersDatabase() {
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         return firebaseDatabase.getReference().child("Users");
-    }
-
-    public static DatabaseReference getUserDatabase() {
-        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-        return firebaseDatabase.getReference().child("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
     }
 
 

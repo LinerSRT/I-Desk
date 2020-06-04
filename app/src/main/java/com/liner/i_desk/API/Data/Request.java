@@ -1,16 +1,7 @@
 package com.liner.i_desk.API.Data;
 
-import androidx.annotation.Nullable;
-
-import com.google.firebase.storage.StorageMetadata;
-import com.liner.i_desk.Utils.TimeUtils;
-import com.stfalcon.chatkit.commons.models.IMessage;
-import com.stfalcon.chatkit.commons.models.IUser;
-import com.stfalcon.chatkit.commons.models.MessageContentType;
-
 import java.io.File;
 import java.io.Serializable;
-import java.util.Date;
 import java.util.List;
 
 public class Request implements Serializable {
@@ -41,7 +32,7 @@ public class Request implements Serializable {
     private String requestShortDescription;
     private List<RequestCheckList> requestCheckList;
     private List<FileData> requestFiles;
-    private List<RequestComment> requestCommentList;
+    private List<Message> messageList;
 
 
     public Request() {
@@ -144,12 +135,12 @@ public class Request implements Serializable {
         this.requestFiles = requestFiles;
     }
 
-    public List<RequestComment> getRequestCommentList() {
-        return requestCommentList;
+    public List<Message> getMessageList() {
+        return messageList;
     }
 
-    public void setRequestCommentList(List<RequestComment> requestCommentList) {
-        this.requestCommentList = requestCommentList;
+    public void setMessageList(List<Message> messageList) {
+        this.messageList = messageList;
     }
 
 
@@ -168,151 +159,10 @@ public class Request implements Serializable {
                 ", requestShortDescription='" + requestShortDescription + '\'' +
                 ", requestCheckList=" + requestCheckList +
                 ", requestFiles=" + requestFiles +
-                ", requestCommentList=" + requestCommentList +
+                ", messageList=" + messageList +
                 '}';
     }
 
-    public static class RequestComment implements Serializable, IMessage, MessageContentType {
-        private String commentID;
-        private String commentCreatorID;
-        private String commentCreatorPhotoURL;
-        private String commentCreationTime;
-        private String commentCreatorName;
-        private String commentText;
-        private boolean commentReaded;
-
-
-
-        private List<FileData> fileDataList;
-
-        public RequestComment() {
-        }
-
-        public boolean isCommentReaded() {
-            return commentReaded;
-        }
-
-        public void setCommentReaded(boolean commentReaded) {
-            this.commentReaded = commentReaded;
-        }
-
-        public String getCommentCreatorName() {
-            return commentCreatorName;
-        }
-
-        public void setCommentCreatorName(String commentCreatorName) {
-            this.commentCreatorName = commentCreatorName;
-        }
-
-        public String getCommentID() {
-            return commentID;
-        }
-
-        public void setCommentID(String commentID) {
-            this.commentID = commentID;
-        }
-
-        public String getCommentCreatorID() {
-            return commentCreatorID;
-        }
-
-        public void setCommentCreatorID(String commentCreatorID) {
-            this.commentCreatorID = commentCreatorID;
-        }
-
-        public String getCommentCreationTime() {
-            return commentCreationTime;
-        }
-
-        public void setCommentCreationTime(String commentCreationTime) {
-            this.commentCreationTime = commentCreationTime;
-        }
-
-        public String getCommentText() {
-            return commentText;
-        }
-
-        public void setCommentText(String commentText) {
-            this.commentText = commentText;
-        }
-
-        public String getCommentCreatorPhotoURL() {
-            return commentCreatorPhotoURL;
-        }
-
-        public void setCommentCreatorPhotoURL(String commentCreatorPhotoURL) {
-            this.commentCreatorPhotoURL = commentCreatorPhotoURL;
-        }
-
-        public List<FileData> getFileDataList() {
-            return fileDataList;
-        }
-
-        public void setFileDataList(List<FileData> fileDataList) {
-            this.fileDataList = fileDataList;
-        }
-
-        @Override
-        public String toString() {
-            return "RequestComment{" +
-                    "commentID='" + commentID + '\'' +
-                    ", commentCreatorID='" + commentCreatorID + '\'' +
-                    ", commentCreatorPhotoURL='" + commentCreatorPhotoURL + '\'' +
-                    ", commentCreationTime='" + commentCreationTime + '\'' +
-                    ", commentCreatorName='" + commentCreatorName + '\'' +
-                    ", commentText='" + commentText + '\'' +
-                    ", fileDataList=" + fileDataList +
-                    '}';
-        }
-
-        @Override
-        public IUser getUser() {
-            return new IUser() {
-                @Override
-                public String getId() {
-                    return getCommentCreatorID();
-                }
-
-                @Override
-                public String getName() {
-                    return getCommentCreatorName();
-                }
-
-                @Override
-                public String getAvatar() {
-                    return getCommentCreatorPhotoURL();
-                }
-            };
-        }
-
-        @Override
-        public String getId() {
-            return getCommentCreatorID();
-        }
-
-        @Override
-        public String getText() {
-            return getCommentText();
-        }
-
-        @Override
-        public Date getCreatedAt() {
-            return TimeUtils.getTime(TimeUtils.convertDate(getCommentCreationTime())).getTime();
-        }
-
-
-//        @Nullable
-//        @Override
-//        public String getImageUrl() {
-//            if(getCommentFiles() != null && !getCommentFiles().isEmpty()){
-//                for(RequestFile file:getCommentFiles()){
-//                    return file.getFilePath();
-//                }
-//            } else {
-//                return null;
-//            }
-//        }
-    }
 
     public static class FileData implements Serializable{
         private String downloadURL;

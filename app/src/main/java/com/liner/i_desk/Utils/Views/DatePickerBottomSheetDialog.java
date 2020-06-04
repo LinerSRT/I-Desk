@@ -85,7 +85,7 @@ public class DatePickerBottomSheetDialog extends BaseBottomSheet {
         }
         datePickerDialogView.setIndicatorText("г","м", "д", "ч");
         datePickerDialogView.setMaxDate(currentTime.getTime() + TimeUnit.DAYS.toMillis(Math.abs(30)));
-        datePickerDialogView.setMinDate(currentTime.getTime()+TimeUnit.HOURS.toMillis(Math.abs(1)));
+        datePickerDialogView.setMinDate(currentTime.getTime()+TimeUnit.HOURS.toMillis(3));
         datePickerDialogTitle.setText(titleText);
         datePickerDialogDone.setText(doneText);
         datePickerDialogDone.setOnClickListener(doneClickListener);

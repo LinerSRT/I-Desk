@@ -40,8 +40,6 @@ public abstract class FirebaseActivity extends FragmentActivity {
     public String FIREBASE_ACTION_USER = "com.liner.i_desk.FIREBASE_ACTION_USER";
 
 
-    public List<Request> userRequestList = new ArrayList<>();
-
 
     public boolean hideKeyboard = true;
     @Override
@@ -61,7 +59,6 @@ public abstract class FirebaseActivity extends FragmentActivity {
                 FirebaseHelper.getRequests(user, new FirebaseHelper.IFirebaseHelperListener() {
                     @Override
                     public void onSuccess(Object result) {
-                        userRequestList = (List<Request>) result;
                         broadcastManager.sendLocal(FIREBASE_ACTION_USER);
                         onUserObtained(user);
                     }
@@ -88,6 +85,7 @@ public abstract class FirebaseActivity extends FragmentActivity {
                 }
                 onFirebaseChanged();
                 broadcastManager.sendLocal(FIREBASE_ACTION);
+                updateUserList();
             }
 
             @Override
@@ -97,6 +95,7 @@ public abstract class FirebaseActivity extends FragmentActivity {
                 }
                 onFirebaseChanged();
                 broadcastManager.sendLocal(FIREBASE_ACTION);
+                updateUserList();
             }
 
             @Override
@@ -106,6 +105,7 @@ public abstract class FirebaseActivity extends FragmentActivity {
                 }
                 onFirebaseChanged();
                 broadcastManager.sendLocal(FIREBASE_ACTION);
+                updateUserList();
             }
 
             @Override
@@ -115,6 +115,7 @@ public abstract class FirebaseActivity extends FragmentActivity {
                 }
                 onFirebaseChanged();
                 broadcastManager.sendLocal(FIREBASE_ACTION);
+                updateUserList();
             }
 
             @Override
@@ -132,7 +133,6 @@ public abstract class FirebaseActivity extends FragmentActivity {
         FirebaseHelper.getRequests(user, new FirebaseHelper.IFirebaseHelperListener() {
             @Override
             public void onSuccess(Object result) {
-                userRequestList = (List<Request>) result;
                 broadcastManager.sendLocal(FIREBASE_ACTION_USER);
                 onUserObtained(user);
             }

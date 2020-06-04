@@ -80,6 +80,7 @@
             android:layout_below="@id/messageText"
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
+            android:drawableEnd="@drawable/message_readed"
             android:layout_marginTop="@dimen/contentMarginHalf"
             android:textSize="@dimen/secondaryTextSizeSmall"
             app:layout_alignSelf="center"

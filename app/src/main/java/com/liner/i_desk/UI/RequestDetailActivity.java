@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 
+import com.liner.i_desk.API.Data.Message;
 import com.liner.i_desk.API.Data.Request;
 import com.liner.i_desk.API.Data.User;
 import com.liner.i_desk.API.FirebaseHelper;
@@ -28,6 +29,7 @@ import com.liner.i_desk.Utils.Views.AudioRecord.RecordView;
 import com.liner.i_desk.Utils.Views.FilePickerBottomSheetDialog;
 import com.liner.i_desk.Utils.Views.FirebaseActivity;
 import com.liner.i_desk.Utils.Views.ProgressBottomSheetDialog;
+import com.liner.i_desk.Utils.Views.SimpleBottomSheetDialog;
 import com.liner.i_desk.Utils.Views.VerticalTextView;
 import com.squareup.picasso.Picasso;
 import com.stfalcon.chatkit.commons.ImageLoader;
@@ -42,9 +44,9 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class RequestDetailActivity extends FirebaseActivity implements MessageInput.AttachmentsListener, MessageInput.InputListener{
-    private List<Request.RequestComment> requestCommentList;
+    private List<Message> requestCommentList;
     private AudioRecorder audioRecorder;
-    private MessagesListAdapter<Request.RequestComment> messagesListAdapter;
+    private MessagesListAdapter<Message> messagesListAdapter;
     private MessageInput messageInput;
     private MessagesList messagesList;
     private Request request;
@@ -60,7 +62,7 @@ public class RequestDetailActivity extends FirebaseActivity implements MessageIn
     private TextView requestDetailCreateTime;
     private TextView requestDetailDeadline;
     private Button requestDetailCloseRequest;
-    private Button requestDetailDeleteRequest;
+    private LinearLayout chatLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,8 +80,7 @@ public class RequestDetailActivity extends FirebaseActivity implements MessageIn
         requestDetailCreateTime = findViewById(R.id.requestDetailCreateTime);
         requestDetailDeadline = findViewById(R.id.requestDetailDeadline);
         requestDetailCloseRequest = findViewById(R.id.requestDetailCloseRequest);
-        requestDetailDeleteRequest = findViewById(R.id.requestDetailDeleteRequest);
-
+        chatLayout = findViewById(R.id.chatLayout);
         request = (Request) getIntent().getSerializableExtra("requestObject");
         requestID = request.getRequestID();
 
@@ -87,6 +88,15 @@ public class RequestDetailActivity extends FirebaseActivity implements MessageIn
 
         if(request == null)
             finish();
+
+
+
+
+
+
+
+
+
         requestDetailTitle.setText(request.getRequestTitle());
         switch (request.getRequestType()) {
             case SERVICE:
@@ -107,6 +117,41 @@ public class RequestDetailActivity extends FirebaseActivity implements MessageIn
         requestDetailCreateTime.setText(TimeUtils.convertDate(request.getRequestCreationTime()));
         requestDetailDeadline.setText(TimeUtils.convertDate(request.getRequestDeadlineTime()));
 
+        requestDetailCloseRequest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final SimpleBottomSheetDialog.Builder simpleDialog = new SimpleBottomSheetDialog.Builder(RequestDetailActivity.this);
+                simpleDialog.setTitleText("Закрыть заявку?")
+                        .setDialogText("Это действие нельзя будет отменить! Вы действительно хотите закрыть заявку?")
+                        .setCancel("Нет", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                simpleDialog.close();
+                            }
+                        })
+                        .setDone("Да", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                simpleDialog.close();
+                                request.setRequestStatus(Request.Status.CLOSED);
+                                FirebaseHelper.updateRequest(requestID, request, new FirebaseHelper.IFirebaseHelperListener() {
+                                    @Override
+                                    public void onSuccess(Object result) {
+                                        finish();
+                                    }
+
+                                    @Override
+                                    public void onFail(String reason) {
+
+                                    }
+                                });
+                            }
+                        }).build();
+
+                simpleDialog.show();
+
+            }
+        });
 
 
 
@@ -114,11 +159,10 @@ public class RequestDetailActivity extends FirebaseActivity implements MessageIn
 
 
 
-
-        requestCommentList = request.getRequestCommentList();
+        requestCommentList = request.getMessageList();
         if (requestCommentList == null) {
             requestCommentList = new ArrayList<>();
-            request.setRequestCommentList(requestCommentList);
+            request.setMessageList(requestCommentList);
         }
         final RecordView recordView = findViewById(R.id.record_view);
         RecordButton recordButton = findViewById(R.id.record_button);
@@ -216,10 +260,21 @@ public class RequestDetailActivity extends FirebaseActivity implements MessageIn
             @Override
             public void onSuccess(Object result) {
                 request = (Request) result;
-                messagesListAdapter.clear();
-                if(request.getRequestCommentList() != null && !request.getRequestCommentList().isEmpty()){
-                    for(Request.RequestComment comment:request.getRequestCommentList()){
-                        messagesListAdapter.addToStart(comment, false);
+                if(request.getRequestStatus() == Request.Status.CLOSED){
+                    chatLayout.setVisibility(View.GONE);
+                    requestDetailCloseRequest.setVisibility(View.GONE);
+                } else {
+                    if(user.getUserAccountType() == User.Type.SERVICE) {
+                        requestDetailCloseRequest.setVisibility(View.VISIBLE);
+                    } else {
+                        requestDetailCloseRequest.setVisibility(View.GONE);
+                    }
+                    chatLayout.setVisibility(View.VISIBLE);
+                    messagesListAdapter.clear();
+                    if (request.getMessageList() != null && !request.getMessageList().isEmpty()) {
+                        for (Message message : request.getMessageList()) {
+                            messagesListAdapter.addToStart(message, false);
+                        }
                     }
                 }
             }
@@ -243,12 +298,12 @@ public class RequestDetailActivity extends FirebaseActivity implements MessageIn
         return true;
     }
 
-    private void createComment(final String creatorName, final String creatorID, final String requestID, final String commentText, List<File> commentFiles){
+    private void createComment(final String creatorName, final String creatorID, final String requestID, final String messageText, List<File> messageFiles){
         final ProgressBottomSheetDialog uploadFileDialog = ViewUtils.createProgressDialog(this, "Загрузка файлов", "Подождите, идет загрузка");
-        if(commentFiles.size() != 0){
+        if(messageFiles.size() != 0){
             uploadFileDialog.create();
         }
-        FirebaseHelper.uploadFileList(commentFiles, "user_files/" + request.getRequestCreatorID() + "/requests/" + requestID, new FirebaseHelper.UploadListListener() {
+        FirebaseHelper.uploadFileList(messageFiles, "user_files/" + request.getRequestCreatorID() + "/requests/" + requestID, new FirebaseHelper.UploadListListener() {
             @Override
             public void onFileUploading(int percent, long transferred, long total, String filename) {
                 uploadFileDialog.setProgress(percent, total, transferred, filename);
@@ -257,15 +312,17 @@ public class RequestDetailActivity extends FirebaseActivity implements MessageIn
             @Override
             public void onFilesUploaded(List<Request.FileData> fileDataList) {
                 uploadFileDialog.close();
-                Request.RequestComment comment = new Request.RequestComment();
-                comment.setCommentCreationTime(TimeUtils.getCurrentTime(TimeUtils.Type.SERVER));
-                comment.setCommentCreatorName(creatorName);
-                comment.setCommentCreatorID(creatorID);
-                comment.setCommentCreatorPhotoURL(user.getUserPhotoURL());
-                comment.setCommentText(commentText);
-                comment.setFileDataList(fileDataList);
-                comment.setCommentID(TextUtils.generateRandomString(20));
-                FirebaseHelper.addComment(requestID, comment);
+                Message message = new Message();
+                message.setRequestID(requestID);
+                message.setMessageCreationTime(TimeUtils.getCurrentTime(TimeUtils.Type.SERVER));
+                message.setMessageCreatorName(creatorName);
+                message.setMessageCreatorID(creatorID);
+                message.setMessageCreatorPhotoURL(user.getUserPhotoURL());
+                message.setMessageText(messageText);
+                message.setFileDataList(fileDataList);
+                message.setMessageReaded(false);
+                message.setMessageID(TextUtils.generateRandomString(20));
+                FirebaseHelper.addNewMessage(requestID, message);
                 fileList.clear();
             }
 
@@ -276,15 +333,17 @@ public class RequestDetailActivity extends FirebaseActivity implements MessageIn
 
             @Override
             public void onListEmpty() {
-                Request.RequestComment comment = new Request.RequestComment();
-                comment.setCommentCreationTime(TimeUtils.getCurrentTime(TimeUtils.Type.SERVER));
-                comment.setCommentCreatorName(creatorName);
-                comment.setCommentCreatorID(creatorID);
-                comment.setCommentCreatorPhotoURL(user.getUserPhotoURL());
-                comment.setCommentText(commentText);
-                comment.setFileDataList(new ArrayList<Request.FileData>());
-                comment.setCommentID(TextUtils.generateRandomString(20));
-                FirebaseHelper.addComment(requestID, comment);
+                Message message = new Message();
+                message.setRequestID(requestID);
+                message.setMessageCreationTime(TimeUtils.getCurrentTime(TimeUtils.Type.SERVER));
+                message.setMessageCreatorName(creatorName);
+                message.setMessageCreatorID(creatorID);
+                message.setMessageCreatorPhotoURL(user.getUserPhotoURL());
+                message.setMessageText(messageText);
+                message.setMessageReaded(false);
+                message.setFileDataList(new ArrayList<Request.FileData>());
+                message.setMessageID(TextUtils.generateRandomString(20));
+                FirebaseHelper.addNewMessage(requestID, message);
             }
         });
     }

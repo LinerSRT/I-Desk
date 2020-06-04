@@ -25,6 +25,7 @@ import com.liner.i_desk.API.FirebaseHelper;
 import com.liner.i_desk.Adapters.RequestAdapter;
 import com.liner.i_desk.R;
 import com.liner.i_desk.UI.CreateRequestActivity;
+import com.liner.i_desk.UI.MainActivity;
 import com.liner.i_desk.UI.SplashActivity;
 import com.liner.i_desk.Utils.Views.FirebaseFragment;
 import com.liner.i_desk.Utils.Views.SimpleBottomSheetDialog;
@@ -45,8 +46,7 @@ public class MainFragment extends FirebaseFragment{
     private TextView userName;
     private TextView userType;
     private Handler handler;
-
-
+    private CardView accountActions;
     private TextView accountActionsAddNewRequest;
     private RecyclerView requestRecyclerView;
     private RequestAdapter requestAdapter;
@@ -64,7 +64,13 @@ public class MainFragment extends FirebaseFragment{
         requestRefreshLayout = view.findViewById(R.id.requestRefreshLayout);
         requestRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-
+        accountActions = view.findViewById(R.id.accountActions);
+        accountActions.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                MainActivity.extendedViewPager.setCurrentItem(1);
+            }
+        });
         handler = new Handler();
 
         loadUserData();
@@ -115,17 +121,13 @@ public class MainFragment extends FirebaseFragment{
         return view;
     }
 
-    private void runOnUIThread(Runnable runnable) {
-        handler.post(runnable);
-    }
-
     @Override
     public void onFirebaseChanged() {
         loadUserData();
     }
 
     @Override
-    public void onUserOptained() {
+    public void onUserObtained() {
         loadUserData();
     }
 
@@ -133,7 +135,7 @@ public class MainFragment extends FirebaseFragment{
     private void loadUserData() {
         try {
             if(firebaseActivity.user.getRequestList() != null) {
-                requestAdapter = new RequestAdapter(getActivity(), firebaseActivity.user.getRequestList());
+                requestAdapter = new RequestAdapter(getActivity(), firebaseActivity.user.getRequestList(), firebaseActivity.user);
                 requestRecyclerView.setAdapter(requestAdapter);
             }
             Picasso.get().load(firebaseActivity.user.getUserPhotoURL()).into(userPhoto);
@@ -147,13 +149,22 @@ public class MainFragment extends FirebaseFragment{
                     userType.setText("Заявитель");
                     break;
             }
-            if(firebaseActivity.userRequestList != null) {
-                requestAdapter = new RequestAdapter(getActivity(), firebaseActivity.userRequestList);
-            } else {
-                requestAdapter = new RequestAdapter(getActivity(), new ArrayList<Request>());
-            }
-            requestRecyclerView.setAdapter(requestAdapter);
-            requestRefreshLayout.setRefreshing(false);
+            FirebaseHelper.getRequests(firebaseActivity.user, new FirebaseHelper.IFirebaseHelperListener() {
+                @Override
+                public void onSuccess(Object result) {
+                    requestAdapter = new RequestAdapter(getActivity(), (List<Request>) result, firebaseActivity.user);
+                    requestRecyclerView.setAdapter(requestAdapter);
+                    requestRefreshLayout.setRefreshing(false);
+                }
+
+                @Override
+                public void onFail(String reason) {
+                    requestAdapter = new RequestAdapter(getActivity(), new ArrayList<Request>(), firebaseActivity.user);
+                    requestRecyclerView.setAdapter(requestAdapter);
+                    requestRefreshLayout.setRefreshing(false);
+                }
+            });
+
         } catch (NullPointerException e){
             e.printStackTrace();
         }

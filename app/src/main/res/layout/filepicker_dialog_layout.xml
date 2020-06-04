@@ -47,7 +47,7 @@
             android:textColor="@color/color_disable"
             android:textSize="@dimen/primaryTextSize"
             android:gravity="center"
-            android:drawableStart="@drawable/arrow_back"
+            android:drawableStart="@drawable/arrow_back_primary"
             android:padding="@dimen/contentHeight"
             android:textStyle="bold"/>
 

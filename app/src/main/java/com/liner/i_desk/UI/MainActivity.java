@@ -37,15 +37,13 @@ import me.ibrahimsn.lib.OnItemSelectedListener;
 import me.ibrahimsn.lib.SmoothBottomBar;
 
 public class MainActivity extends FirebaseActivity {
-    private ExtendedViewPager extendedViewPager;
-    private SmoothBottomBar bottomBar;
+    public static ExtendedViewPager extendedViewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         extendedViewPager = findViewById(R.id.mainPager);
-        bottomBar = findViewById(R.id.bottomBar);
 
 
 
@@ -81,31 +79,7 @@ public class MainActivity extends FirebaseActivity {
         extendedViewPager.setAdapter(adapter);
         extendedViewPager.setCurrentItem(0);
         extendedViewPager.setOffscreenPageLimit(2);
-        extendedViewPager.setPagingEnabled(true);
-        extendedViewPager.setPageTransformer(false, new PagesTransformer());
-        bottomBar.setActiveItem(extendedViewPager.getCurrentItem());
-        bottomBar.setOnItemSelectedListener(new OnItemSelectedListener() {
-            @Override
-            public boolean onItemSelect(int i) {
-                extendedViewPager.setCurrentItem(i);
-                return true;
-            }
-        });
-        extendedViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-            }
-
-            @Override
-            public void onPageSelected(final int position) {
-                bottomBar.setActiveItem(position);
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
+        extendedViewPager.setPagingEnabled(false);
     }
 
 

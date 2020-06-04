@@ -130,6 +130,7 @@
                 android:background="@drawable/button_bg"
                 android:elevation="4dp"
                 android:enabled="true"
+                android:visibility="gone"
                 android:paddingStart="@dimen/contentMarginHalf"
                 android:paddingEnd="@dimen/contentMarginHalf"
                 android:text="Закрыть заявку"
@@ -137,21 +138,18 @@
                 android:textColor="@color/color_white"
                 android:textSize="@dimen/secondaryTextSize" />
 
-            <Button
-                android:id="@+id/requestDetailDeleteRequest"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/contentHeight"
-                android:layout_margin="@dimen/contentMarginHalf"
-                android:background="@drawable/button_bg"
-                android:elevation="4dp"
-                android:enabled="true"
-                android:paddingStart="@dimen/contentMarginHalf"
-                android:paddingEnd="@dimen/contentMarginHalf"
-                android:text="Удалить заявку"
-                android:textAllCaps="false"
-                android:textColor="@color/color_white"
-                android:textSize="@dimen/secondaryTextSize" />
         </LinearLayout>
+
+
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/chatLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
         <TextView
             android:layout_width="match_parent"
@@ -161,14 +159,6 @@
             android:text="Чат"
             android:textColor="?textColor"
             android:textSize="@dimen/primaryTextSize" />
-
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
 
         <com.stfalcon.chatkit.messages.MessagesList
             android:id="@+id/messagesList"
