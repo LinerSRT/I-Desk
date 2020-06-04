@@ -62,6 +62,9 @@ public class RequestDetailActivity extends FirebaseActivity implements MessageIn
     private TextView requestDetailCreateTime;
     private TextView requestDetailDeadline;
     private Button requestDetailCloseRequest;
+    private Button requestDetailAcceptRequest;
+    private Button requestDetailRemoveAcceptRequest;
+    private TextView requestAccepedName;
     private LinearLayout chatLayout;
 
     @Override
@@ -80,6 +83,9 @@ public class RequestDetailActivity extends FirebaseActivity implements MessageIn
         requestDetailCreateTime = findViewById(R.id.requestDetailCreateTime);
         requestDetailDeadline = findViewById(R.id.requestDetailDeadline);
         requestDetailCloseRequest = findViewById(R.id.requestDetailCloseRequest);
+        requestDetailAcceptRequest = findViewById(R.id.requestDetailAcceptRequest);
+        requestDetailRemoveAcceptRequest = findViewById(R.id.requestDetailRemoveAcceptRequest);
+        requestAccepedName = findViewById(R.id.requestAccepedName);
         chatLayout = findViewById(R.id.chatLayout);
         request = (Request) getIntent().getSerializableExtra("requestObject");
         requestID = request.getRequestID();
@@ -88,10 +94,6 @@ public class RequestDetailActivity extends FirebaseActivity implements MessageIn
 
         if(request == null)
             finish();
-
-
-
-
 
 
 
@@ -153,8 +155,100 @@ public class RequestDetailActivity extends FirebaseActivity implements MessageIn
             }
         });
 
+        requestDetailAcceptRequest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final SimpleBottomSheetDialog.Builder simpleDialog = new SimpleBottomSheetDialog.Builder(RequestDetailActivity.this);
+                simpleDialog.setTitleText("Принять заявку?")
+                        .setDialogText("Вы хотите принять данную заявку на обработку?")
+                        .setCancel("Нет", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                simpleDialog.close();
+                            }
+                        })
+                        .setDone("Да", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                simpleDialog.close();
+                                request.setRequestAcceptedUserID(user.getUserUID());
+                                FirebaseHelper.updateRequest(requestID, request, new FirebaseHelper.IFirebaseHelperListener() {
+                                    @Override
+                                    public void onSuccess(Object result) {
+                                        requestAccepedName.setText("Вы приняли эту заявку");
+                                        final SimpleBottomSheetDialog.Builder newDialog = new SimpleBottomSheetDialog.Builder(RequestDetailActivity.this);
+                                        newDialog.setTitleText("Заявка принята")
+                                                .setDialogText("Вы успешно приняли данную заявку")
+                                                .setDone("Ок", new View.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(View view) {
+                                                        newDialog.close();
+
+                                                    }
+                                                }).build();
+                                        newDialog.show();
+                                    }
+
+                                    @Override
+                                    public void onFail(String reason) {
+
+                                    }
+                                });
+                            }
+                        }).build();
+
+                simpleDialog.show();
+
+            }
+        });
 
 
+        requestDetailRemoveAcceptRequest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final SimpleBottomSheetDialog.Builder simpleDialog = new SimpleBottomSheetDialog.Builder(RequestDetailActivity.this);
+                simpleDialog.setTitleText("Отменить заявку?")
+                        .setDialogText("Вы хотите отменить данную заявку?")
+                        .setCancel("Нет", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                simpleDialog.close();
+                            }
+                        })
+                        .setDone("Да", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                simpleDialog.close();
+                                requestAccepedName.setText("Вы отменили эту заявку");
+                                request.setRequestAcceptedUserID(null);
+                                FirebaseHelper.updateRequest(requestID, request, new FirebaseHelper.IFirebaseHelperListener() {
+                                    @Override
+                                    public void onSuccess(Object result) {
+                                        final SimpleBottomSheetDialog.Builder newDialog = new SimpleBottomSheetDialog.Builder(RequestDetailActivity.this);
+                                        newDialog.setTitleText("Заявка отменена")
+                                                .setDialogText("Вы успешно отменили данную заявку")
+                                                .setDone("Ок", new View.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(View view) {
+                                                        newDialog.close();
+
+                                                    }
+                                                }).build();
+                                        newDialog.show();
+                                    }
+
+                                    @Override
+                                    public void onFail(String reason) {
+
+                                    }
+                                });
+                            }
+                        }).build();
+
+                simpleDialog.show();
+
+            }
+        });
 
 
 
@@ -263,11 +357,17 @@ public class RequestDetailActivity extends FirebaseActivity implements MessageIn
                 if(request.getRequestStatus() == Request.Status.CLOSED){
                     chatLayout.setVisibility(View.GONE);
                     requestDetailCloseRequest.setVisibility(View.GONE);
+                    requestDetailAcceptRequest.setVisibility(View.GONE);
+                    requestDetailRemoveAcceptRequest.setVisibility(View.GONE);
                 } else {
                     if(user.getUserAccountType() == User.Type.SERVICE) {
                         requestDetailCloseRequest.setVisibility(View.VISIBLE);
+                        requestDetailAcceptRequest.setVisibility(View.VISIBLE);
+                        requestDetailRemoveAcceptRequest.setVisibility(View.VISIBLE);
                     } else {
                         requestDetailCloseRequest.setVisibility(View.GONE);
+                        requestDetailAcceptRequest.setVisibility(View.GONE);
+                        requestDetailRemoveAcceptRequest.setVisibility(View.GONE);
                     }
                     chatLayout.setVisibility(View.VISIBLE);
                     messagesListAdapter.clear();
@@ -288,7 +388,26 @@ public class RequestDetailActivity extends FirebaseActivity implements MessageIn
 
     @Override
     public void onUserObtained(User user) {
+        if(request.getRequestAcceptedUserID() != null){
+            if(request.getRequestAcceptedUserID().equals(user.getUserUID())){
+                requestAccepedName.setText("Вы приняли эту заявку");
+            } else {
+                FirebaseHelper.getUserModel(request.getRequestAcceptedUserID(), new FirebaseHelper.IFirebaseHelperListener() {
+                    @Override
+                    public void onSuccess(Object result) {
+                        User result1 = (User) result;
+                        requestAccepedName.setText("Вашу заявку принял: " + result1.getUserName());
+                    }
 
+                    @Override
+                    public void onFail(String reason) {
+                        requestAccepedName.setText("Заявка на рассмотрении");
+                    }
+                });
+            }
+        } else {
+            requestAccepedName.setText("Заявка на рассмотрении");
+        }
     }
 
 

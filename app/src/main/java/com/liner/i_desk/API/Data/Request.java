@@ -28,6 +28,7 @@ public class Request implements Serializable {
     private String requestCreationTime;
     private String requestDeadlineTime;
     private String requestTitle;
+    private String requestAcceptedUserID;
     private String requestUserDeviceDescription;
     private String requestShortDescription;
     private List<RequestCheckList> requestCheckList;
@@ -38,6 +39,14 @@ public class Request implements Serializable {
     public Request() {
     }
 
+
+    public String getRequestAcceptedUserID() {
+        return requestAcceptedUserID;
+    }
+
+    public void setRequestAcceptedUserID(String requestAcceptedUserID) {
+        this.requestAcceptedUserID = requestAcceptedUserID;
+    }
 
     public String getRequestID() {
         return requestID;

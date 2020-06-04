@@ -25,6 +25,16 @@
             android:textColor="?textColor"
             android:textSize="@dimen/primaryTextSize" />
 
+        <TextView
+            android:id="@+id/requestAccepedName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/contentMarginHalf"
+            android:gravity="center"
+            android:textColor="?colorPrimaryDark"
+            android:textSize="@dimen/primaryTextSize" />
+
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -130,10 +140,42 @@
                 android:background="@drawable/button_bg"
                 android:elevation="4dp"
                 android:enabled="true"
-                android:visibility="gone"
+                android:visibility="visible"
                 android:paddingStart="@dimen/contentMarginHalf"
                 android:paddingEnd="@dimen/contentMarginHalf"
                 android:text="Закрыть заявку"
+                android:textAllCaps="false"
+                android:textColor="@color/color_white"
+                android:textSize="@dimen/secondaryTextSize" />
+
+            <Button
+                android:id="@+id/requestDetailAcceptRequest"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/contentHeight"
+                android:layout_margin="@dimen/contentMarginHalf"
+                android:background="@drawable/button_bg"
+                android:elevation="4dp"
+                android:enabled="true"
+                android:visibility="visible"
+                android:paddingStart="@dimen/contentMarginHalf"
+                android:paddingEnd="@dimen/contentMarginHalf"
+                android:text="Принять заявку"
+                android:textAllCaps="false"
+                android:textColor="@color/color_white"
+                android:textSize="@dimen/secondaryTextSize" />
+
+            <Button
+                android:id="@+id/requestDetailRemoveAcceptRequest"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/contentHeight"
+                android:layout_margin="@dimen/contentMarginHalf"
+                android:background="@drawable/button_bg"
+                android:elevation="4dp"
+                android:enabled="true"
+                android:visibility="visible"
+                android:paddingStart="@dimen/contentMarginHalf"
+                android:paddingEnd="@dimen/contentMarginHalf"
+                android:text="Отменить заявку"
                 android:textAllCaps="false"
                 android:textColor="@color/color_white"
                 android:textSize="@dimen/secondaryTextSize" />
