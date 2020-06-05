@@ -25,8 +25,8 @@ public class Request implements Serializable {
     private Type requestType;
     private Priority requestPriority;
     private Status requestStatus;
-    private String requestCreationTime;
-    private String requestDeadlineTime;
+    private long createTime;
+    private long deadlineTime;
     private String requestTitle;
     private String requestAcceptedUserID;
     private String requestUserDeviceDescription;
@@ -88,20 +88,20 @@ public class Request implements Serializable {
         this.requestStatus = requestStatus;
     }
 
-    public String getRequestCreationTime() {
-        return requestCreationTime;
+    public long getCreateTime() {
+        return createTime;
     }
 
-    public void setRequestCreationTime(String requestCreationTime) {
-        this.requestCreationTime = requestCreationTime;
+    public void setCreateTime(long createTime) {
+        this.createTime = createTime;
     }
 
-    public String getRequestDeadlineTime() {
-        return requestDeadlineTime;
+    public long getDeadlineTime() {
+        return deadlineTime;
     }
 
-    public void setRequestDeadlineTime(String requestDeadlineTime) {
-        this.requestDeadlineTime = requestDeadlineTime;
+    public void setDeadlineTime(long deadlineTime) {
+        this.deadlineTime = deadlineTime;
     }
 
     public String getRequestTitle() {
@@ -152,25 +152,6 @@ public class Request implements Serializable {
         this.messageList = messageList;
     }
 
-
-    @Override
-    public String toString() {
-        return "Request{" +
-                "requestID='" + requestID + '\'' +
-                ", requestCreatorID='" + requestCreatorID + '\'' +
-                ", requestType=" + requestType +
-                ", requestPriority=" + requestPriority +
-                ", requestStatus=" + requestStatus +
-                ", requestCreationTime='" + requestCreationTime + '\'' +
-                ", requestDeadlineTime='" + requestDeadlineTime + '\'' +
-                ", requestTitle='" + requestTitle + '\'' +
-                ", requestUserDeviceDescription='" + requestUserDeviceDescription + '\'' +
-                ", requestShortDescription='" + requestShortDescription + '\'' +
-                ", requestCheckList=" + requestCheckList +
-                ", requestFiles=" + requestFiles +
-                ", messageList=" + messageList +
-                '}';
-    }
 
 
     public static class FileData implements Serializable{

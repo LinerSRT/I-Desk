@@ -1,7 +1,5 @@
 package com.liner.i_desk.API.Data;
 
-
-import com.liner.i_desk.Utils.TimeUtils;
 import com.stfalcon.chatkit.commons.models.IMessage;
 import com.stfalcon.chatkit.commons.models.IUser;
 import com.stfalcon.chatkit.commons.models.MessageContentType;
@@ -15,7 +13,7 @@ public class Message implements Serializable, IMessage, MessageContentType {
     private String messageID;
     private String messageCreatorID;
     private String messageCreatorPhotoURL;
-    private String messageCreationTime;
+    private long creationTime;
     private String messageCreatorName;
     private String messageText;
     private boolean messageReaded;
@@ -56,12 +54,12 @@ public class Message implements Serializable, IMessage, MessageContentType {
         this.messageCreatorPhotoURL = messageCreatorPhotoURL;
     }
 
-    public String getMessageCreationTime() {
-        return messageCreationTime;
+    public long getCreationTime() {
+        return creationTime;
     }
 
-    public void setMessageCreationTime(String messageCreationTime) {
-        this.messageCreationTime = messageCreationTime;
+    public void setCreationTime(long creationTime) {
+        this.creationTime = creationTime;
     }
 
     public String getMessageCreatorName() {
@@ -128,6 +126,6 @@ public class Message implements Serializable, IMessage, MessageContentType {
 
     @Override
     public Date getCreatedAt() {
-        return TimeUtils.getTime(TimeUtils.convertDate(getMessageCreationTime())).getTime();
+        return new Date(getCreationTime());
     }
 }

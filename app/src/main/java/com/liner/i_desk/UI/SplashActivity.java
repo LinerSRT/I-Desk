@@ -37,7 +37,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -48,8 +47,8 @@ import com.liner.i_desk.API.FirebaseHelper;
 import com.liner.i_desk.R;
 import com.liner.i_desk.Utils.ColorUtils;
 import com.liner.i_desk.Utils.ImageUtils;
+import com.liner.i_desk.Utils.Server.Time;
 import com.liner.i_desk.Utils.TextUtils;
-import com.liner.i_desk.Utils.TimeUtils;
 import com.liner.i_desk.Utils.Views.EditRegexTextView;
 import com.liner.i_desk.Utils.Views.IndeterminateBottomSheetDialog;
 import com.liner.i_desk.Utils.Views.SelectionBottomSheetDialog;
@@ -512,7 +511,7 @@ public class SplashActivity extends AppCompatActivity {
                                                                         user.setUserPhotoURL(fileData.getDownloadURL());
                                                                         user.setUserPassword(userPassword);
                                                                         user.setUserName(userNickName);
-                                                                        user.setUserLastOnlineTimeStamp(TimeUtils.getCurrentTime(TimeUtils.Type.SERVER));
+                                                                        user.setLastOnlineTime(Time.getTime());
                                                                         user.setUserEmail(userEmail);
                                                                         user.setUserAccountType(registerAccountType);
                                                                         FirebaseHelper.setUserModel(user.getUserUID(), user, new FirebaseHelper.IFirebaseHelperListener() {
@@ -688,7 +687,7 @@ public class SplashActivity extends AppCompatActivity {
                                                     user.setUserPhotoURL(photoURL);
                                                     user.setUserPassword(TextUtils.generateRandomString(64));
                                                     user.setUserName(userNickName);
-                                                    user.setUserLastOnlineTimeStamp(TimeUtils.getCurrentTime(TimeUtils.Type.SERVER));
+                                                    user.setLastOnlineTime(Time.getTime());
                                                     user.setUserEmail(userEmail);
                                                     user.setUserAccountType(registerAccountType);
                                                     FirebaseHelper.setUserModel(user.getUserUID(), user, new FirebaseHelper.IFirebaseHelperListener() {

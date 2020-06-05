@@ -9,8 +9,8 @@ import com.liner.i_desk.API.Data.Request;
 import com.liner.i_desk.API.Data.User;
 import com.liner.i_desk.API.FirebaseHelper;
 import com.liner.i_desk.R;
+import com.liner.i_desk.Utils.Server.Time;
 import com.liner.i_desk.Utils.TextUtils;
-import com.liner.i_desk.Utils.TimeUtils;
 import com.liner.i_desk.Utils.ViewUtils;
 import com.liner.i_desk.Utils.Views.DatePickerBottomSheetDialog;
 import com.liner.i_desk.Utils.Views.EditBottomSheetDialog;
@@ -257,14 +257,13 @@ public class CreateRequestActivity extends FirebaseActivity {
                                 datePickerBottomSheetDialog.close();
                             }
                         })
-                        .setCurrentTime(new Date(System.currentTimeMillis()))
                         .setDone("Готово", new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
                                 datePickerBottomSheetDialog.close();
                                 createRequestDeadlineText.setVisibility(View.VISIBLE);
                                 requestDeadlineDone = true;
-                                createRequestDeadlineText.setText(datePickerBottomSheetDialog.getDialog().getPickedDate());
+                                createRequestDeadlineText.setText(Time.getHumanReadableTime(datePickerBottomSheetDialog.getDialog().getPickedDate(), "yyyy.MM.dd HH:mm"));
 
                             }
                         }).build();
@@ -370,8 +369,8 @@ public class CreateRequestActivity extends FirebaseActivity {
             newRequest.setRequestFiles(new ArrayList<Request.FileData>());
             newRequest.setRequestType(createRequestTypeView.getType());
             newRequest.setMessageList(new ArrayList<Message>());
-            newRequest.setRequestCreationTime(TimeUtils.getCurrentTime(TimeUtils.Type.SERVER));
-            newRequest.setRequestDeadlineTime(TimeUtils.convertDate(datePickerBottomSheetDialog.getDialog().getPickedDate()));
+            newRequest.setCreateTime(Time.getTime());
+            newRequest.setDeadlineTime(datePickerBottomSheetDialog.getDialog().getPickedDate());
             newRequest.setRequestUserDeviceDescription(createRequestUserDeviceDescription.getText().toString().trim());
             newRequest.setRequestPriority(Request.Priority.MEDIUM);
             newRequest.setRequestShortDescription(createRequestShortDescription.getText().toString().trim());

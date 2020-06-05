@@ -15,7 +15,7 @@ public class User {
     private String userAboutText;
     private String userAdditionalInformationText;
     private Type userAccountType;
-    private String userLastOnlineTimeStamp;
+    private long lastOnlineTime;
     private List<Request> requestList;
 
     public User() {
@@ -69,14 +69,13 @@ public class User {
         this.userPhotoURL = userPhotoURL;
     }
 
-    public String getUserLastOnlineTimeStamp() {
-        return userLastOnlineTimeStamp;
+    public long getLastOnlineTime() {
+        return lastOnlineTime;
     }
 
-    public void setUserLastOnlineTimeStamp(String userLastOnlineTimeStamp) {
-        this.userLastOnlineTimeStamp = userLastOnlineTimeStamp;
+    public void setLastOnlineTime(long lastOnlineTime) {
+        this.lastOnlineTime = lastOnlineTime;
     }
-
 
     public List<Request> getRequestList() {
         return requestList;
@@ -102,21 +101,5 @@ public class User {
 
     public void setUserAdditionalInformationText(String userAdditionalInformationText) {
         this.userAdditionalInformationText = userAdditionalInformationText;
-    }
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "userUID='" + userUID + '\'' +
-                ", userName='" + userName + '\'' +
-                ", userEmail='" + userEmail + '\'' +
-                ", userPassword='" + userPassword + '\'' +
-                ", userPhotoURL='" + userPhotoURL + '\'' +
-                ", userAboutText='" + userAboutText + '\'' +
-                ", userAdditionalInformationText='" + userAdditionalInformationText + '\'' +
-                ", userAccountType=" + userAccountType +
-                ", userLastOnlineTimeStamp=" + userLastOnlineTimeStamp +
-                ", requestList=" + requestList +
-                '}';
     }
 }

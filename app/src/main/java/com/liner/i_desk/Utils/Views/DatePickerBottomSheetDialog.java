@@ -11,9 +11,10 @@ import androidx.annotation.NonNull;
 
 import com.arthurivanets.bottomsheets.BaseBottomSheet;
 import com.arthurivanets.bottomsheets.config.Config;
+import com.github.florent37.singledateandtimepicker.DateHelper;
+import com.github.florent37.singledateandtimepicker.SingleDateAndTimePicker;
 import com.liner.i_desk.R;
 import com.liner.i_desk.Utils.ColorUtils;
-import com.liner.i_desk.Utils.TimeUtils;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -22,17 +23,15 @@ import java.util.concurrent.TimeUnit;
 @SuppressLint("ViewConstructor")
 public class DatePickerBottomSheetDialog extends BaseBottomSheet {
     private TextView datePickerDialogTitle;
-    private DateHourPicker datePickerDialogView;
     private TextView datePickerDialogCancel;
     private ExtendedTextButton datePickerDialogDone;
+    private SingleDateAndTimePicker datePicker;
     private String titleText;
     private String cancelText;
     private String doneText;
     private OnClickListener cancelClickListener;
     private OnClickListener doneClickListener;
-    private Date currentTime;
-
-
+    private Date selectedDate;
 
     private DatePickerBottomSheetDialog(Builder builder) {
         super(builder.activity, new Config.Builder(builder.activity)
@@ -42,7 +41,6 @@ public class DatePickerBottomSheetDialog extends BaseBottomSheet {
         this.titleText = builder.titleText;
         this.cancelText = builder.cancelText;
         this.doneText = builder.doneText;
-        this.currentTime = builder.currentTime;
         this.cancelClickListener = builder.cancelClickListener;
         this.doneClickListener = builder.doneClickListener;
     }
@@ -52,16 +50,15 @@ public class DatePickerBottomSheetDialog extends BaseBottomSheet {
     public final View onCreateSheetContentView(@NonNull Context context) {
         View view = LayoutInflater.from(context).inflate(R.layout.datepicker_dialog_layout, this, false);
         datePickerDialogTitle = view.findViewById(R.id.datePickerDialogTitle);
-        datePickerDialogView = view.findViewById(R.id.datePickerDialogViewPicker);
         datePickerDialogCancel = view.findViewById(R.id.datePickerDialogCancel);
         datePickerDialogDone = view.findViewById(R.id.datePickerDialogDone);
+        datePicker = view.findViewById(R.id.datePicker);
+        selectedDate = new Date(System.currentTimeMillis() + TimeUnit.HOURS.toMillis(1));
         return view;
     }
 
-    public String getPickedDate() {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(datePickerDialogView.getDateLong());
-        return TimeUtils.getTime(calendar, TimeUtils.Type.LOCAL);
+    public long getPickedDate() {
+        return selectedDate.getTime();
     }
 
     public void close() {
@@ -83,9 +80,16 @@ public class DatePickerBottomSheetDialog extends BaseBottomSheet {
                 }
             };
         }
-        datePickerDialogView.setIndicatorText("г","м", "д", "ч");
-        datePickerDialogView.setMaxDate(currentTime.getTime() + TimeUnit.DAYS.toMillis(Math.abs(30)));
-        datePickerDialogView.setMinDate(currentTime.getTime()+TimeUnit.HOURS.toMillis(3));
+        datePicker.setMinDate(selectedDate);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(selectedDate);
+        datePicker.selectDate(calendar);
+        datePicker.addOnDateChangedListener(new SingleDateAndTimePicker.OnDateChangedListener() {
+            @Override
+            public void onDateChanged(String displayed, Date date) {
+                selectedDate = date;
+            }
+        });
         datePickerDialogTitle.setText(titleText);
         datePickerDialogDone.setText(doneText);
         datePickerDialogDone.setOnClickListener(doneClickListener);
@@ -103,7 +107,6 @@ public class DatePickerBottomSheetDialog extends BaseBottomSheet {
         private String doneText;
         private OnClickListener cancelClickListener;
         private OnClickListener doneClickListener;
-        private Date currentTime;
 
 
         public Builder(@NonNull Activity activity) {
@@ -124,10 +127,7 @@ public class DatePickerBottomSheetDialog extends BaseBottomSheet {
             this.titleText = value;
             return this;
         }
-        public Builder setCurrentTime(Date value) {
-            this.currentTime = value;
-            return this;
-        }
+
 
         public Builder setDone(String text, View.OnClickListener clickListener) {
             this.doneText = text;

@@ -20,8 +20,8 @@ import com.liner.i_desk.R;
 import com.liner.i_desk.Utils.AudioRecorder;
 import com.liner.i_desk.Utils.Messages.CustomIncomingViewHolder;
 import com.liner.i_desk.Utils.Messages.CustomOutcomingViewHolder;
+import com.liner.i_desk.Utils.Server.Time;
 import com.liner.i_desk.Utils.TextUtils;
-import com.liner.i_desk.Utils.TimeUtils;
 import com.liner.i_desk.Utils.ViewUtils;
 import com.liner.i_desk.Utils.Views.AudioRecord.OnRecordListener;
 import com.liner.i_desk.Utils.Views.AudioRecord.RecordButton;
@@ -116,8 +116,8 @@ public class RequestDetailActivity extends FirebaseActivity implements MessageIn
         }
         requestDetailText.setText(request.getRequestShortDescription());
         requestDetailDeviceText.setText(request.getRequestUserDeviceDescription());
-        requestDetailCreateTime.setText(TimeUtils.convertDate(request.getRequestCreationTime()));
-        requestDetailDeadline.setText(TimeUtils.convertDate(request.getRequestDeadlineTime()));
+        requestDetailCreateTime.setText(Time.getHumanReadableTime(request.getCreateTime(), "yyyy.MM.dd HH:mm"));
+        requestDetailDeadline.setText(Time.getHumanReadableTime(request.getDeadlineTime(), "yyyy.MM.dd HH:mm"));
 
         requestDetailCloseRequest.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -433,7 +433,7 @@ public class RequestDetailActivity extends FirebaseActivity implements MessageIn
                 uploadFileDialog.close();
                 Message message = new Message();
                 message.setRequestID(requestID);
-                message.setMessageCreationTime(TimeUtils.getCurrentTime(TimeUtils.Type.SERVER));
+                message.setCreationTime(Time.getTime());
                 message.setMessageCreatorName(creatorName);
                 message.setMessageCreatorID(creatorID);
                 message.setMessageCreatorPhotoURL(user.getUserPhotoURL());
@@ -454,7 +454,7 @@ public class RequestDetailActivity extends FirebaseActivity implements MessageIn
             public void onListEmpty() {
                 Message message = new Message();
                 message.setRequestID(requestID);
-                message.setMessageCreationTime(TimeUtils.getCurrentTime(TimeUtils.Type.SERVER));
+                message.setCreationTime(Time.getTime());
                 message.setMessageCreatorName(creatorName);
                 message.setMessageCreatorID(creatorID);
                 message.setMessageCreatorPhotoURL(user.getUserPhotoURL());

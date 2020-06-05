@@ -9,13 +9,21 @@
     tools:context=".DEBUG">
 
 
-
-    <ImageView
-        android:id="@+id/startRecordTEST"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:src="@drawable/microphone_icon"
-        android:padding="16dp"
-        android:background="@drawable/circle_bg"/>
-
+    <com.github.florent37.singledateandtimepicker.SingleDateAndTimePicker
+        android:id="@+id/single_day_picker"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        app:picker_displayMinutes="true"
+        app:picker_textColor="?textColor"
+        app:picker_mustBeOnFuture="true"
+        app:picker_textSize="@dimen/primaryTextSize"
+        app:picker_itemSpacing="@dimen/contentMarginHalf"
+        app:picker_curved="false"
+        app:picker_selectorColor="@android:color/transparent"
+        app:picker_cyclic="false"
+        app:picker_selectedTextColor="?colorPrimaryDark"
+        app:picker_dayCount="31"
+        app:picker_visibleItemCount="10"
+        app:picker_stepSizeHours="30"
+        />
 </LinearLayout>
