@@ -67,7 +67,8 @@ public class TimeUtils {
         Date end = getTime(endTime).getTime();
         long totalTime = end.getTime() - start.getTime();
         long elapsedTime = System.currentTimeMillis() - start.getTime();
-        return TextUtils.getPercent(elapsedTime, totalTime);
+        return 1f;
+        //return TextUtils.getPercent(elapsedTime, totalTime);
     }
 
 

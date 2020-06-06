@@ -24,7 +24,7 @@ import com.liner.i_desk.R;
 import com.liner.i_desk.UI.RequestDetailActivity;
 import com.liner.i_desk.UI.SplashActivity;
 import com.liner.i_desk.Utils.ColorUtils;
-import com.liner.i_desk.Utils.TimeUtils;
+import com.liner.i_desk.Utils.Firebase.Time;
 import com.liner.i_desk.Utils.Views.SimpleBottomSheetDialog;
 import com.liner.i_desk.Utils.Views.VerticalTextView;
 import com.squareup.picasso.Picasso;
@@ -96,9 +96,9 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.ViewHold
 
         holder.requestName.setText(item.getRequestTitle());
         holder.requestText.setText(item.getRequestShortDescription());
-        holder.requestTimeCreation.setText(TimeUtils.convertDate(item.getRequestCreationTime()));
-        holder.requestTimeDeadline.setText(TimeUtils.convertDate(item.getRequestDeadlineTime()));
-        holder.requestTimeDeadlineProgress.setProgress((int) TimeUtils.getDatesPercentage(item.getRequestCreationTime(), item.getRequestDeadlineTime(), TimeUtils.Type.SERVER));
+        //holder.requestTimeCreation.setText(Time.getHumanReadableTime(item.getCreateTime(), "yyyy.MM.dd HH:mm"));
+        //holder.requestTimeDeadline.setText(Time.getHumanReadableTime(item.getDeadlineTime(), "yyyy.MM.dd HH:mm"));
+        //holder.requestTimeDeadlineProgress.setProgress((int) Time.getPercent(item.getCreateTime(), item.getDeadlineTime()));
         holder.requestTimeDeadlineProgress.getProgressDrawable().setColorFilter(ColorUtils.interpolateColor(ColorUtils.getThemeColor(activity, R.attr.colorPrimaryDark), Color.RED, holder.requestTimeDeadlineProgress.getProgress()), PorterDuff.Mode.SRC_IN);
         holder.requestDeadlineWarning.setVisibility((holder.requestTimeDeadlineProgress.getProgress() > 80) ? View.VISIBLE : View.GONE);
 

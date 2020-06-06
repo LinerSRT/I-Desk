@@ -224,7 +224,7 @@ public class UserProfileActivity extends FirebaseActivity implements EditRegexTe
                         final ProgressBottomSheetDialog.Builder uploadDialog = new ProgressBottomSheetDialog.Builder(UserProfileActivity.this);
                         uploadDialog.setTitleText("Загрузка").setDialogText("Пожалуйста подождите, Ваше фото загружается").build();
                         uploadDialog.show();
-                        FirebaseHelper.uploadByteArray(ImageUtils.getDrawableByteArray(bitmap), File.separator + getCurrentUser().getUserName() + "_" + TextUtils.generateRandomString(10) + ".jpg",
+                        FirebaseHelper.uploadByteArray(ImageUtils.getDrawableByteArray(bitmap), File.separator + getCurrentUser().getUserName() + "_" + /*TextUtils.generateRandomString(10) +*/ ".jpg",
                                 "user_images" + File.separator + firebaseUser.getUid() + File.separator + "profile_photos",
                                 new FirebaseHelper.UploadListener() {
                                     @Override

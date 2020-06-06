@@ -1,7 +1,10 @@
 package com.liner.i_desk.Utils;
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -21,6 +24,8 @@ import com.squareup.picasso.Picasso;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.util.ArrayList;
+import java.util.Objects;
 
 public class ImageUtils {
     public static Bitmap drawableToBitmap(Drawable drawable) {
@@ -64,5 +69,15 @@ public class ImageUtils {
         return new BitmapDrawable(context.getResources(), resizeBitmap(ThumbnailUtils.createVideoThumbnail(file.getAbsolutePath(), MediaStore.Images.Thumbnails.MINI_KIND), width, height));
     }
 
-
+    @SuppressLint("InlinedApi")
+    public static ArrayList<String> getAllImagesFromDevice(Activity activity) {
+        ArrayList<String> listOfAllImages = new ArrayList<>();
+        Cursor cursor = activity.getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                new String[]{MediaStore.MediaColumns.DATA, MediaStore.Images.Media.BUCKET_DISPLAY_NAME},
+                null, null, MediaStore.Images.ImageColumns.DATE_TAKEN +" DESC");
+        while (Objects.requireNonNull(cursor).moveToNext()) {
+            listOfAllImages.add(cursor.getString(Objects.requireNonNull(cursor).getColumnIndexOrThrow(MediaStore.MediaColumns.DATA)));
+        }
+        return listOfAllImages;
+    }
 }

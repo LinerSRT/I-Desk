@@ -321,7 +321,7 @@ public class RequestDetailActivity extends FirebaseActivity implements MessageIn
                 message.setMessageText(messageText);
                 message.setFileDataList(fileDataList);
                 message.setMessageReaded(false);
-                message.setMessageID(TextUtils.generateRandomString(20));
+                //message.setMessageID(TextUtils.generateRandomString(20));
                 FirebaseHelper.addNewMessage(requestID, message);
                 fileList.clear();
             }
@@ -342,7 +342,7 @@ public class RequestDetailActivity extends FirebaseActivity implements MessageIn
                 message.setMessageText(messageText);
                 message.setMessageReaded(false);
                 message.setFileDataList(new ArrayList<Request.FileData>());
-                message.setMessageID(TextUtils.generateRandomString(20));
+                //message.setMessageID(TextUtils.generateRandomString(20));
                 FirebaseHelper.addNewMessage(requestID, message);
             }
         });

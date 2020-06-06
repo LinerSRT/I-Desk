@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".ActivityRegister">
+
+
+    <studio.carbonylgroup.textfieldboxes.TextFieldBoxes
+        android:id="@+id/registerTextFieldEmailBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:background="@drawable/fui_idp_button_background_google"
+        android:elevation="2dp"
+        android:paddingStart="@dimen/contentMarginHalf"
+        android:paddingEnd="@dimen/contentMarginHalf"
+        app:alwaysShowHint="false"
+        app:errorColor="@color/color_warning_red"
+        app:hasClearButton="true"
+        app:helperText="Введите ваш E-mail"
+        app:helperTextColor="?textColorDark"
+        app:iconSignifier="@drawable/email_icon"
+        app:labelText="Email"
+        app:layout_constraintBottom_toTopOf="@+id/view"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:minCharacters="6"
+        app:panelBackgroundColor="@color/white"
+        app:primaryColor="?colorPrimaryDark"
+        app:useDenseSpacing="true">
+
+        <studio.carbonylgroup.textfieldboxes.ExtendedEditText
+            android:id="@+id/registerExtendedEmailEdit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textEmailAddress"
+            android:textSize="@dimen/secondaryTextSize" />
+
+    </studio.carbonylgroup.textfieldboxes.TextFieldBoxes>
+
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="wrap_content"
+        android:layout_height="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <studio.carbonylgroup.textfieldboxes.TextFieldBoxes
+        android:id="@+id/registerTextFieldPasswordBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:background="@drawable/fui_idp_button_background_google"
+        android:elevation="2dp"
+        android:paddingStart="@dimen/contentMarginHalf"
+        android:paddingEnd="@dimen/contentMarginHalf"
+        app:alwaysShowHint="false"
+        app:errorColor="@color/color_warning_red"
+        app:hasClearButton="false"
+        app:helperText="Придумайте новый пароль"
+        app:helperTextColor="?textColorDark"
+        app:iconSignifier="@drawable/password_icon"
+        app:isResponsiveIconColor="true"
+        app:labelText="Пароль"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view"
+        app:maxCharacters="20"
+        app:minCharacters="6"
+        app:panelBackgroundColor="@color/white"
+        app:primaryColor="?colorPrimaryDark"
+        app:useDenseSpacing="true">
+
+        <studio.carbonylgroup.textfieldboxes.ExtendedEditText
+            android:id="@+id/registerExtendedPasswordEdit"
+            android:layout_width="match_parent"
+            android:inputType="textPassword"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/secondaryTextSize" />
+
+    </studio.carbonylgroup.textfieldboxes.TextFieldBoxes>
+
+    <TextView
+        android:id="@+id/registerDescription"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        android:text="Введите свой Email и придумайте пароль"
+        android:textColor="?textColorDark"
+        android:textSize="@dimen/primaryTextSizeLarge"
+        app:layout_constraintBottom_toTopOf="@+id/registerTextFieldEmailBox"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/registerHeader"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="8dp"
+        android:background="?colorPrimaryDark"
+        android:elevation="4dp"
+        android:fontFamily="sans-serif-thin"
+        android:gravity="center"
+        android:text="I-Desk"
+        android:textColor="@color/white"
+        android:textSize="48sp"
+        android:textStyle="bold"
+        android:transitionName="header_bar"
+        app:layout_constraintBottom_toTopOf="@+id/registerDescription"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/registerQuestion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:text="Есть аккаунт?"
+        android:textColor="?colorPrimaryDark"
+        android:textSize="@dimen/secondaryTextSizeSmall"
+        app:layout_constraintBottom_toTopOf="@+id/registerLoginAccount"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/registerSignWithGoogle"
+        style="@style/FirebaseUI.Button.AccountChooser.GoogleButton"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="8dp"
+        android:text="Войти с помощью"
+        android:textColor="?textColor"
+        android:textSize="@dimen/secondaryTextSize"
+        app:layout_constraintEnd_toStartOf="@+id/registerNextStep"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/registerTextFieldPasswordBox" />
+
+    <Button
+        android:id="@+id/registerNextStep"
+        style="@style/AppTheme.Button"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="32dp"
+        android:background="@drawable/fui_idp_button_background_google"
+        android:drawableEnd="@drawable/ic_arrow_forward_black_24dp"
+        android:elevation="4dp"
+        android:text="Далее"
+        android:textAllCaps="false"
+        android:textColor="?textColor"
+        android:textColorHighlight="?textColorDark"
+        android:typeface="normal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/registerSignWithGoogle"
+        app:layout_constraintTop_toBottomOf="@+id/registerTextFieldPasswordBox" />
+
+    <Button
+        android:id="@+id/registerLoginAccount"
+        style="@style/AppTheme.Button"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/fui_idp_button_background_google"
+        android:drawableStart="@drawable/account_login_icon"
+        android:elevation="4dp"
+        android:text="Войти аккаунт"
+        android:textAllCaps="false"
+        android:textColor="?textColor"
+        android:textColorHighlight="?textColorDark"
+        android:typeface="normal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

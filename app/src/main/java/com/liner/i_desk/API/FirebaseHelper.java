@@ -329,7 +329,7 @@ public class FirebaseHelper {
         }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onProgress(@NonNull UploadTask.TaskSnapshot taskSnapshot) {
-                uploadListener.onFileUploading(Math.round(TextUtils.getPercent(taskSnapshot.getBytesTransferred(), taskSnapshot.getTotalByteCount())), taskSnapshot.getBytesTransferred(), taskSnapshot.getTotalByteCount(), file.getName());
+                //uploadListener.onFileUploading(Math.round(TextUtils.getPercent(taskSnapshot.getBytesTransferred(), taskSnapshot.getTotalByteCount())), taskSnapshot.getBytesTransferred(), taskSnapshot.getTotalByteCount(), file.getName());
             }
         });
     }
@@ -376,7 +376,7 @@ public class FirebaseHelper {
         }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onProgress(@NonNull UploadTask.TaskSnapshot taskSnapshot) {
-                uploadListener.onFileUploading(Math.round(TextUtils.getPercent(taskSnapshot.getBytesTransferred(), taskSnapshot.getTotalByteCount())), taskSnapshot.getBytesTransferred(), taskSnapshot.getTotalByteCount(), filename);
+                //uploadListener.onFileUploading(Math.round(TextUtils.getPercent(taskSnapshot.getBytesTransferred(), taskSnapshot.getTotalByteCount())), taskSnapshot.getBytesTransferred(), taskSnapshot.getTotalByteCount(), filename);
             }
         });
     }

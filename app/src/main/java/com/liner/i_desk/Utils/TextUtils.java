@@ -1,27 +1,51 @@
 package com.liner.i_desk.Utils;
 
+import android.app.Activity;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+
+import java.util.Objects;
 import java.util.Random;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import static com.liner.i_desk.Constants.GENERATED_ID_LENGTH;
 
 public class TextUtils {
-    public static String generateRandomString(int lenth){
+    public static boolean isEmailValid(String text) {
+        String expression = "[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+";
+        Pattern pattern = Pattern.compile(expression);
+        Matcher matcher = pattern.matcher(text);
+        return matcher.matches();
+    }
+
+    public static boolean isPasswordValid(String text) {
+        String expression = "(?=.*[0-9])(?=.*[a-zA-Zа-яА-Я]).{6,}";
+        Pattern pattern = Pattern.compile(expression);
+        Matcher matcher = pattern.matcher(text);
+        return matcher.matches();
+    }
+
+
+    public static boolean isTextEmpty(String text) {
+        return android.text.TextUtils.isEmpty(text);
+    }
+
+    public static String getUniqueString() {
         char[] chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz".toCharArray();
-        StringBuilder sb = new StringBuilder();
-        Random random = new Random();
-        for (int i = 0; i < lenth; i++) {
-            char c = chars[random.nextInt(chars.length)];
-            sb.append(c);
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int i = 0; i < GENERATED_ID_LENGTH; i++) {
+            stringBuilder.append(chars[new Random().nextInt(chars.length)]);
         }
-        return sb.toString();
-    }
-    public static int randInt(int min, int max) {
-        return new Random().nextInt((max - min) + 1) + min;
+        return stringBuilder.toString();
     }
 
-    public static float getPercent(float firstValue, float secondValue){
-        return ((firstValue/secondValue) * 100f);
-    }
-
-    public static float getPercent(long firstValue, long secondValue){
-        return ((Float.parseFloat(Long.toString(firstValue))/Float.parseFloat(Long.toString(secondValue))) * 100f);
+    public static void hideKeyboard(Activity activity) {
+        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        View view = activity.getCurrentFocus();
+        if (view == null) {
+            view = new View(activity);
+        }
+        Objects.requireNonNull(imm).hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 }

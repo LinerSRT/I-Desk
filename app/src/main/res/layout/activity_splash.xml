@@ -52,7 +52,6 @@
             layout="@layout/splash_login_card_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone"
             android:layout_margin="@dimen/contentMargin" />
 
         <include
@@ -69,7 +68,6 @@
         android:id="@+id/splashAdditionalAccountFunctions"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"
         android:gravity="center"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"

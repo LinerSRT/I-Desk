@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.res.Resources;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 
 import com.liner.i_desk.Utils.Views.ProgressBottomSheetDialog;
 
@@ -56,5 +58,12 @@ public class ViewUtils {
                 .setTitleText(title)
                 .setDialogText(text)
                 .build().getDialog();
+    }
+
+
+    public static void animateView(View view, int animationResource, int duration){
+        Animation animation = AnimationUtils.loadAnimation(view.getContext(), animationResource);
+        animation.setDuration(duration);
+        view.startAnimation(animation);
     }
 }

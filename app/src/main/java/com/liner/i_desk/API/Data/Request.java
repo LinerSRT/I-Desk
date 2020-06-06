@@ -178,7 +178,13 @@ public class Request implements Serializable {
         public FileData() {
         }
 
-        public FileData(String downloadURL, String fileName, String filePath, String contentType, String contentEncoding, long fileByteSize, long fileCreationTime) {
+        public FileData(String downloadURL,
+                        String fileName,
+                        String filePath,
+                        String contentType,
+                        String contentEncoding,
+                        long fileByteSize,
+                        long fileCreationTime) {
             this.downloadURL = downloadURL;
             this.fileName = fileName;
             this.filePath = filePath;

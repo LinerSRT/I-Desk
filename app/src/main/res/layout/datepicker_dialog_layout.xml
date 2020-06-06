@@ -21,27 +21,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <com.liner.i_desk.Utils.Views.DateHourPicker
-            android:id="@+id/datePickerDialogViewPicker"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/contentMarginHalf"
-            android:layout_marginBottom="@dimen/contentMarginHalf"
-            android:background="?backgroundColor"
-            app:halfVisibleItemCount="2"
-            app:itemHeightSpace="@dimen/secondaryTextSize"
-            app:itemTextColor="?textColor"
-            app:itemTextSize="@dimen/secondaryTextSize"
-            app:selectedTextSize="@dimen/primaryTextSizeLarge"
-            app:wheelCurtain="true"
-            app:wheelCurtainBorder="false"
-            app:indicatorTextColor="@color/color_white"
-            app:selectedTextColor="@color/color_white"
-            app:wheelCurtainColor="?colorPrimaryDark"
-            app:wheelCurtainBorderColor="?backgroundColor"
-            app:wheelCyclic="true"
-            app:zoomInSelectedItem="true" />
+
 
     </LinearLayout>
 

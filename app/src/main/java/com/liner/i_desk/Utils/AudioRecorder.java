@@ -15,7 +15,7 @@ public class AudioRecorder implements MediaRecorder.OnInfoListener, MediaRecorde
 
     public AudioRecorder(Context context) {
         this.context = context;
-        this.outName = TextUtils.generateRandomString(10);
+        //this.outName = TextUtils.generateRandomString(10);
     }
 
     public void start() {

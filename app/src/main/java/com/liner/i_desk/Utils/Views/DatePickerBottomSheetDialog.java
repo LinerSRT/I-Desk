@@ -22,7 +22,6 @@ import java.util.concurrent.TimeUnit;
 @SuppressLint("ViewConstructor")
 public class DatePickerBottomSheetDialog extends BaseBottomSheet {
     private TextView datePickerDialogTitle;
-    private DateHourPicker datePickerDialogView;
     private TextView datePickerDialogCancel;
     private ExtendedTextButton datePickerDialogDone;
     private String titleText;
@@ -52,7 +51,6 @@ public class DatePickerBottomSheetDialog extends BaseBottomSheet {
     public final View onCreateSheetContentView(@NonNull Context context) {
         View view = LayoutInflater.from(context).inflate(R.layout.datepicker_dialog_layout, this, false);
         datePickerDialogTitle = view.findViewById(R.id.datePickerDialogTitle);
-        datePickerDialogView = view.findViewById(R.id.datePickerDialogViewPicker);
         datePickerDialogCancel = view.findViewById(R.id.datePickerDialogCancel);
         datePickerDialogDone = view.findViewById(R.id.datePickerDialogDone);
         return view;
@@ -60,7 +58,6 @@ public class DatePickerBottomSheetDialog extends BaseBottomSheet {
 
     public String getPickedDate() {
         Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(datePickerDialogView.getDateLong());
         return TimeUtils.getTime(calendar, TimeUtils.Type.LOCAL);
     }
 
@@ -83,9 +80,6 @@ public class DatePickerBottomSheetDialog extends BaseBottomSheet {
                 }
             };
         }
-        datePickerDialogView.setIndicatorText("г","м", "д", "ч");
-        datePickerDialogView.setMaxDate(currentTime.getTime() + TimeUnit.DAYS.toMillis(Math.abs(30)));
-        datePickerDialogView.setMinDate(currentTime.getTime()+TimeUnit.HOURS.toMillis(3));
         datePickerDialogTitle.setText(titleText);
         datePickerDialogDone.setText(doneText);
         datePickerDialogDone.setOnClickListener(doneClickListener);

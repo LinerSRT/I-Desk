@@ -109,10 +109,6 @@ public class SimpleBottomSheetDialog extends BaseBottomSheet {
         return view;
     }
 
-
-
-
-
     public void create(){
         simpleDialogTitle.setText(titleText);
         simpleDialogText.setText(dialogText);

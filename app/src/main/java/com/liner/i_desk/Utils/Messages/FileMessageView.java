@@ -111,7 +111,7 @@ public class FileMessageView extends BaseMessageItem {
         @Override
         protected void progress(BaseDownloadTask task, int soFarBytes, int totalBytes) {
             fileDownload.setProgressState(CircleProgressBar.ProgressState.PROGRESS, false);
-            fileDownload.setProgressWithAnimation(TextUtils.getPercent(soFarBytes, totalBytes));
+            //fileDownload.setProgressWithAnimation(TextUtils.getPercent(soFarBytes, totalBytes));
         }
 
         @Override

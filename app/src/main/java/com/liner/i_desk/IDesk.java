@@ -7,7 +7,11 @@ import com.liulishuo.filedownloader.connection.FileDownloadUrlConnection;
 
 public class IDesk extends Application {
 
-    private static IDesk mContext;
+    private static IDesk context;
+
+    public static IDesk getContext() {
+        return context;
+    }
 
     @Override
     public void onCreate() {
@@ -19,11 +23,7 @@ public class IDesk extends Application {
                         .readTimeout(15_000)
                 ))
                 .commit();
-        mContext = this;
-    }
-
-    public static IDesk getContext() {
-        return mContext;
+        context = this;
     }
 
 }

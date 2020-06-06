@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="color_text">#252525</color>
-    <color name="color_text_dark">#5E5E5E</color>
-    <color name="color_disable">#949393</color>
+    <color name="color_text">#4D4D4D</color>
+    <color name="color_text_dark">#868686</color>
+    <color name="color_disable">#B6B6B6</color>
     <color name="color_white">#FFFFFF</color>
     <color name="color_white_dark">#DBDBDB</color>
-    <color name="color_warning_red">#C00</color>
+    <color name="color_warning_red">#F16060</color>
     <color name="color_news_media_background">#E7E7E7</color>
     <color name="color_primary">#0091EA</color>
     <color name="color_primary_dark">#0277BD</color>
