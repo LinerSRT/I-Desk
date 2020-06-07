@@ -5,6 +5,7 @@ import java.util.List;
 
 public class UserObject implements Serializable {
     public String userID;
+    private UserType userType;
     private String userDeviceID;
     private String userName;
     private String userEmail;
@@ -45,6 +46,7 @@ public class UserObject implements Serializable {
      * @param userFiles            Список файлов пользователя
      */
     public UserObject(String userID,
+                      UserType userType,
                       String userDeviceID,
                       String userName,
                       String userEmail,
@@ -59,6 +61,7 @@ public class UserObject implements Serializable {
                       List<String> userMessages,
                       List<String> userFiles) {
         this.userID = userID;
+        this.userType = userType;
         this.userDeviceID = userDeviceID;
         this.userName = userName;
         this.userEmail = userEmail;
@@ -74,15 +77,20 @@ public class UserObject implements Serializable {
         this.userFiles = userFiles;
     }
 
-    /**
-     * Стандартные get'еры и set'еры
-     */
     public String getUserID() {
         return userID;
     }
 
     public void setUserID(String userID) {
         this.userID = userID;
+    }
+
+    public UserType getUserType() {
+        return userType;
+    }
+
+    public void setUserType(UserType userType) {
+        this.userType = userType;
     }
 
     public String getUserDeviceID() {
@@ -189,10 +197,16 @@ public class UserObject implements Serializable {
         this.userFiles = userFiles;
     }
 
+    /**
+     * Стандартные get'еры и set'еры
+     */
+
+
     @Override
     public String toString() {
         return "UserObject{" +
                 "userID='" + userID + '\'' +
+                ", userType=" + userType +
                 ", userDeviceID='" + userDeviceID + '\'' +
                 ", userName='" + userName + '\'' +
                 ", userEmail='" + userEmail + '\'' +

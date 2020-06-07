@@ -14,7 +14,7 @@
             android:layout_height="wrap_content"/>
 
         <com.roacult.backdrop.BackdropLayout
-            android:id="@+id/container"
+            android:id="@+id/mainBackdropLayout"
             app:front_layout="@id/includedFront"
             app:back_layout="@id/includedBack"
             app:toolbarId="@id/toolbar"
@@ -56,6 +56,7 @@
                         </LinearLayout>
 
                         <LinearLayout
+                            android:id="@+id/mainLayoutToCreateRequest"
                             android:layout_width="100dp"
                             android:layout_height="wrap_content"
                             android:gravity="center"
@@ -79,6 +80,7 @@
                         </LinearLayout>
 
                         <LinearLayout
+                            android:id="@+id/mainLayoutToProfile"
                             android:layout_width="100dp"
                             android:layout_height="wrap_content"
                             android:gravity="center"

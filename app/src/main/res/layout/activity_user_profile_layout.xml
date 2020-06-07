@@ -15,7 +15,7 @@
         app:titleTextColor="#fff" />
 
     <com.roacult.backdrop.BackdropLayout
-        android:id="@+id/container"
+        android:id="@+id/profileBackdropLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:back_layout="@id/includedBack"
@@ -31,21 +31,22 @@
             android:layout_height="wrap_content"
             android:background="?colorPrimaryDark"
             android:gravity="center"
-            android:paddingBottom="@dimen/contentMarginHalf"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:paddingBottom="@dimen/contentMarginHalf">
 
             <LinearLayout
+                android:id="@+id/profileLayoutToRequestList"
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
-                android:gravity="center"
                 android:layout_margin="@dimen/contentMarginHalf"
+                android:gravity="center"
                 android:orientation="vertical">
 
                 <ImageView
                     android:layout_width="40dp"
+                    android:layout_height="40dp"
                     android:background="@drawable/circle_bg"
                     android:backgroundTint="@color/color_primary"
-                    android:layout_height="40dp"
                     android:src="@drawable/request_list_icon" />
 
                 <com.liner.views.YSTextView
@@ -58,10 +59,11 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/profileLayoutToAddRequest"
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
-                android:gravity="center"
                 android:layout_margin="@dimen/contentMarginHalf"
+                android:gravity="center"
                 android:orientation="vertical">
 
                 <ImageView
@@ -83,15 +85,15 @@
             <LinearLayout
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
-                android:gravity="center"
                 android:layout_margin="@dimen/contentMarginHalf"
+                android:gravity="center"
                 android:orientation="vertical">
 
                 <ImageView
                     android:layout_width="40dp"
+                    android:layout_height="40dp"
                     android:background="@drawable/circle_bg"
                     android:backgroundTint="@color/color_primary"
-                    android:layout_height="40dp"
                     android:src="@drawable/profile_icon" />
 
                 <com.liner.views.YSTextView
@@ -106,283 +108,280 @@
 
         </LinearLayout>
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <com.faltenreich.skeletonlayout.SkeletonLayout
             android:id="@+id/includedFront"
             android:layout_width="match_parent"
-            android:background="@drawable/round_corner_background_top"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            app:showShimmer="true"
+            app:maskColor="@color/white_five"
+            app:shimmerColor="@color/color_disable"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/round_corner_background_top">
 
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/circleImageView"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_marginTop="16dp"
-                android:src="@drawable/temp_user_photo"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <com.liner.views.YSTextView
-                android:id="@+id/YSTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Username"
-                android:textColor="#383838"
-                android:textSize="24sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/circleImageView"
-                app:ys_type="Bold" />
-
-            <com.liner.views.YSTextView
-                android:id="@+id/YSTextView2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Заявитель"
-                android:textColor="#383838"
-                android:textSize="@dimen/secondaryTextSize"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/YSTextView"
-                app:ys_type="Thin" />
-
-            <LinearLayout
-                android:id="@+id/linearLayout2"
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/contentMarginHalf"
-                android:layout_marginTop="8dp"
-                android:background="@drawable/background"
-                android:elevation="2dp"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:padding="@dimen/contentMarginHalf"
-                app:layout_constraintTop_toBottomOf="@+id/YSTextView2"
-                tools:layout_editor_absoluteX="8dp">
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
-                <com.liner.views.YSTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="О себе"
-                    android:textColor="#383838"
-                    android:layout_gravity="start"
-                    android:textSize="@dimen/primaryTextSize"
+
+                <com.bosphere.fadingedgelayout.FadingEdgeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    app:fel_edge="bottom|right|left|top"
+                    app:fel_size_top="32dp"
+                    app:fel_size_bottom="32dp"
+                    app:layout_constraintBottom_toTopOf="@+id/userAboutLayout"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <com.liner.views.BlurredImageView
+                        android:id="@+id/profileLayoutBlurredUserPhoto"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:adjustViewBounds="true"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/temp_user_photo" />
+                </com.bosphere.fadingedgelayout.FadingEdgeLayout>
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/profileLayoutUserPhoto"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_marginTop="32dp"
+                    android:src="@drawable/temp_user_photo"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/YSTextView"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <com.liner.views.YSTextView
+                    android:id="@+id/profileLayoutUserName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#383838"
+                    android:textSize="24sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/profileLayoutUserPhoto"
                     app:ys_type="Bold" />
 
                 <com.liner.views.YSTextView
+                    android:id="@+id/profileLayoutUserType"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:maxLines="8"
-                    android:text="Цитаты и статусы о себе — это как раз те фразы, которые характеризуют и описывают вас. Люди бывают самые разные, и цитаты о себе каждый человек должен выбирать, разумеется, сам. Мы стараемся вымещать самые различные высказывания, чтобы каждый смог выбрать наиболее подходящее. Статусы о себе можно использовать в контакте, чтобы дать возможность своим друзьям и всем остальным понять вас лучше. Выбирайте."
                     android:textColor="#383838"
                     android:textSize="@dimen/secondaryTextSize"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/YSTextView"
-                    app:ys_type="Light" />
+                    app:layout_constraintTop_toBottomOf="@+id/profileLayoutUserName"
+                    app:ys_type="Thin" />
 
-                <net.cachapa.expandablelayout.ExpandableLayout
+                <LinearLayout
+                    android:id="@+id/userAboutLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:el_expanded="true">
+                    android:layout_margin="@dimen/contentMarginHalf"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/background"
+                    android:elevation="2dp"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="@dimen/contentMarginHalf"
+                    app:layout_constraintTop_toBottomOf="@+id/profileLayoutUserType"
+                    tools:layout_editor_absoluteX="8dp">
 
-                    <studio.carbonylgroup.textfieldboxes.TextFieldBoxes
-                        android:id="@+id/createProfileNickNameFiledBox"
+                    <com.liner.views.YSTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="start"
+                        android:text="О себе"
+                        android:layout_marginBottom="@dimen/contentMarginHalf"
+                        android:textColor="#383838"
+                        android:textSize="@dimen/primaryTextSize"
+                        app:ys_type="Bold" />
+
+                    <com.liner.views.YSTextView
+                        android:id="@+id/profileLayoutUserAbout"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="start"
+                        android:layout_marginBottom="@dimen/contentMarginHalf"
+                        android:maxLines="8"
+                        android:text="Информация о себе не указана"
+                        android:textColor="#383838"
+                        android:textSize="@dimen/secondaryTextSize"
+                        app:ys_type="Light" />
+
+                    <net.cachapa.expandablelayout.ExpandableLayout
+                        android:id="@+id/profileLayoutUserAboutExpandLayout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/fui_idp_button_background_google"
-                        android:elevation="2dp"
-                        android:paddingStart="@dimen/contentMarginHalf"
-                        android:paddingEnd="@dimen/contentMarginHalf"
-                        app:alwaysShowHint="false"
-                        app:errorColor="@color/color_warning_red"
-                        app:hasClearButton="false"
-                        app:helperText="Напишите кратко о себе"
-                        app:helperTextColor="?textColorDark"
-                        app:endIcon="@drawable/done_icon"
-                        app:maxCharacters="200"
-                        app:layout_constraintBottom_toTopOf="@+id/createProfileAboutFiledBox"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.0"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:panelBackgroundColor="@color/white"
-                        app:primaryColor="?colorPrimaryDark"
-                        app:useDenseSpacing="true">
+                        android:visibility="gone"
+                        app:el_duration="400"
+                        app:el_expanded="false"
+                        app:el_parallax="100">
 
-                        <studio.carbonylgroup.textfieldboxes.ExtendedEditText
-                            android:id="@+id/createProfileNickName"
+                        <studio.carbonylgroup.textfieldboxes.TextFieldBoxes
+                            android:id="@+id/profileLayoutUserAboutEditBox"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:textSize="@dimen/secondaryTextSize" />
+                            android:background="@drawable/fui_idp_button_background_google"
+                            android:elevation="2dp"
+                            android:paddingStart="@dimen/contentMarginHalf"
+                            android:paddingEnd="@dimen/contentMarginHalf"
+                            app:alwaysShowHint="false"
+                            app:endIcon="@drawable/done_icon"
+                            app:errorColor="@color/color_warning_red"
+                            app:hasClearButton="false"
+                            app:helperText="Напишите кратко о себе"
+                            app:helperTextColor="?textColorDark"
+                            app:maxCharacters="150"
+                            app:panelBackgroundColor="@color/white"
+                            app:primaryColor="?colorPrimaryDark"
+                            app:useDenseSpacing="true">
 
-                    </studio.carbonylgroup.textfieldboxes.TextFieldBoxes>
+                            <studio.carbonylgroup.textfieldboxes.ExtendedEditText
+                                android:id="@+id/profileLayoutUserAboutEditText"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textSize="@dimen/secondaryTextSize" />
 
-                </net.cachapa.expandablelayout.ExpandableLayout>
+                        </studio.carbonylgroup.textfieldboxes.TextFieldBoxes>
 
-            </LinearLayout>
+                    </net.cachapa.expandablelayout.ExpandableLayout>
+
+                </LinearLayout>
 
 
-            <LinearLayout
-                android:id="@+id/linearLayout3"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/contentMarginHalf"
-                android:background="@drawable/background"
-                android:elevation="2dp"
-                android:orientation="vertical"
-                android:padding="@dimen/contentMarginHalf"
-                app:layout_constraintTop_toBottomOf="@+id/linearLayout2"
-                tools:layout_editor_absoluteX="8dp">
+                <LinearLayout
+                    android:id="@+id/linearLayout3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/contentMarginHalf"
+                    android:background="@drawable/background"
+                    android:elevation="2dp"
+                    android:orientation="vertical"
+                    android:padding="@dimen/contentMarginHalf"
+                    app:layout_constraintTop_toBottomOf="@+id/userAboutLayout"
+                    tools:layout_editor_absoluteX="8dp">
 
-                <com.liner.views.YSTextView
+                    <com.liner.views.YSTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/contentMarginHalf"
+                        android:text="Информация"
+                        android:textColor="#383838"
+                        android:textSize="@dimen/primaryTextSize"
+                        app:ys_type="Bold" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/contentMarginHalf"
+                        android:orientation="horizontal">
+
+                        <com.liner.views.YSTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="@dimen/contentMarginHalf"
+                            android:text="Регистрация"
+                            android:textColor="#383838"
+                            android:textSize="@dimen/secondaryTextSize"
+                            app:ys_type="Light" />
+
+                        <com.liner.views.YSTextView
+                            android:id="@+id/profileLayoutRegistrationDate"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="#383838"
+                            android:textSize="@dimen/secondaryTextSize"
+                            app:ys_type="Bold" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/contentMarginHalf"
+                        android:orientation="horizontal">
+
+                        <com.liner.views.YSTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="@dimen/contentMarginHalf"
+                            android:text="Последнее посещение"
+                            android:textColor="#383838"
+                            android:textSize="@dimen/secondaryTextSize"
+                            app:ys_type="Light" />
+
+                        <com.liner.views.YSTextView
+                            android:id="@+id/profileLayoutLastOnlineDate"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="#383838"
+                            android:textSize="@dimen/secondaryTextSize"
+                            app:ys_type="Bold" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/contentMarginHalf"
+                        android:orientation="horizontal">
+
+                        <com.liner.views.YSTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="@dimen/contentMarginHalf"
+                            android:text="Сообщений написано"
+                            android:textColor="#383838"
+                            android:textSize="@dimen/secondaryTextSize"
+                            app:ys_type="Light" />
+
+                        <com.liner.views.YSTextView
+                            android:id="@+id/profileLayoutMessageWrited"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="#383838"
+                            android:textSize="@dimen/secondaryTextSize"
+                            app:ys_type="Bold" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/contentMarginHalf"
+                        android:orientation="horizontal">
+
+                        <com.liner.views.YSTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="@dimen/contentMarginHalf"
+                            android:text="Заявок создано"
+                            android:textColor="#383838"
+                            android:textSize="@dimen/secondaryTextSize"
+                            app:ys_type="Light" />
+
+                        <com.liner.views.YSTextView
+                            android:id="@+id/profileLayoutRequestsCreated"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="#383838"
+                            android:textSize="@dimen/secondaryTextSize"
+                            app:ys_type="Bold" />
+                    </LinearLayout>
+                </LinearLayout>
+
+
+                <Button
+                    android:id="@+id/profileLayoutSignOut"
+                    style="@style/AppTheme.Button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/contentMarginHalf"
-                    android:text="Информация"
+                    android:drawableStart="@drawable/sighout_icon"
+                    android:text="Выйти"
                     android:textColor="#383838"
-                    android:textSize="@dimen/primaryTextSize"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/YSTextView"
-                    app:ys_type="Bold" />
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/contentMarginHalf"
-                    android:orientation="horizontal">
-
-                    <com.liner.views.YSTextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="@dimen/contentMarginHalf"
-                        android:text="Регистрация"
-                        android:textColor="#383838"
-                        android:textSize="@dimen/secondaryTextSize"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/YSTextView"
-                        app:ys_type="Light" />
-
-                    <com.liner.views.YSTextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="07.06.2020"
-                        android:textColor="#383838"
-                        android:textSize="@dimen/secondaryTextSize"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/YSTextView"
-                        app:ys_type="Bold" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/contentMarginHalf"
-                    android:orientation="horizontal">
-
-                    <com.liner.views.YSTextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="@dimen/contentMarginHalf"
-                        android:text="Последнее посещение"
-                        android:textColor="#383838"
-                        android:textSize="@dimen/secondaryTextSize"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/YSTextView"
-                        app:ys_type="Light" />
-
-                    <com.liner.views.YSTextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="07.06.2020 22:20"
-                        android:textColor="#383838"
-                        android:textSize="@dimen/secondaryTextSize"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/YSTextView"
-                        app:ys_type="Bold" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/contentMarginHalf"
-                    android:orientation="horizontal">
-
-                    <com.liner.views.YSTextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="@dimen/contentMarginHalf"
-                        android:text="Сообщений написано"
-                        android:textColor="#383838"
-                        android:textSize="@dimen/secondaryTextSize"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/YSTextView"
-                        app:ys_type="Light" />
-
-                    <com.liner.views.YSTextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="0"
-                        android:textColor="#383838"
-                        android:textSize="@dimen/secondaryTextSize"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/YSTextView"
-                        app:ys_type="Bold" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/contentMarginHalf"
-                    android:orientation="horizontal">
-
-                    <com.liner.views.YSTextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="@dimen/contentMarginHalf"
-                        android:text="Заявок создано"
-                        android:textColor="#383838"
-                        android:textSize="@dimen/secondaryTextSize"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/YSTextView"
-                        app:ys_type="Light" />
-
-                    <com.liner.views.YSTextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="0"
-                        android:textColor="#383838"
-                        android:textSize="@dimen/secondaryTextSize"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/YSTextView"
-                        app:ys_type="Bold" />
-                </LinearLayout>
-            </LinearLayout>
-
-
-            <Button
-                style="@style/AppTheme.Button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:drawableStart="@drawable/sighout_icon"
-                android:text="Выйти"
-                android:textColor="#383838"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
+                    app:layout_constraintStart_toStartOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </com.faltenreich.skeletonlayout.SkeletonLayout>
     </com.roacult.backdrop.BackdropLayout>
 </LinearLayout>

@@ -216,6 +216,7 @@ public class ActivityLogin extends AppCompatActivity {
                                     Objects.requireNonNull(Objects.requireNonNull(task.getResult()).getUser()).sendEmailVerification();
                                 UserObject userObject = new UserObject(
                                         Objects.requireNonNull(Objects.requireNonNull(task.getResult()).getUser()).getUid(),
+                                        UserObject.UserType.CLIENT,
                                         FirebaseInstanceId.getInstance().getToken(),
                                         googleAccount.getDisplayName(),
                                         googleAccount.getEmail(),

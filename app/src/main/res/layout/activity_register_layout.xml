@@ -83,7 +83,6 @@
         <studio.carbonylgroup.textfieldboxes.ExtendedEditText
             android:id="@+id/registerExtendedPasswordEdit"
             android:layout_width="match_parent"
-            android:inputType="textPassword"
             android:layout_height="wrap_content"
             android:textSize="@dimen/secondaryTextSize" />
 
