@@ -22,16 +22,15 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.iid.FirebaseInstanceId;
-import com.liner.i_desk.Utils.Firebase.Firebase;
-import com.liner.i_desk.Utils.Firebase.FirebaseValue;
-import com.liner.i_desk.Utils.Firebase.Time;
-import com.liner.i_desk.Utils.Firebase.UserObject;
-import com.liner.i_desk.Utils.TextUtils;
-import com.liner.i_desk.Utils.Views.IndeterminateBottomSheetDialog;
-import com.liner.i_desk.Utils.Views.SimpleBottomSheetDialog;
+import com.liner.bottomdialogs.IndeterminateDialog;
+import com.liner.bottomdialogs.SimpleDialog;
+import com.liner.i_desk.Firebase.Firebase;
+import com.liner.i_desk.Firebase.FirebaseValue;
+import com.liner.utils.TextUtils;
+import com.liner.utils.Time;
+import com.liner.i_desk.Firebase.UserObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Objects;
 
 import studio.carbonylgroup.textfieldboxes.ExtendedEditText;
@@ -43,8 +42,8 @@ public class ActivityRegister extends AppCompatActivity {
     private TextFieldBoxes registerTextFieldEmailBox;
     private TextFieldBoxes registerTextFieldPasswordBox;
     private String userEmail = "", userPassword = "";
-    private SimpleBottomSheetDialog.Builder errorDialog;
-    private IndeterminateBottomSheetDialog.Builder progressBottomSheetDialog;
+    private SimpleDialog.Builder errorDialog;
+    private IndeterminateDialog.Builder progressBottomSheetDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,9 +80,9 @@ public class ActivityRegister extends AppCompatActivity {
             }
         });
 
-        progressBottomSheetDialog = new IndeterminateBottomSheetDialog.Builder(this)
+        progressBottomSheetDialog = new IndeterminateDialog.Builder(this)
                 .setDialogText("Регистрация").setTitleText("Подождите...").build();
-        errorDialog = new SimpleBottomSheetDialog.Builder(this)
+        errorDialog = new SimpleDialog.Builder(this)
                 .setDismissTouchOutside(false)
                 .setTitleText("Ошибка")
                 .setDialogText("Невозможно создать новый аккаунт. Попробуйте позже!")
@@ -133,7 +132,7 @@ public class ActivityRegister extends AppCompatActivity {
                                     finish();
                                 } else {
                                     if ("The email address is already in use by another account.".equals(Objects.requireNonNull(Objects.requireNonNull(task.getException()).getMessage()))) {
-                                        errorDialog = new SimpleBottomSheetDialog.Builder(ActivityRegister.this)
+                                        errorDialog = new SimpleDialog.Builder(ActivityRegister.this)
                                                 .setDismissTouchOutside(false)
                                                 .setTitleText("Ошибка")
                                                 .setDialogText("Невозможно создать новый аккаунт. Данный Email уже используется!")
@@ -160,7 +159,7 @@ public class ActivityRegister extends AppCompatActivity {
         registerSignWithGoogle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                progressBottomSheetDialog = new IndeterminateBottomSheetDialog.Builder(ActivityRegister.this);
+                progressBottomSheetDialog = new IndeterminateDialog.Builder(ActivityRegister.this);
                 progressBottomSheetDialog.setTitleText("Подождите").setDialogText("Выполняется вход в аккаунт").build();
                 progressBottomSheetDialog.show();
                 FirebaseAuth.getInstance().signOut();

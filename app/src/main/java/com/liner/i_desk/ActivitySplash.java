@@ -6,8 +6,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.provider.Settings;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -15,10 +13,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityOptionsCompat;
 
 import com.google.firebase.database.DatabaseReference;
-import com.liner.i_desk.Utils.Firebase.Firebase;
-import com.liner.i_desk.Utils.Firebase.FirebaseValue;
-import com.liner.i_desk.Utils.Firebase.UserObject;
-import com.liner.i_desk.Utils.Views.SimpleBottomSheetDialog;
+import com.liner.bottomdialogs.SimpleDialog;
+import com.liner.i_desk.Firebase.Firebase;
+import com.liner.i_desk.Firebase.FirebaseValue;
+import com.liner.i_desk.Firebase.UserObject;
 import com.nabinbhandari.android.permissions.PermissionHandler;
 import com.nabinbhandari.android.permissions.Permissions;
 
@@ -72,7 +70,7 @@ public class ActivitySplash extends AppCompatActivity {
             @Override
             public void onDenied(Context context, ArrayList<String> deniedPermissions) {
                 super.onDenied(context, deniedPermissions);
-                SimpleBottomSheetDialog.Builder builder = new SimpleBottomSheetDialog.Builder(ActivitySplash.this)
+                SimpleDialog.Builder builder = new SimpleDialog.Builder(ActivitySplash.this)
                         .setTitleText("Вы не предоставили разрешения")
                         .setDialogText("Приложению необходимы некоторые разрешения для своей работы.\nЕсли вы хотите воспользоваться данным приложением, предоставьте разрешения в настройках вашего устройтсва")
                         .setCancel("Выйти", new View.OnClickListener() {

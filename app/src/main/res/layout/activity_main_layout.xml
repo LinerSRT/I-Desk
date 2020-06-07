@@ -1,9 +1,111 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ActivityMain">
+    android:layout_height="match_parent">
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            app:title="Меню"
+            app:titleTextColor="#fff"
+            android:background="?colorPrimaryDark"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <com.roacult.backdrop.BackdropLayout
+            android:id="@+id/container"
+            app:front_layout="@id/includedFront"
+            app:back_layout="@id/includedBack"
+            app:toolbarId="@id/toolbar"
+            app:peekHeight="100dp"
+            app:menuDrawable="@drawable/menu_icon"
+            app:disable_when_open="true"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+                <LinearLayout
+                    android:id="@+id/includedBack"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="?colorPrimaryDark"
+                    android:gravity="center"
+                    android:paddingBottom="@dimen/contentMarginHalf"
+                    android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:layout_width="100dp"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:layout_margin="@dimen/contentMarginHalf"
+                            android:orientation="vertical">
+
+                                <ImageView
+                                    android:layout_width="40dp"
+                                    android:background="@drawable/circle_bg"
+                                    android:backgroundTint="@color/color_primary"
+                                    android:layout_height="40dp"
+                                    android:src="@drawable/request_list_icon" />
+
+                                <com.liner.views.YSTextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Заявки"
+                                    android:textColor="@color/white"
+                                    android:textSize="@dimen/secondaryTextSize"
+                                    app:ys_type="Light" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="100dp"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:layout_margin="@dimen/contentMarginHalf"
+                            android:orientation="vertical">
+
+                                <ImageView
+                                    android:layout_width="40dp"
+                                    android:layout_height="40dp"
+                                    android:background="@drawable/circle_bg"
+                                    android:backgroundTint="@color/color_primary"
+                                    android:src="@drawable/add_request" />
+
+                                <com.liner.views.YSTextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Создать заявку"
+                                    android:textColor="@color/white"
+                                    android:textSize="@dimen/secondaryTextSize"
+                                    app:ys_type="Light" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="100dp"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:layout_margin="@dimen/contentMarginHalf"
+                            android:orientation="vertical">
+
+                                <ImageView
+                                    android:layout_width="40dp"
+                                    android:background="@drawable/circle_bg"
+                                    android:backgroundTint="@color/color_primary"
+                                    android:layout_height="40dp"
+                                    android:src="@drawable/profile_icon" />
+
+                                <com.liner.views.YSTextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Профиль"
+                                    android:textColor="@color/white"
+                                    android:textSize="@dimen/secondaryTextSize"
+                                    app:ys_type="Light" />
+                        </LinearLayout>
+
+
+                </LinearLayout>
+                <include
+                    android:id="@+id/includedFront"
+                    layout="@layout/layout_main"/>
+
+        </com.roacult.backdrop.BackdropLayout>
+</LinearLayout>

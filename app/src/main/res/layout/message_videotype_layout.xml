@@ -4,7 +4,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     xmlns:android="http://schemas.android.com/apk/res/android">
-    <com.liner.i_desk.Utils.Views.VideoPlayerView
+    <com.liner.views.VideoPlayerView
         android:id="@+id/messageVideoTypeView"
         android:layout_width="match_parent"
         android:layout_height="300dp"

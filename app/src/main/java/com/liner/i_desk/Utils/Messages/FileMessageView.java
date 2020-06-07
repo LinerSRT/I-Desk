@@ -1,19 +1,16 @@
 package com.liner.i_desk.Utils.Messages;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 
-import com.liner.i_desk.API.Data.Request;
-import com.liner.i_desk.IDesk;
+import com.liner.i_desk.Firebase.FileObject;
 import com.liner.i_desk.R;
-import com.liner.i_desk.Utils.FileUtils;
-import com.liner.i_desk.Utils.TextUtils;
-import com.liner.i_desk.Utils.Views.CircleProgressBar;
+import com.liner.utils.FileUtils;
+import com.liner.views.CircleProgressBar;
 import com.liulishuo.filedownloader.BaseDownloadTask;
 import com.liulishuo.filedownloader.FileDownloadListener;
 
@@ -24,8 +21,8 @@ public class FileMessageView extends BaseMessageItem {
     private ImageView fileTypeIcon;
     private CircleProgressBar fileDownload;
     private TextView fileName;
+    private FileObject fileObject;
     private TextView fileSize;
-    private Request.FileData fileData;
     private Listener listener;
     private File downloadedFile;
 
@@ -51,10 +48,10 @@ public class FileMessageView extends BaseMessageItem {
         setVisibility(GONE);
     }
 
-    public void setup(Request.FileData data) {
-        this.fileData = data;
+    public void setup(final FileObject fileObject ) {
+        this.fileObject = fileObject;
         showView();
-        downloadedFile = new File(FileUtils.getDownloadDir()+fileData.getFileName());
+        downloadedFile = new File(FileUtils.getDownloadDir()+fileObject.getFileName());
         if(downloadedFile.exists()) {
             fileDownload.setProgressState(CircleProgressBar.ProgressState.FINISHED, false);
         }
@@ -68,7 +65,7 @@ public class FileMessageView extends BaseMessageItem {
             @Override
             public void onStart() {
                 if(!downloadedFile.exists())
-                    FileUtils.createDownloadTask(fileData.getDownloadURL(), FileUtils.getDownloadDir() + fileData.getFileName(), listener).start();
+                    FileUtils.createDownloadTask(fileObject.getFileURL(), FileUtils.getDownloadDir() + fileObject.getFileName(), listener).start();
             }
 
             @Override
@@ -92,10 +89,10 @@ public class FileMessageView extends BaseMessageItem {
 
             }
         });
-        fileName.setText(fileData.getFileName());
-        fileSize.setText(FileUtils.humanReadableByteCount(fileData.getFileByteSize()));
+        fileName.setText(fileObject.getFileName());
+        fileSize.setText(FileUtils.humanReadableByteCount(fileObject.getFileSizeInBytes()));
         try {
-            fileTypeIcon.setImageDrawable(FileUtils.getFileIcon(context, fileData.getContentType()));
+            fileTypeIcon.setImageDrawable(FileUtils.getFileIcon(context, fileObject.getFileType()));
         } catch (IOException e) {
             e.printStackTrace();
         }

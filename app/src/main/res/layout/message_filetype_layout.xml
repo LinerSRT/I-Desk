@@ -47,7 +47,7 @@
 
 
 
-    <com.liner.i_desk.Utils.Views.CircleProgressBar
+    <com.liner.views.CircleProgressBar
         android:id="@+id/fileDownloadBtn"
         android:layout_width="40dp"
         android:layout_height="40dp"

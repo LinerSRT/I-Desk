@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="VideoPlayerView">
+        <attr name="toFullScreenIcon" format="reference" />
+        <attr name="toBaseScreenIcon" format="reference" />
+        <attr name="playIcon" format="reference" />
+        <attr name="pauseIcon" format="reference" />
+        <attr name="seekBarProgressDrawable" format="reference" />
+        <attr name="seekBarThumb" format="reference" />
+        <attr name="currentPositionColor" format="color|reference" />
+        <attr name="durationColor" format="color|reference" />
+    </declare-styleable>
+
+    <declare-styleable name="RecordView">
+        <attr name="slide_to_cancel_text" format="string" />
+        <attr name="slide_to_cancel_arrow" format="reference" />
+        <attr name="slide_to_cancel_margin_right" format="dimension" />
+        <attr name="slide_to_cancel_bounds" format="dimension" />
+        <attr name="slide_to_cancel_arrow_color" format="color|reference" />
+        <attr name="counter_time_color" format="color|reference" />
+
+    </declare-styleable>
+
+    <declare-styleable name="RecordButton">
+        <attr name="mic_icon" format="reference" />
+    </declare-styleable>
+
+    <declare-styleable name="CircleProgressBar">
+        <attr name="progressMin" format="integer" />
+        <attr name="progressMax" format="integer" />
+        <attr name="progress" format="integer" />
+        <attr name="progressStartAngle" format="integer" />
+        <attr name="progressBarColor" format="color|reference" />
+        <attr name="progressBarBackgroundColor" format="color|reference" />
+        <attr name="progressBarThickness" format="dimension|reference" />
+        <attr name="progressBarPadding" format="dimension|reference"/>
+        <attr name="progressBarIconPadding" format="dimension|reference"/>
+    </declare-styleable>
+
+    <declare-styleable name="YSTextView">
+        <attr name="ys_type">
+            <enum name="Bold" value="1"/>
+            <enum name="Light" value="2"/>
+            <enum name="Medium" value="3"/>
+            <enum name="Regular" value="4"/>
+            <enum name="RegularItalic" value="5"/>
+            <enum name="Thin" value="6"/>
+        </attr>
+    </declare-styleable>
+
+</resources>

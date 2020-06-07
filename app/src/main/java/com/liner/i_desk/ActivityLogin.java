@@ -24,16 +24,15 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.iid.FirebaseInstanceId;
-import com.liner.i_desk.Utils.Firebase.Firebase;
-import com.liner.i_desk.Utils.Firebase.FirebaseValue;
-import com.liner.i_desk.Utils.Firebase.Time;
-import com.liner.i_desk.Utils.Firebase.UserObject;
-import com.liner.i_desk.Utils.TextUtils;
-import com.liner.i_desk.Utils.Views.IndeterminateBottomSheetDialog;
-import com.liner.i_desk.Utils.Views.SimpleBottomSheetDialog;
+import com.liner.bottomdialogs.IndeterminateDialog;
+import com.liner.bottomdialogs.SimpleDialog;
+import com.liner.i_desk.Firebase.Firebase;
+import com.liner.i_desk.Firebase.FirebaseValue;
+import com.liner.utils.TextUtils;
+import com.liner.utils.Time;
+import com.liner.i_desk.Firebase.UserObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Objects;
 
 import studio.carbonylgroup.textfieldboxes.ExtendedEditText;
@@ -46,8 +45,8 @@ public class ActivityLogin extends AppCompatActivity {
     private TextFieldBoxes loginTextFieldPasswordBox;
     private ExtendedEditText loginExtendedPasswordEdit;
     private String userEmail = "", userPassword = "";
-    private SimpleBottomSheetDialog.Builder errorDialog;
-    private IndeterminateBottomSheetDialog.Builder progressBottomSheetDialog;
+    private SimpleDialog.Builder errorDialog;
+    private IndeterminateDialog.Builder progressBottomSheetDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,9 +70,9 @@ public class ActivityLogin extends AppCompatActivity {
             loginExtendedPasswordEdit.setSelection(userPassword.length());
         }
 
-        progressBottomSheetDialog = new IndeterminateBottomSheetDialog.Builder(this)
+        progressBottomSheetDialog = new IndeterminateDialog.Builder(this)
                 .setDialogText("Вход").setTitleText("Подождите...").build();
-        errorDialog = new SimpleBottomSheetDialog.Builder(this)
+        errorDialog = new SimpleDialog.Builder(this)
                 .setDismissTouchOutside(false)
                 .setTitleText("Ошибка")
                 .setDialogText("Невозможно войти в аккаунт")
@@ -162,7 +161,7 @@ public class ActivityLogin extends AppCompatActivity {
         loginSignWithGoogle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                progressBottomSheetDialog = new IndeterminateBottomSheetDialog.Builder(ActivityLogin.this);
+                progressBottomSheetDialog = new IndeterminateDialog.Builder(ActivityLogin.this);
                 progressBottomSheetDialog.setTitleText("Подождите").setDialogText("Выполняется вход в аккаунт").build();
                 progressBottomSheetDialog.show();
                 FirebaseAuth.getInstance().signOut();

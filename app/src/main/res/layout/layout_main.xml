@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:background="@drawable/round_corner_background_top"
+    android:gravity="center_horizontal"
+    android:paddingTop="@dimen/contentMargin"
+    android:layout_height="match_parent">
+
+    <com.baoyz.widget.PullRefreshLayout
+        android:id="@+id/requestRefreshLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:refreshColor="?colorPrimary"
+        app:refreshType="smartisan">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/requestRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:overScrollMode="never"
+            android:orientation="vertical"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:itemCount="10"
+            tools:listitem="@layout/request_item_holder"/>
+
+
+    </com.baoyz.widget.PullRefreshLayout>
+</LinearLayout>
