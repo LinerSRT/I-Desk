@@ -64,4 +64,5 @@ dependencies {
     implementation 'com.github.HITGIF:TextFieldBoxes:1.4.5'
     implementation 'com.github.roiacult:BackdropLayout:2.0'
     implementation project(path: ':utils')
+    implementation project(path: ':bottomdialogs')
 }

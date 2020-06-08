@@ -210,35 +210,48 @@ public class ActivityLogin extends AppCompatActivity {
                     AuthCredential authCredential = GoogleAuthProvider.getCredential(googleAccount.getIdToken(), null);
                     FirebaseAuth.getInstance().signInWithCredential(authCredential).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                         @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
+                        public void onComplete(@NonNull final Task<AuthResult> task) {
                             if (task.isSuccessful()) {
-                                if(Constants.USERS_REQUIRE_EMAIL_VERIFICATION)
-                                    Objects.requireNonNull(Objects.requireNonNull(task.getResult()).getUser()).sendEmailVerification();
-                                UserObject userObject = new UserObject(
-                                        Objects.requireNonNull(Objects.requireNonNull(task.getResult()).getUser()).getUid(),
-                                        UserObject.UserType.CLIENT,
-                                        FirebaseInstanceId.getInstance().getToken(),
-                                        googleAccount.getDisplayName(),
-                                        googleAccount.getEmail(),
-                                        String.valueOf(googleAccount.getPhotoUrl()),
-                                        "Информация о себе не указана",
-                                        "",
-                                        UserObject.UserStatus.ONLINE,
-                                        Time.getTime(),
-                                        Time.getTime(),
-                                        true,
-                                        new ArrayList<String>(),
-                                        new ArrayList<String>(),
-                                        new ArrayList<String>()
-                                );
-                                Objects.requireNonNull(Firebase.getUsersDatabase()).child(userObject.getUserID()).setValue(userObject)
-                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                            @Override
-                                            public void onComplete(@NonNull Task<Void> task) {
-                                                startActivity(new Intent(ActivityLogin.this, ActivityMain.class).addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED));
-                                                finish();
-                                            }
-                                        });
+                                FirebaseValue.getUser(Objects.requireNonNull(Objects.requireNonNull(task.getResult()).getUser()).getUid(), new FirebaseValue.ValueListener() {
+                                    @Override
+                                    public void onSuccess(Object object, DatabaseReference databaseReference) {
+                                        startActivity(new Intent(ActivityLogin.this, ActivityMain.class).addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED));
+                                        finish();
+                                    }
+
+                                    @Override
+                                    public void onFail(String errorMessage) {
+                                        if(Constants.USERS_REQUIRE_EMAIL_VERIFICATION)
+                                            Objects.requireNonNull(Objects.requireNonNull(task.getResult()).getUser()).sendEmailVerification();
+                                        UserObject userObject = new UserObject(
+                                                Objects.requireNonNull(Objects.requireNonNull(task.getResult()).getUser()).getUid(),
+                                                UserObject.UserType.CLIENT,
+                                                FirebaseInstanceId.getInstance().getToken(),
+                                                googleAccount.getDisplayName(),
+                                                googleAccount.getEmail(),
+                                                String.valueOf(googleAccount.getPhotoUrl()),
+                                                "Информация о себе не указана",
+                                                "",
+                                                UserObject.UserStatus.ONLINE,
+                                                Time.getTime(),
+                                                Time.getTime(),
+                                                true,
+                                                new ArrayList<String>(),
+                                                new ArrayList<String>(),
+                                                new ArrayList<String>()
+                                        );
+                                        Objects.requireNonNull(Firebase.getUsersDatabase()).child(userObject.getUserID()).setValue(userObject)
+                                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                    @Override
+                                                    public void onComplete(@NonNull Task<Void> task) {
+                                                        startActivity(new Intent(ActivityLogin.this, ActivityMain.class).addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED));
+                                                        finish();
+                                                    }
+                                                });
+                                    }
+                                });
+
+
 
                             } else {
                                 progressBottomSheetDialog.close();
@@ -255,6 +268,5 @@ public class ActivityLogin extends AppCompatActivity {
                 errorDialog.show();
             }
         }
-
     }
 }

@@ -10,12 +10,16 @@
 
 
 
-    <ImageView
-        android:id="@+id/startRecordTEST"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:src="@drawable/microphone_icon"
-        android:padding="16dp"
-        android:background="@drawable/circle_bg"/>
+    <com.liner.views.AttachmentLayoutView
+        android:id="@+id/attachmentLayoutView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/contentMarginHalf"
+        android:text="Add atachment"
+        android:id="@+id/testbtn"/>
 
 </LinearLayout>

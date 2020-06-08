@@ -119,6 +119,26 @@ public class CircleProgressBar extends View {
         });
     }
 
+    public void setNormalIcon(Drawable normalIcon) {
+        this.normalIcon = normalIcon;
+        invalidate();
+    }
+
+    public void setFinishedIcon(Drawable finishedIcon) {
+        this.finishedIcon = finishedIcon;
+        invalidate();
+    }
+
+    public void setCancelIcon(Drawable cancelIcon) {
+        this.cancelIcon = cancelIcon;
+        invalidate();
+    }
+
+    public void setErrorIcon(Drawable errorIcon) {
+        this.errorIcon = errorIcon;
+        invalidate();
+    }
+
     public void setProgressState(ProgressState state, boolean notify) {
         this.progressState = state;
         if (notify)

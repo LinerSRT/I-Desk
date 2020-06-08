@@ -48,4 +48,17 @@
         </attr>
     </declare-styleable>
 
+    <declare-styleable name="SwipeableRecyclerView">
+        <attr name="left_bg_color" format="color|reference" />
+        <attr name="left_image" format="integer|reference" />
+        <attr name="left_text" format="string|reference" />
+        <attr name="left_text_size" format="integer|reference"/>
+        <attr name="left_text_color" format="color|reference"/>
+        <attr name="right_bg_color" format="color|reference" />
+        <attr name="right_image" format="integer|reference" />
+        <attr name="right_text" format="string|reference" />
+        <attr name="right_text_size" format="integer|reference"/>
+        <attr name="right_text_color" format="color|reference"/>
+    </declare-styleable>
+
 </resources>

@@ -75,12 +75,47 @@ public class FirebaseValue {
         Objects.requireNonNull(Firebase.getUsersDatabase()).child(userID).setValue(value);
     }
 
+    public static void deleteFile(final String creatorID, final String fileID, String fileName){
+        final StorageReference path = FirebaseStorage.getInstance().getReference(Firebase.getUserUID()+File.separator+fileName);
+        path.delete();
+        getUser(creatorID, new FirebaseValue.ValueListener(){
+            @Override
+            public void onFail(String errorMessage) {
 
+            }
 
+            @Override
+            public void onSuccess(Object object, DatabaseReference databaseReference) {
+                UserObject userObject = (UserObject) object;
+                userObject.getUserFiles().remove(fileID);
+                setUserValue(creatorID, "userFiles", userObject.getUserFiles());
+                Objects.requireNonNull(Firebase.getFilesDatabase()).child(fileID).removeValue();
+            }
+        });
+    }
+
+    public static void deleteFile(final FileObject fileObject){
+        final StorageReference path = FirebaseStorage.getInstance().getReference(Firebase.getUserUID()+File.separator+fileObject.getFileID()+File.separator+fileObject.getFileName());
+        path.delete();
+        getUser(fileObject.getFileCreatorID(), new FirebaseValue.ValueListener(){
+            @Override
+            public void onFail(String errorMessage) {
+
+            }
+
+            @Override
+            public void onSuccess(Object object, DatabaseReference databaseReference) {
+                UserObject userObject = (UserObject) object;
+                userObject.getUserFiles().remove(fileObject.getFileID());
+                setUserValue(fileObject.getFileCreatorID(), "userFiles", userObject.getUserFiles());
+                Objects.requireNonNull(Firebase.getFilesDatabase()).child(fileObject.getFileID()).removeValue();
+            }
+        });
+    }
 
     public static void uploadByteArray(byte[] bytes, final String filenameWithExtension, final FileUploadListener fileUploadListener) {
         final String fileID = TextUtils.getUniqueString();
-        final StorageReference path = FirebaseStorage.getInstance().getReference(Firebase.getUserUID()+File.separator+fileID+File.separator+filenameWithExtension);
+        final StorageReference path = FirebaseStorage.getInstance().getReference(Firebase.getUserUID()+File.separator+filenameWithExtension);
         final UploadTask uploadTask = path.putBytes(bytes);
         fileUploadListener.onStart();
         uploadTask.addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {

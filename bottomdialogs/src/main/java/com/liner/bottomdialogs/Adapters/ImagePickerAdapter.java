@@ -61,6 +61,7 @@ public class ImagePickerAdapter extends RecyclerView.Adapter<ImagePickerAdapter.
             super(view);
             imageView = view.findViewById(R.id.imagePickerItemView);
             checkBox = view.findViewById(R.id.imagePickerCheckBox);
+            checkBox.setEnabled(false);
 
         }
 

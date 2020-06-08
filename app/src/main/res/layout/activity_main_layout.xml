@@ -7,7 +7,7 @@
     android:layout_height="match_parent">
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
-            app:title="Меню"
+            app:title="Заявки"
             app:titleTextColor="#fff"
             android:background="?colorPrimaryDark"
             android:layout_width="match_parent"

@@ -64,7 +64,7 @@ public class ActivitySplash extends AppCompatActivity {
                             startLoginActivity();
                         }
                     }
-                }, 1200);
+                }, 200);
             }
 
             @Override

@@ -17,5 +17,6 @@ public class Constants {
     public static final int GENERATED_ID_LENGTH = 16;
     public static final boolean USERS_REQUIRE_EMAIL_VERIFICATION = false;
     public static final int USER_STATUS_UPDATE_PERIOD = 2;
+    public static final long USER_STORAGE_SIZE = 67108864;
 
 }

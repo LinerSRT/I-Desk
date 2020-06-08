@@ -36,7 +36,7 @@ public abstract class FireActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        FirebaseValue.setUserValue(Firebase.getUserUID(), "userStatus", UserObject.UserStatus.OFFLINE);
+        //FirebaseValue.setUserValue(Firebase.getUserUID(), "userStatus", UserObject.UserStatus.OFFLINE);
         onlineUpdater.removeCallbacks(onlineUpdaterRunnable);
         super.onDestroy();
     }
