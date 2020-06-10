@@ -4,21 +4,12 @@
     <color name="color_text_dark">#a4a4a4</color>
     <color name="color_disable">#B6B6B6</color>
     <color name="color_white">#FFFFFF</color>
-    <color name="color_white_dark">#DBDBDB</color>
     <color name="color_warning_red">#F16060</color>
-    <color name="color_news_media_background">#E7E7E7</color>
     <color name="color_primary">#0091EA</color>
     <color name="color_primary_dark">#0277BD</color>
     <color name="color_background">#FFFAFAFA</color>
-    <color name="color_background_black">#000000</color>
-    <color name="color_background_dark">#1A1A1A</color>
     <color name="color_background_secondary">#EEEEEE</color>
-    <color name="color_background_black_secondary">#141414</color>
     <color name="color_background_dark_secondary">#303030</color>
-    <color name="black_alpha">#80000000</color>
 
 
-    <color name="request_incident">#C62828</color>
-    <color name="request_consultation">#1565C0</color>
-    <color name="request_service">#2E7D32</color>
 </resources>

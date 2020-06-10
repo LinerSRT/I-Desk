@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#707070"
+    android:gravity="bottom"
+    android:orientation="vertical"
+    tools:context=".TestingActivity">
+
+
+    <com.google.android.material.button.MaterialButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/AppTheme.Button"
+        app:icon="@drawable/delete_icon"
+        android:text="dasgsdgsdg"/>
+
+
+
+<!--    <androidx.recyclerview.widget.RecyclerView-->
+<!--        android:id="@+id/RecyclerView"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="0dp"-->
+<!--        android:layout_weight="1"-->
+<!--        />-->
+
+<!--    <com.liner.views.MessageInputView-->
+<!--        android:id="@+id/messageInputView"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"/>-->
+
+<!--&lt;!&ndash;    <com.liner.views.AttachmentLayoutView&ndash;&gt;-->
+<!--&lt;!&ndash;        android:id="@+id/attachLayout"&ndash;&gt;-->
+<!--&lt;!&ndash;        android:layout_width="match_parent"&ndash;&gt;-->
+<!--&lt;!&ndash;        android:layout_height="wrap_content"&ndash;&gt;-->
+<!--&lt;!&ndash;        />&ndash;&gt;-->
+
+<!--&lt;!&ndash;    <com.stfalcon.chatkit.messages.MessageInput&ndash;&gt;-->
+<!--&lt;!&ndash;        android:id="@+id/messageinput"&ndash;&gt;-->
+<!--&lt;!&ndash;        android:layout_width="match_parent"&ndash;&gt;-->
+<!--&lt;!&ndash;        android:layout_height="64dp"&ndash;&gt;-->
+<!--&lt;!&ndash;        android:background="@drawable/round_corner_background_top"&ndash;&gt;-->
+<!--&lt;!&ndash;        app:attachmentButtonBackground="@drawable/round_corner_background_light"&ndash;&gt;-->
+<!--&lt;!&ndash;        app:attachmentButtonDefaultIconColor="?colorPrimaryDark"&ndash;&gt;-->
+<!--&lt;!&ndash;        app:attachmentButtonDefaultIconDisabledColor="?disabledColor"&ndash;&gt;-->
+<!--&lt;!&ndash;        app:attachmentButtonDefaultIconPressedColor="?colorPrimary"&ndash;&gt;-->
+<!--&lt;!&ndash;        app:delayTypingStatus="1000"&ndash;&gt;-->
+<!--&lt;!&ndash;        app:inputBackground="@drawable/round_corner_background_light"&ndash;&gt;-->
+<!--&lt;!&ndash;        app:inputButtonBackground="@drawable/round_corner_background_light"&ndash;&gt;-->
+<!--&lt;!&ndash;        android:elevation="2dp"&ndash;&gt;-->
+<!--&lt;!&ndash;        app:inputButtonDefaultIconColor="?colorPrimaryDark"&ndash;&gt;-->
+<!--&lt;!&ndash;        app:inputButtonDefaultIconDisabledColor="?disabledColor"&ndash;&gt;-->
+<!--&lt;!&ndash;        app:inputButtonDefaultIconPressedColor="?colorPrimary"&ndash;&gt;-->
+<!--&lt;!&ndash;        app:inputButtonHeight="40dp"&ndash;&gt;-->
+<!--&lt;!&ndash;        app:inputButtonWidth="40dp"&ndash;&gt;-->
+<!--&lt;!&ndash;        app:inputHint="Сообщение"&ndash;&gt;-->
+<!--&lt;!&ndash;        android:layout_above="@+id/attachexpand"&ndash;&gt;-->
+<!--&lt;!&ndash;        app:inputHintColor="?textColorDark"&ndash;&gt;-->
+<!--&lt;!&ndash;        app:inputMaxLines="2"&ndash;&gt;-->
+<!--&lt;!&ndash;        app:inputTextColor="?textColor"&ndash;&gt;-->
+<!--&lt;!&ndash;        app:inputTextSize="@dimen/secondaryTextSize"&ndash;&gt;-->
+<!--&lt;!&ndash;        app:showAttachmentButton="true"/>&ndash;&gt;-->
+
+<!--&lt;!&ndash;    <com.liner.views.ExpandLayout&ndash;&gt;-->
+<!--&lt;!&ndash;        android:id="@+id/attachexpand"&ndash;&gt;-->
+<!--&lt;!&ndash;        android:layout_width="match_parent"&ndash;&gt;-->
+<!--&lt;!&ndash;        app:el_expanded="false"&ndash;&gt;-->
+<!--&lt;!&ndash;        android:background="?backgroundColor"&ndash;&gt;-->
+<!--&lt;!&ndash;        app:el_duration="400"&ndash;&gt;-->
+<!--&lt;!&ndash;        app:el_parallax="300"&ndash;&gt;-->
+<!--&lt;!&ndash;        android:layout_height="wrap_content">&ndash;&gt;-->
+<!--&lt;!&ndash;        <androidx.constraintlayout.widget.ConstraintLayout&ndash;&gt;-->
+<!--&lt;!&ndash;            android:layout_width="match_parent"&ndash;&gt;-->
+<!--&lt;!&ndash;            android:layout_height="wrap_content"&ndash;&gt;-->
+<!--&lt;!&ndash;            android:gravity="center">&ndash;&gt;-->
+
+<!--&lt;!&ndash;            <ImageView&ndash;&gt;-->
+<!--&lt;!&ndash;                android:id="@+id/imageView3"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:layout_width="32dp"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:layout_height="32dp"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:layout_marginEnd="24dp"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:layout_marginBottom="32dp"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:elevation="2dp"&ndash;&gt;-->
+<!--&lt;!&ndash;                app:layout_constraintBottom_toBottomOf="parent"&ndash;&gt;-->
+<!--&lt;!&ndash;                app:layout_constraintEnd_toStartOf="@+id/imageView2"&ndash;&gt;-->
+<!--&lt;!&ndash;                app:srcCompat="@drawable/flashlight_icon" />&ndash;&gt;-->
+
+<!--&lt;!&ndash;            <ImageView&ndash;&gt;-->
+<!--&lt;!&ndash;                android:id="@+id/imageView"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:layout_width="32dp"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:layout_height="32dp"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:layout_marginStart="24dp"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:layout_marginBottom="32dp"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:elevation="2dp"&ndash;&gt;-->
+<!--&lt;!&ndash;                app:layout_constraintBottom_toBottomOf="parent"&ndash;&gt;-->
+<!--&lt;!&ndash;                app:layout_constraintStart_toEndOf="@+id/imageView2"&ndash;&gt;-->
+<!--&lt;!&ndash;                app:srcCompat="@drawable/switch_camera" />&ndash;&gt;-->
+
+<!--&lt;!&ndash;            <ImageView&ndash;&gt;-->
+<!--&lt;!&ndash;                android:id="@+id/imageView2"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:layout_width="48dp"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:layout_height="48dp"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:layout_marginBottom="32dp"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:elevation="2dp"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:src="@drawable/take_picture_icon"&ndash;&gt;-->
+<!--&lt;!&ndash;                app:layout_constraintBottom_toBottomOf="parent"&ndash;&gt;-->
+<!--&lt;!&ndash;                app:layout_constraintEnd_toEndOf="parent"&ndash;&gt;-->
+<!--&lt;!&ndash;                app:layout_constraintStart_toStartOf="parent" />&ndash;&gt;-->
+
+
+
+
+
+<!--&lt;!&ndash;        </androidx.constraintlayout.widget.ConstraintLayout>&ndash;&gt;-->
+<!--&lt;!&ndash;    </com.liner.views.ExpandLayout>&ndash;&gt;-->
+
+
+</LinearLayout>

@@ -2,6 +2,7 @@ package com.liner.views;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import androidx.annotation.Nullable;
@@ -14,6 +15,7 @@ public class FileView extends BaseItem {
     private ImageView fileTypeIcon;
     private YSTextView fileName;
     private YSTextView fileSize;
+    private ImageButton deleteIcon;
 
     public FileView(Context context) {
         super(context);
@@ -33,6 +35,7 @@ public class FileView extends BaseItem {
         fileTypeIcon = findViewById(R.id.fileTypeView);
         fileName = findViewById(R.id.fileName);
         fileSize = findViewById(R.id.fileSize);
+        deleteIcon = findViewById(R.id.deleteIcon);
         hideView();
     }
 
@@ -51,5 +54,9 @@ public class FileView extends BaseItem {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public ImageButton getDeleteButton(){
+        return deleteIcon;
     }
 }

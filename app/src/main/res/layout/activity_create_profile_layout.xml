@@ -108,16 +108,14 @@
             android:layout_marginEnd="@dimen/contentMarginHalf"
             android:src="@drawable/temp_user_photo" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/createProfileChoosePhoto"
-            style="@style/AppTheme.Button.Dence"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:elevation="0dp"
             android:gravity="center"
-            android:text="Выбрать фотографию профиля"
-            android:textColor="?textColor" />
+            android:text="Выбрать фотографию профиля" />
 
     </LinearLayout>
 
@@ -152,19 +150,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/createProfileNextStep"
-        style="@style/AppTheme.Button"
         android:layout_width="wrap_content"
         android:layout_height="48dp"
-        android:background="@drawable/fui_idp_button_background_google"
-        android:drawableEnd="@drawable/ic_arrow_forward_black_24dp"
+        android:layout_marginTop="@dimen/contentMarginHalf"
         android:elevation="4dp"
         android:text="Далее"
-        android:textAllCaps="false"
-        android:textColor="?textColor"
-        android:textColorHighlight="?textColorDark"
-        android:typeface="normal"
+        app:icon="@drawable/ic_arrow_forward_black_24dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/createProfilePhotoLayout" />

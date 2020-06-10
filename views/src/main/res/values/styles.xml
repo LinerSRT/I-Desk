@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="YSTitleTextStyle">
+        <item name="textColor">#383838</item>
+        <item name="textSize">@dimen/primaryTextSize</item>
+        <item name="ys_type">Bold</item>
+    </style>
+    <style name="YSContentTextStyle">
+        <item name="textColor">#383838</item>
+        <item name="textSize">@dimen/secondaryTextSize</item>
+        <item name="ys_type">Light</item>
+    </style>
+
+</resources>

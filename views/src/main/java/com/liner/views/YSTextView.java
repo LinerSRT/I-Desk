@@ -37,7 +37,7 @@ public class YSTextView extends AppCompatTextView {
 
     private void init(Context context, AttributeSet attrs, int defStyle) {
         final TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.YSTextView, defStyle, 0);
-        int fontType = typedArray.getInt(R.styleable.YSTextView_ys_type, 4);
+        int fontType = typedArray.getInt(R.styleable.YSEditText_yse_type, 4);
         typedArray.recycle();
         switch (fontType) {
             case 1:

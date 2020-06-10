@@ -23,12 +23,15 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:background="@drawable/round_corner_bottom"
-        android:padding="@dimen/contentMarginHalf"
+        android:paddingStart="@dimen/contentMarginHalf"
+        android:paddingEnd="@dimen/contentMarginHalf"
+        android:paddingBottom="@dimen/contentMarginHalf"
+        android:paddingTop="4dp"
         android:shadowColor="#80000000"
         app:ys_type="Light"
         android:drawableEnd="@drawable/cancel_icon_white"
         android:text="Filename"
-        android:textSize="@dimen/secondaryTextSize"
+        android:textSize="@dimen/tipsTextSize"
         android:gravity="center_vertical"
         android:textColor="#FFF" />
 

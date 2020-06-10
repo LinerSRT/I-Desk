@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
@@ -14,10 +15,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.faltenreich.skeletonlayout.SkeletonLayout;
+import com.google.android.material.button.MaterialButton;
 import com.google.firebase.database.DatabaseReference;
+import com.liner.bottomdialogs.BaseDialog;
+import com.liner.bottomdialogs.BaseDialogBuilder;
 import com.liner.bottomdialogs.ImagePickerDialog;
 import com.liner.bottomdialogs.ProgressDialog;
-import com.liner.bottomdialogs.SimpleDialog;
 import com.liner.i_desk.Adapters.ProfileInformationAdapter;
 import com.liner.i_desk.Firebase.DatabaseListener;
 import com.liner.i_desk.Firebase.FileObject;
@@ -32,13 +35,13 @@ import com.liner.utils.ImageUtils;
 import com.liner.utils.TextUtils;
 import com.liner.utils.Time;
 import com.liner.views.BlurredImageView;
+import com.liner.views.ExpandLayout;
 import com.liner.views.FileListLayoutView;
 import com.liner.views.YSTextView;
 import com.roacult.backdrop.BackdropLayout;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
-import net.cachapa.expandablelayout.ExpandableLayout;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -59,13 +62,13 @@ public class ActivityUserProfile extends FireActivity {
     private YSTextView profileLayoutUserName;
     private YSTextView profileLayoutUserType;
     private YSTextView profileLayoutUserAbout;
-    private ExpandableLayout profileLayoutUserAboutExpandLayout;
+    private ExpandLayout profileLayoutUserAboutExpandLayout;
     private TextFieldBoxes profileLayoutUserAboutEditBox;
     private ExtendedEditText profileLayoutUserAboutEditText;
     private RecyclerView profileLayoutInformationRecycler;
 
     private ProfileInformationAdapter informationAdapter;
-    private Button profileLayoutSignOut;
+    private MaterialButton profileLayoutSignOut;
     private SkeletonLayout includedFront;
 
     private ImagePickerDialog.Builder imagePickerDialog;
@@ -75,7 +78,6 @@ public class ActivityUserProfile extends FireActivity {
 
     private DatabaseListener databaseListener;
     private List<ProfileInformationAdapter.InformationHolder> informationHolderList = new ArrayList<>();
-    private FileListLayoutView fileListLayoutView;
 
     private String userAboutText = "";
     private int messageCreated = 0;
@@ -92,22 +94,26 @@ public class ActivityUserProfile extends FireActivity {
             if (user == null) {
                 loadRetryCount++;
                 if (loadRetryCount > 5) {
-                    SimpleDialog.Builder simpleDialog = new SimpleDialog.Builder(ActivityUserProfile.this)
-                            .setTitleText("Упс...")
-                            .setDialogText("Похоже что загрузка продолжается слишком долго, попробовать загрузить еще раз?")
-                            .setCancel("Нет", new View.OnClickListener() {
+
+                    BaseDialog baseDialog = BaseDialogBuilder.buildFast(ActivityUserProfile.this,
+                            "Упс...",
+                            "Похоже что загрузка продолжается слишком долго, попробовать загрузить еще раз?",
+                            "Нет",
+                            "Попробовать",
+                            BaseDialogBuilder.Type.WARNING,
+                            new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
                                     finish();
                                 }
-                            })
-                            .setDone("Попробовать", new View.OnClickListener() {
+                            },
+                            new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
                                     recreate();
                                 }
-                            }).build();
-                    simpleDialog.show();
+                            });
+                    baseDialog.showDialog();
                 } else {
                     includedFront.showSkeleton();
                     loadHandler.postDelayed(onLoadFinished, 1500);
@@ -129,7 +135,6 @@ public class ActivityUserProfile extends FireActivity {
         profileLayoutToAddRequest = findViewById(R.id.profileLayoutToAddRequest);
         userAboutLayout = findViewById(R.id.userAboutLayout);
         profileLayoutInformationRecycler = findViewById(R.id.profileLayoutInformationRecycler);
-        fileListLayoutView = findViewById(R.id.fileListLayoutView);
         profileLayoutUserPhoto = findViewById(R.id.profileLayoutUserPhoto);
         profileLayoutUserName = findViewById(R.id.profileLayoutUserName);
         profileLayoutUserType = findViewById(R.id.profileLayoutUserType);
@@ -154,13 +159,7 @@ public class ActivityUserProfile extends FireActivity {
 
 
 
-        fileListLayoutView.setActivity(this);
-        fileListLayoutView.setOnDeleteListener(new FileListLayoutView.OnDeleteListener() {
-            @Override
-            public void onDelete(final String fileID, String filename) {
-                FirebaseValue.deleteFile(Firebase.getUserUID(), fileID, filename);
-            }
-        });
+
         databaseListener = new DatabaseListener() {
             @Override
             public void onUserAdded(UserObject userObject) {
@@ -204,7 +203,7 @@ public class ActivityUserProfile extends FireActivity {
                 super.onFileAdded(fileObject);
                 if (fileObject.getFileCreatorID().equals(Firebase.getUserUID())) {
                     storageUsed += fileObject.getFileSizeInBytes();
-                    fileListLayoutView.addFile(new FileListLayoutView.FileItem(fileObject.getFileID(), fileObject.getFileName(), fileObject.getFileType(), fileObject.getFileSizeInBytes()));
+                    //fileListLayoutView.addFile(new FileListLayoutView.FileItem(fileObject.getFileID(), fileObject.getFileName(), fileObject.getFileType(), fileObject.getFileSizeInBytes()));
                     updateUserData();
 
                 }
@@ -216,7 +215,7 @@ public class ActivityUserProfile extends FireActivity {
                 super.onFileDeleted(fileObject);
                 if (fileObject.getFileCreatorID().equals(Firebase.getUserUID())) {
                     storageUsed -= fileObject.getFileSizeInBytes();
-                    fileListLayoutView.removeFile(fileObject.getFileName());
+                    //fileListLayoutView.removeFile(fileObject.getFileName());
                     updateUserData();
                 }
             }
@@ -418,17 +417,22 @@ public class ActivityUserProfile extends FireActivity {
     }
 
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        databaseListener.startListening();
+    }
 
     @Override
     protected void onPause() {
         databaseListener.stopListening();
-        finish();
         super.onPause();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        databaseListener.stopListening();
         Bungee.slideDown(this);
     }
 }

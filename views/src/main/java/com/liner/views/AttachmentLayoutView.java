@@ -62,6 +62,17 @@ public class AttachmentLayoutView extends BaseItem {
         }, 50);
     }
 
+    public void clearAttachments(){
+        attachmentItemList.clear();
+        attachmentAdapter.notifyDataSetChanged();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                attachmentRecycler.smoothScrollToPosition(0);
+            }
+        }, 50);
+    }
+
     public List<AttachmentItem> getAttachmentItemList() {
         return attachmentItemList;
     }

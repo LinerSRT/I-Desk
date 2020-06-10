@@ -17,13 +17,15 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.liner.bottomdialogs.BaseDialog;
+import com.liner.bottomdialogs.BaseDialogBuilder;
 import com.liner.bottomdialogs.IndeterminateDialog;
-import com.liner.bottomdialogs.SimpleDialog;
 import com.liner.i_desk.Firebase.Firebase;
 import com.liner.i_desk.Firebase.FirebaseValue;
 import com.liner.utils.TextUtils;
@@ -42,15 +44,15 @@ public class ActivityRegister extends AppCompatActivity {
     private TextFieldBoxes registerTextFieldEmailBox;
     private TextFieldBoxes registerTextFieldPasswordBox;
     private String userEmail = "", userPassword = "";
-    private SimpleDialog.Builder errorDialog;
+    private BaseDialog errorDialog;
     private IndeterminateDialog.Builder progressBottomSheetDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_layout);
-        Button registerSignWithGoogle = findViewById(R.id.registerSignWithGoogle);
-        Button registerNextStep = findViewById(R.id.registerNextStep);
-        Button registerLoginAccount = findViewById(R.id.registerLoginAccount);
+        MaterialButton registerSignWithGoogle = findViewById(R.id.registerSignWithGoogle);
+        MaterialButton registerNextStep = findViewById(R.id.registerNextStep);
+        MaterialButton registerLoginAccount = findViewById(R.id.registerLoginAccount);
         registerTextFieldEmailBox = findViewById(R.id.registerTextFieldEmailBox);
         registerTextFieldPasswordBox = findViewById(R.id.registerTextFieldPasswordBox);
         ExtendedEditText registerExtendedPasswordEdit = findViewById(R.id.registerExtendedPasswordEdit);
@@ -82,16 +84,21 @@ public class ActivityRegister extends AppCompatActivity {
 
         progressBottomSheetDialog = new IndeterminateDialog.Builder(this)
                 .setDialogText("Регистрация").setTitleText("Подождите...").build();
-        errorDialog = new SimpleDialog.Builder(this)
-                .setDismissTouchOutside(false)
-                .setTitleText("Ошибка")
-                .setDialogText("Невозможно создать новый аккаунт. Попробуйте позже!")
-                .setDone("Ок", new View.OnClickListener() {
+
+        errorDialog = BaseDialogBuilder.buildFast(this,
+                "Ошибка",
+                "Невозможно создать новый аккаунт. Попробуйте позже!",
+                null,
+                "Ок",
+                BaseDialogBuilder.Type.ERROR,
+                null,
+                new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        errorDialog.close();
+                        errorDialog.closeDialog();
                     }
-                }).build();
+                });
+
 
         registerNextStep.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -133,19 +140,12 @@ public class ActivityRegister extends AppCompatActivity {
                                     finish();
                                 } else {
                                     if ("The email address is already in use by another account.".equals(Objects.requireNonNull(Objects.requireNonNull(task.getException()).getMessage()))) {
-                                        errorDialog = new SimpleDialog.Builder(ActivityRegister.this)
-                                                .setDismissTouchOutside(false)
-                                                .setTitleText("Ошибка")
-                                                .setDialogText("Невозможно создать новый аккаунт. Данный Email уже используется!")
-                                                .setDone("Ок", new View.OnClickListener() {
-                                                    @Override
-                                                    public void onClick(View view) {
-                                                        errorDialog.close();
-                                                    }
-                                                }).build();
+                                        errorDialog.setDialogTextText("Невозможно создать новый аккаунт. Данный Email уже используется!");
+                                    } else {
+                                        errorDialog.setDialogTextText("Невозможно создать новый аккаунт. Попробуйте позже!");
                                     }
                                     progressBottomSheetDialog.close();
-                                    errorDialog.show();
+                                    errorDialog.showDialog();
                                 }
                             }
                         });
@@ -173,7 +173,7 @@ public class ActivityRegister extends AppCompatActivity {
                             @Override
                             public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
                                 progressBottomSheetDialog.close();
-                                errorDialog.show();
+                                errorDialog.showDialog();
                             }
                         })
                         .addApi(Auth.GOOGLE_SIGN_IN_API, googleSignInOptions)
@@ -242,17 +242,17 @@ public class ActivityRegister extends AppCompatActivity {
 
                             } else {
                                 progressBottomSheetDialog.close();
-                                errorDialog.show();
+                                errorDialog.showDialog();
                             }
                         }
                     });
                 } else {
                     progressBottomSheetDialog.close();
-                    errorDialog.show();
+                    errorDialog.showDialog();
                 }
             } else {
                 progressBottomSheetDialog.close();
-                errorDialog.show();
+                errorDialog.showDialog();
             }
         }
 

@@ -48,6 +48,17 @@
         </attr>
     </declare-styleable>
 
+    <declare-styleable name="YSEditText">
+        <attr name="yse_type">
+            <enum name="Bold" value="1"/>
+            <enum name="Light" value="2"/>
+            <enum name="Medium" value="3"/>
+            <enum name="Regular" value="4"/>
+            <enum name="RegularItalic" value="5"/>
+            <enum name="Thin" value="6"/>
+        </attr>
+    </declare-styleable>
+
     <declare-styleable name="SwipeableRecyclerView">
         <attr name="left_bg_color" format="color|reference" />
         <attr name="left_image" format="integer|reference" />
@@ -60,5 +71,22 @@
         <attr name="right_text_size" format="integer|reference"/>
         <attr name="right_text_color" format="color|reference"/>
     </declare-styleable>
+
+    <declare-styleable name="MediaPickerView">
+        <attr name="picker_max_count" format="integer" />
+        <attr name="picker_column" format="integer" />
+        <attr name="picker_item_decoration" format="reference" />
+        <attr name="picker_item_add_cover" format="reference" />
+        <attr name="picker_item_delete_icon" format="reference" />
+    </declare-styleable>
+
+
+    <declare-styleable name="ExpandLayout">
+        <attr name="el_duration" format="integer" />
+        <attr name="el_expanded" format="boolean" />
+        <attr name="el_parallax" format="float" />
+        <attr name="android:orientation"/>
+    </declare-styleable>
+	
 
 </resources>

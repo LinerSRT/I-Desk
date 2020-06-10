@@ -5,10 +5,12 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import com.google.android.material.button.MaterialButton;
+import com.liner.bottomdialogs.BaseDialog;
+import com.liner.bottomdialogs.BaseDialogBuilder;
 import com.liner.bottomdialogs.ImagePickerDialog;
 import com.liner.bottomdialogs.IndeterminateDialog;
 import com.liner.bottomdialogs.ProgressDialog;
-import com.liner.bottomdialogs.SimpleDialog;
 import com.liner.i_desk.Firebase.FileObject;
 import com.liner.i_desk.Firebase.FireActivity;
 import com.liner.i_desk.Firebase.Firebase;
@@ -30,15 +32,17 @@ import studio.carbonylgroup.textfieldboxes.TextFieldBoxes;
 public class ActivityCreateProfile extends FireActivity {
     private TextFieldBoxes createProfileNickNameFiledBox;
     private CircleImageView createProfilePhoto;
-    private SimpleDialog.Builder exitWarnDialog;
     private UserObject userObject;
 
     private String userNickName = "", userAbout = "";
-    private SimpleDialog.Builder errorDialog;
-    private SimpleDialog.Builder finishDialog;
     private IndeterminateDialog.Builder progressBottomSheetDialog;
     private ProgressDialog.Builder uploadPhotoDialog;
     private ImagePickerDialog.Builder imagePickerDialog;
+
+
+    private BaseDialog errorDialog;
+    private BaseDialog finishDialog;
+    private BaseDialog exitWarnDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,8 +53,8 @@ public class ActivityCreateProfile extends FireActivity {
         userObject = (UserObject) getIntent().getSerializableExtra("userObject");
         createProfileNickNameFiledBox = findViewById(R.id.createProfileNickNameFiledBox);
         TextFieldBoxes createProfileAboutFiledBox = findViewById(R.id.createProfileAboutFiledBox);
-        Button createProfileChoosePhoto = findViewById(R.id.createProfileChoosePhoto);
-        Button createProfileNextStep = findViewById(R.id.createProfileNextStep);
+        MaterialButton createProfileChoosePhoto = findViewById(R.id.createProfileChoosePhoto);
+        MaterialButton createProfileNextStep = findViewById(R.id.createProfileNextStep);
         createProfilePhoto = findViewById(R.id.createProfilePhoto);
         createProfileNickNameFiledBox = findViewById(R.id.createProfileNickNameFiledBox);
         createProfileNickNameFiledBox = findViewById(R.id.createProfileNickNameFiledBox);
@@ -58,33 +62,39 @@ public class ActivityCreateProfile extends FireActivity {
         createProfileNickNameFiledBox = findViewById(R.id.createProfileNickNameFiledBox);
         progressBottomSheetDialog = new IndeterminateDialog.Builder(this)
                 .setDialogText("Завершение регистрации").setTitleText("Подождите...").build();
-        errorDialog = new SimpleDialog.Builder(this)
-                .setDismissTouchOutside(false)
-                .setTitleText("Ошибка")
-                .setDialogText("Что-то пошло не так. Попробуйте еще раз")
-                .setDone("Ок", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        errorDialog.close();
-                    }
-                }).build();
-        finishDialog = new SimpleDialog.Builder(this)
-                .setDismissTouchOutside(false)
-                .setTitleText("Готово")
-                .setDialogText((Constants.USERS_REQUIRE_EMAIL_VERIFICATION)?"Регистрация завершена успешно. Подтвердите свой Email для дальнейшей работы":"Регистрация завершена успешно. Теперь вы можете использовать свой аккаунт для входа")
-                .setDone("Ок", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        errorDialog.close();
-                        if(Constants.USERS_REQUIRE_EMAIL_VERIFICATION) {
-                            signOut();
-                        } else {
-                            startActivity(new Intent(ActivityCreateProfile.this, ActivityMain.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
-                            finish();
-                        }
 
-                    }
-                }).build();
+        errorDialog = BaseDialogBuilder.buildFast(this,
+                "Ошибка", "Что-то пошло не так. Попробуйте еще раз",
+                null,
+                "Ок",
+                BaseDialogBuilder.Type.ERROR,
+                null,
+                new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                errorDialog.closeDialog();
+            }
+        });
+        finishDialog = BaseDialogBuilder.buildFast(this,
+                "Готово",
+                (Constants.USERS_REQUIRE_EMAIL_VERIFICATION)?"Регистрация завершена успешно. Подтвердите свой Email для дальнейшей работы":"Регистрация завершена успешно. Теперь вы можете использовать свой аккаунт для входа",
+                null,
+                "Ок",
+                BaseDialogBuilder.Type.INFO,
+                null,
+                new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                errorDialog.closeDialog();
+                if(Constants.USERS_REQUIRE_EMAIL_VERIFICATION) {
+                    signOut();
+                } else {
+                    startActivity(new Intent(ActivityCreateProfile.this, ActivityMain.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+                    finish();
+                }
+            }
+        });
+
         uploadPhotoDialog = new ProgressDialog.Builder(this)
                 .setDismissTouchOutside(false)
                 .setTitleText("Подождите")
@@ -123,7 +133,7 @@ public class ActivityCreateProfile extends FireActivity {
                         @Override
                         public void onFail(String reason) {
                             uploadPhotoDialog.close();
-                            errorDialog.show();
+                            errorDialog.showDialog();
                         }
 
                         @Override
@@ -141,7 +151,7 @@ public class ActivityCreateProfile extends FireActivity {
                             userObject.setUserRegisterFinished(true);
                             FirebaseValue.setUser(Firebase.getUserUID(), userObject);
                             uploadPhotoDialog.close();
-                            finishDialog.show();
+                            finishDialog.showDialog();
                         }
                     });
                 }
@@ -180,21 +190,24 @@ public class ActivityCreateProfile extends FireActivity {
 
     @Override
     public void onBackPressed() {
-        exitWarnDialog = new SimpleDialog.Builder(this)
-                .setTitleText("Выйти?")
-                .setDialogText("Вы действительно хотите выйти? Процесс создания аккаунта еще не завершен!")
-                .setCancel("Выйти", new View.OnClickListener() {
+        errorDialog = BaseDialogBuilder.buildFast(this,
+                "Выйти?", "Вы действительно хотите выйти? Процесс создания аккаунта еще не завершен!",
+                "Остаться",
+                "Выйти",
+                BaseDialogBuilder.Type.WARNING,
+                new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        errorDialog.closeDialog();
+                    }
+                },
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        errorDialog.closeDialog();
                         finish();
                     }
-                })
-                .setDone("Остаться", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        exitWarnDialog.close();
-                    }
-                }).build();
-        exitWarnDialog.show();
+                });
+        exitWarnDialog.showDialog();
     }
 }

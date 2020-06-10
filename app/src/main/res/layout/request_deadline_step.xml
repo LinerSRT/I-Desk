@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="310dp"
+    android:padding="@dimen/contentMarginHalf"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <com.github.florent37.singledateandtimepicker.SingleDateAndTimePicker
+        android:id="@+id/requestDeadlineStepPicker"
+        android:layout_width="match_parent"
+        android:background="@drawable/round_corner_background_light"
+        android:elevation="2dp"
+        android:layout_height="300dp"
+        app:picker_displayMinutes="true"
+        app:picker_textColor="?textColor"
+        app:picker_mustBeOnFuture="true"
+        app:picker_textSize="@dimen/primaryTextSize"
+        app:picker_itemSpacing="@dimen/contentMarginHalf"
+        app:picker_curved="false"
+        app:picker_selectorColor="@android:color/transparent"
+        app:picker_cyclic="false"
+        app:picker_selectedTextColor="@color/color_primary_dark"
+        app:picker_dayCount="31"
+        app:picker_visibleItemCount="10"
+        app:picker_stepSizeHours="30"
+        />
+</RelativeLayout>

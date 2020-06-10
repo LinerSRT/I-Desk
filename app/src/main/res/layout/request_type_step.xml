@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <com.roughike.swipeselector.SwipeSelector
+        android:id="@+id/requestTypeSelectorStep"
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        app:swipe_customFontPath="yandex_font/Light.ttf"
+        app:swipe_descriptionGravity="center"
+        app:swipe_descriptionTextAppearance="@style/YSContentTextStyle"
+        app:swipe_indicatorActiveColor="@color/color_primary_dark"
+        app:swipe_indicatorInActiveColor="@color/color_disable"
+        app:swipe_indicatorMargin="@dimen/contentMarginHalf"
+        app:swipe_titleTextAppearance="@style/YSTitleTextStyle" />
+
+
+</LinearLayout>

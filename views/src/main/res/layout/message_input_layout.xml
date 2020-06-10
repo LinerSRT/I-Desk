@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/round_corner_background_top"
+    android:orientation="vertical">
+
+
+    <com.liner.views.AttachmentLayoutView
+        android:id="@+id/messageInputAttachmentLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <LinearLayout
+        android:id="@+id/messageInputLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/contentMarginHalf"
+        android:layout_marginBottom="@dimen/contentMarginHalf"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:padding="@dimen/contentMarginHalf">
+
+        <ImageButton
+            android:id="@+id/messageInputAttachmentButton"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:backgroundTint="@color/color_primary_dark"
+            android:backgroundTintMode="src_in"
+            android:src="@drawable/attachment_icon" />
+
+        <EditText
+            android:id="@+id/messageInputEditText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/round_corner_primary"
+            android:hint="Сообщение"
+            android:padding="@dimen/contentMarginHalf"
+            android:textColor="@color/color_text"
+            android:textColorHint="@color/color_text_dark"
+            android:textSize="@dimen/primaryTextSize" />
+
+        <ImageButton
+            android:id="@+id/messageInputSendButton"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:backgroundTint="@color/color_primary_dark"
+            android:backgroundTintMode="src_in"
+            android:src="@drawable/send_icon" />
+
+    </LinearLayout>
+
+    <com.liner.views.ExpandLayout
+        android:id="@+id/messageInputAttachmentExpandLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:el_duration="400"
+        app:el_expanded="true"
+        app:el_parallax="300">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.liner.views.YSTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:gravity="center"
+                android:text="Выберите тип"
+                android:textColor="#383838"
+                android:textSize="@dimen/secondaryTextSize"
+                app:ys_type="Light" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:paddingTop="@dimen/contentMarginHalf"
+                android:paddingBottom="@dimen/contentMarginHalf">
+
+
+                <com.liner.views.YSTextView
+                    android:id="@+id/messageInputAttachmentVideo"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:drawableTop="@drawable/video_icon"
+                    android:gravity="center"
+                    android:text="Видео"
+                    android:textColor="#383838"
+                    android:textSize="@dimen/secondaryTextSize"
+                    app:ys_type="Light" />
+
+                <com.liner.views.YSTextView
+                    android:id="@+id/messageInputAttachmentImage"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:drawableTop="@drawable/image_icon"
+                    android:gravity="center"
+                    android:text="Изображение"
+                    android:textColor="#383838"
+                    app:ys_type="Light" />
+
+
+                <com.liner.views.YSTextView
+                    android:id="@+id/messageInputAttachmentAudio"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:drawableTop="@drawable/music_icon"
+                    android:gravity="center"
+                    android:text="Аудио"
+                    android:textColor="#383838"
+                    app:ys_type="Light" />
+
+                <com.liner.views.YSTextView
+                    android:id="@+id/messageInputAttachmentFile"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:drawableTop="@drawable/file_icon"
+                    android:gravity="center"
+                    android:text="Файл"
+                    android:textColor="#383838"
+                    app:ys_type="Light" />
+
+
+            </LinearLayout>
+
+            <com.liner.views.YSTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:gravity="center"
+                android:text="Или"
+                android:textColor="#383838"
+                android:paddingBottom="@dimen/contentMarginHalf"
+                android:textSize="@dimen/secondaryTextSize"
+                app:ys_type="Light" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="64dp">
+
+                <com.liner.views.AudioRecord.RecordView
+                    android:id="@+id/record_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="64dp"
+                    android:layout_alignParentBottom="true"
+                    app:counter_time_color="?colorPrimary"
+                    app:slide_to_cancel_arrow="@drawable/attachment_icon" />
+
+                <com.liner.views.AudioRecord.RecordButton
+                    android:id="@+id/record_button"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/round_corner_background_light"
+                    android:scaleType="centerInside"
+                    app:mic_icon="@drawable/mic_icon" />
+
+            </RelativeLayout>
+
+        </LinearLayout>
+    </com.liner.views.ExpandLayout>
+
+</LinearLayout>

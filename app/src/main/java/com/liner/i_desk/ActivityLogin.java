@@ -18,14 +18,16 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.liner.bottomdialogs.BaseDialog;
+import com.liner.bottomdialogs.BaseDialogBuilder;
 import com.liner.bottomdialogs.IndeterminateDialog;
-import com.liner.bottomdialogs.SimpleDialog;
 import com.liner.i_desk.Firebase.Firebase;
 import com.liner.i_desk.Firebase.FirebaseValue;
 import com.liner.utils.TextUtils;
@@ -45,16 +47,16 @@ public class ActivityLogin extends AppCompatActivity {
     private TextFieldBoxes loginTextFieldPasswordBox;
     private ExtendedEditText loginExtendedPasswordEdit;
     private String userEmail = "", userPassword = "";
-    private SimpleDialog.Builder errorDialog;
+    private BaseDialog errorDialog;
     private IndeterminateDialog.Builder progressBottomSheetDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_layout);
-        Button loginSignWithGoogle = findViewById(R.id.loginSignWithGoogle);
-        Button loginSignIn = findViewById(R.id.loginSignIn);
-        Button loginRegisterAccount = findViewById(R.id.loginRegisterAccount);
+        MaterialButton loginSignWithGoogle = findViewById(R.id.loginSignWithGoogle);
+        MaterialButton loginSignIn = findViewById(R.id.loginSignIn);
+        MaterialButton loginRegisterAccount = findViewById(R.id.loginRegisterAccount);
         loginTextFieldEmailBox = findViewById(R.id.loginTextFieldEmailBox);
         loginTextFieldPasswordBox = findViewById(R.id.loginTextFieldPasswordBox);
         loginExtendedPasswordEdit = findViewById(R.id.loginExtendedPasswordEdit);
@@ -72,17 +74,20 @@ public class ActivityLogin extends AppCompatActivity {
 
         progressBottomSheetDialog = new IndeterminateDialog.Builder(this)
                 .setDialogText("Вход").setTitleText("Подождите...").build();
-        errorDialog = new SimpleDialog.Builder(this)
-                .setDismissTouchOutside(false)
-                .setTitleText("Ошибка")
-                .setDialogText("Невозможно войти в аккаунт")
-                .setDone("Ок", new View.OnClickListener() {
+
+        errorDialog = BaseDialogBuilder.buildFast(this,
+                "Ошибка",
+                "Неверный логин или пароль!",
+                null,
+                "Ок",
+                BaseDialogBuilder.Type.ERROR,
+                null,
+                new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        errorDialog.close();
+                        errorDialog.closeDialog();
                     }
-                }).build();
-
+                });
 
         loginTextFieldEmailBox.setSimpleTextChangeWatcher(new SimpleTextChangedWatcher() {
             @Override
@@ -141,12 +146,12 @@ public class ActivityLogin extends AppCompatActivity {
                                         @Override
                                         public void onFail(String errorMessage) {
                                             progressBottomSheetDialog.close();
-                                            errorDialog.show();
+                                            errorDialog.showDialog();
                                         }
                                     });
                                 } else {
                                     progressBottomSheetDialog.close();
-                                    errorDialog.show();
+                                    errorDialog.showDialog();
                                 }
                             }
                         });
@@ -174,7 +179,7 @@ public class ActivityLogin extends AppCompatActivity {
                             @Override
                             public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
                                 progressBottomSheetDialog.close();
-                                errorDialog.show();
+                                errorDialog.showDialog();
                             }
                         })
                         .addApi(Auth.GOOGLE_SIGN_IN_API, googleSignInOptions)
@@ -255,17 +260,17 @@ public class ActivityLogin extends AppCompatActivity {
 
                             } else {
                                 progressBottomSheetDialog.close();
-                                errorDialog.show();
+                                errorDialog.showDialog();
                             }
                         }
                     });
                 } else {
                     progressBottomSheetDialog.close();
-                    errorDialog.show();
+                    errorDialog.showDialog();
                 }
             } else {
                 progressBottomSheetDialog.close();
-                errorDialog.show();
+                errorDialog.showDialog();
             }
         }
     }

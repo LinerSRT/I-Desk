@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <com.liner.views.FileListLayoutView
+        android:id="@+id/requestFileStepView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/requestFileStepAdd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Нажмите что бы выбрать файлы"
+        app:icon="@drawable/add_icon"
+        style="@style/AppTheme.Button"
+        android:layout_marginTop="@dimen/contentMarginHalf"/>
+</LinearLayout>

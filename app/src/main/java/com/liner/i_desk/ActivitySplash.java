@@ -13,7 +13,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityOptionsCompat;
 
 import com.google.firebase.database.DatabaseReference;
-import com.liner.bottomdialogs.SimpleDialog;
+import com.liner.bottomdialogs.BaseDialog;
+import com.liner.bottomdialogs.BaseDialogBuilder;
 import com.liner.i_desk.Firebase.Firebase;
 import com.liner.i_desk.Firebase.FirebaseValue;
 import com.liner.i_desk.Firebase.UserObject;
@@ -31,8 +32,7 @@ public class ActivitySplash extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_layout);
         splashAppName = findViewById(R.id.splashAppName);
-
-        String[] permissions = {Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.RECORD_AUDIO};
+        String[] permissions = {Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.RECORD_AUDIO, Manifest.permission.CAMERA};
         Permissions.check(this, permissions, null, null, new PermissionHandler() {
             @Override
             public void onGranted() {
@@ -70,34 +70,33 @@ public class ActivitySplash extends AppCompatActivity {
             @Override
             public void onDenied(Context context, ArrayList<String> deniedPermissions) {
                 super.onDenied(context, deniedPermissions);
-                SimpleDialog.Builder builder = new SimpleDialog.Builder(ActivitySplash.this)
-                        .setTitleText("Вы не предоставили разрешения")
-                        .setDialogText("Приложению необходимы некоторые разрешения для своей работы.\nЕсли вы хотите воспользоваться данным приложением, предоставьте разрешения в настройках вашего устройтсва")
-                        .setCancel("Выйти", new View.OnClickListener() {
+                BaseDialog baseDialog = BaseDialogBuilder.buildFast(ActivitySplash.this,
+                        "Вы не предоставили разрешения",
+                        "Приложению необходимы некоторые разрешения для своей работы.\nЕсли вы хотите воспользоваться данным приложением, предоставьте разрешения в настройках вашего устройтсва",
+                        "Выйти",
+                        "Настройки",
+                        BaseDialogBuilder.Type.WARNING,
+                        new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
                                 finish();
                             }
-                        })
-                        .setDone("Настройки", new View.OnClickListener() {
+                        },
+                        new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
                                 startActivity(new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:"+getPackageName())));
                                 finish();
                             }
-                        }).build();
-                builder.show();
+                        });
+                baseDialog.showDialog();
             }
         });
 
 
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        finish();
-    }
+
 
     private void startLoginActivity() {
         Intent intent = new Intent(this, ActivityLogin.class);
