@@ -6,26 +6,37 @@
     android:layout_height="match_parent"
     tools:context=".ActivityCreateRequest">
 
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?colorPrimaryDark"
+        app:title="Новая заявка"
+        app:titleTextColor="#fff" />
+
+
     <ernestoyaquello.com.verticalstepperform.VerticalStepperFormView
         android:id="@+id/stepper_form"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
         style="@style/AppTheme"
-        app:form_last_button_text="Создать заявку"
-        app:form_circle_background_color="@color/color_primary_dark"
-        app:form_next_button_background_color="@color/color_primary_dark"
-        app:form_next_button_pressed_background_color="@color/color_primary"
-        app:form_display_cancel_button_in_last_step="true"
-        app:form_cancel_button_text="Отмена"
-        app:form_error_message_text_size="@dimen/secondaryTextSize"
-        app:form_subtitle_text_size="@dimen/secondaryTextSizeSmall"
-        app:form_confirmation_step_title_text="Завершение"
-        app:form_next_button_text="Далее"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
         app:form_allow_non_linear_navigation="true"
         app:form_cancel_button_background_color="@android:color/transparent"
         app:form_cancel_button_pressed_background_color="@android:color/transparent"
+        app:form_cancel_button_pressed_text_color="@color/color_primary"
+        app:form_cancel_button_text="Отмена"
         app:form_cancel_button_text_color="@color/color_primary_dark"
-        app:form_cancel_button_pressed_text_color="@color/color_primary"/>
+        app:form_circle_background_color="@color/color_primary_dark"
+        app:form_confirmation_step_title_text="Завершение"
+        app:form_display_cancel_button_in_last_step="true"
+        app:form_error_message_text_size="@dimen/secondaryTextSize"
+        app:form_last_button_text="Создать заявку"
+        app:form_next_button_background_color="@color/color_primary_dark"
+        app:form_next_button_pressed_background_color="@color/color_primary"
+        app:form_next_button_text="Далее"
+        app:form_subtitle_text_size="@dimen/secondaryTextSizeSmall"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar2" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

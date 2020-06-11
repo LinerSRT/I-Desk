@@ -20,11 +20,13 @@ import com.liner.i_desk.R;
 import com.liner.utils.FileUtils;
 import com.liner.views.FileListLayoutView;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import ernestoyaquello.com.verticalstepperform.Step;
 
+import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
 
 @SuppressLint("InflateParams")
@@ -134,7 +136,10 @@ public class RequestFileStep extends Step<String> {
 
     @Override
     public String getStepData() {
-        return "";
+        StringBuilder stringBuilder = new StringBuilder();
+        for(ChosenFile file:requestFileStepView.getFileItemList())
+            stringBuilder.append(file.getOriginalPath()).append("|");
+        return stringBuilder.toString();
     }
 
     @Override
@@ -173,6 +178,15 @@ public class RequestFileStep extends Step<String> {
     public void submitPicker(int requestCode, int resultCode, @Nullable Intent data) {
         if (requestCode == Picker.PICK_FILE && resultCode == RESULT_OK) {
             filePicker.submit(data);
+        } else if( requestCode == Picker.PICK_FILE && resultCode == RESULT_CANCELED){
+            processingDialog.closeDialog();
         }
+    }
+
+    public List<File> getResult(){
+        List<File> result = new ArrayList<>();
+        for(ChosenFile chosenFile:requestFileStepView.getFileItemList())
+            result.add(new File(chosenFile.getOriginalPath()));
+        return result;
     }
 }

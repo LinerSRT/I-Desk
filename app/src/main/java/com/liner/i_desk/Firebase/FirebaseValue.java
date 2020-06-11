@@ -1,6 +1,7 @@
 package com.liner.i_desk.Firebase;
 
 import android.net.Uri;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -17,12 +18,19 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.liner.utils.FileUtils;
 import com.liner.utils.TextUtils;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class FirebaseValue {
+    private static int uploadCount = 0;
+    private static long uploadSize = 0;
+    private static long uploadedCount = 0;
+
     public static void getUserValue(String userUID, final String key, final ValueListener valueListener) {
         if (!Firebase.isUserLoginned())
             return;
@@ -113,6 +121,42 @@ public class FirebaseValue {
         });
     }
 
+    public static void uploadFileList(final List<File> fileList, final FileListUploadListener fileListUploadListener){
+        final List<FileObject> fileObjects = new ArrayList<>();
+        uploadCount = 0;
+        uploadedCount = 0;
+        uploadSize = FileUtils.getListFilesSize(fileList);
+        for(final File file:fileList){
+            uploadByteArray(FileUtils.getFileByteArray(file), file.getName(), new FileUploadListener() {
+                @Override
+                public void onStart() {
+                    Log.d(getClass().getSimpleName(), "Start upload ["+file.getName()+"] finished");
+                }
+
+                @Override
+                public void onProgress(long transferredBytes, long totalBytes) {
+                    Log.d(getClass().getSimpleName(), "Uploading "+uploadCount+" of "+fileList.size()+" | "+file.getName()+" ["+transferredBytes+"/"+totalBytes+"]");
+                    uploadCount += transferredBytes;
+                    fileListUploadListener.onUploading(Math.round((uploadCount/uploadSize)*100));
+                }
+
+                @Override
+                public void onFail(String reason) {
+                    fileListUploadListener.onFail(reason);
+                }
+
+                @Override
+                public void onFinish(FileObject fileObject) {
+                    uploadCount++;
+                    Log.d(getClass().getSimpleName(), "Upload ["+file.getName()+"] finished");
+                    fileObjects.add(fileObject);
+                    if(uploadCount == fileList.size())
+                        fileListUploadListener.onFinish(fileObjects);
+                }
+            });
+        }
+    }
+
     public static void uploadByteArray(byte[] bytes, final String filenameWithExtension, final FileUploadListener fileUploadListener) {
         final String fileID = TextUtils.getUniqueString();
         final StorageReference path = FirebaseStorage.getInstance().getReference(Firebase.getUserUID()+File.separator+filenameWithExtension);
@@ -126,7 +170,6 @@ public class FirebaseValue {
                         @Override
                         public void onSuccess(Uri uri) {
                             final String fileURL = uri.toString();
-
                             path.getMetadata().addOnSuccessListener(new OnSuccessListener<StorageMetadata>() {
                                 @Override
                                 public void onSuccess(final StorageMetadata storageMetadata) {
@@ -222,5 +265,10 @@ public class FirebaseValue {
         void onProgress(long transferredBytes, long totalBytes);
         void onFail(String reason);
         void onFinish(FileObject fileObject);
+    }
+    public interface FileListUploadListener{
+        void onFinish(List<FileObject> fileObjectList);
+        void onFail(String reason);
+        void onUploading(int percent);
     }
 }

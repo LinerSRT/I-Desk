@@ -5,19 +5,35 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#707070"
-    android:gravity="bottom"
+    android:gravity="center"
     android:orientation="vertical"
     tools:context=".TestingActivity">
 
 
+
     <com.google.android.material.button.MaterialButton
+        android:id="@+id/testDownload"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         style="@style/AppTheme.Button"
-        app:icon="@drawable/delete_icon"
-        android:text="dasgsdgsdg"/>
+        app:icon="@drawable/download_icon"
+        android:text="download"/>
 
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/test"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/AppTheme.Button"
+        app:icon="@drawable/file_icon"
+        android:text="upload"/>
 
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/testList"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/AppTheme.Button"
+        app:icon="@drawable/file_icon"
+        android:text="upload list"/>
 
 <!--    <androidx.recyclerview.widget.RecyclerView-->
 <!--        android:id="@+id/RecyclerView"-->

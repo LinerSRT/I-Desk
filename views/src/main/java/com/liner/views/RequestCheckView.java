@@ -1,9 +1,13 @@
 package com.liner.views;
 
 import android.content.Context;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.AttributeSet;
+import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RadioButton;
 
 import androidx.annotation.Nullable;
 
@@ -12,10 +16,10 @@ import com.liner.utils.FileUtils;
 import java.io.IOException;
 
 public class RequestCheckView extends BaseItem {
-    private ImageView fileTypeIcon;
-    private YSTextView fileName;
-    private YSTextView fileSize;
-    private ImageButton deleteIcon;
+    private RadioButton requestCheckButton;
+    private YSEditText requestCheckText;
+    private ImageButton requestCheckEditButton;
+    private ImageButton requestDeleteButton;
 
     public RequestCheckView(Context context) {
         super(context);
@@ -32,31 +36,28 @@ public class RequestCheckView extends BaseItem {
 
     @Override
     protected void onFindViewById() {
-        fileTypeIcon = findViewById(R.id.fileTypeView);
-        fileName = findViewById(R.id.fileName);
-        fileSize = findViewById(R.id.fileSize);
-        deleteIcon = findViewById(R.id.deleteIcon);
+        requestCheckButton = findViewById(R.id.requestCheckButton);
+        requestCheckText = findViewById(R.id.requestCheckText);
+        requestCheckEditButton = findViewById(R.id.requestCheckEditButton);
+        requestDeleteButton = findViewById(R.id.requestDeleteButton);
         hideView();
     }
 
-
-    public void setFileName(String text) {
-        fileName.setText(text);
+    public ImageButton getRequestCheckEditButton() {
+        return requestCheckEditButton;
     }
 
-    public void setFileSize(String text) {
-        fileSize.setText(text);
+    public ImageButton getRequestDeleteButton() {
+        return requestDeleteButton;
     }
 
-    public void setFileType(String fileType){
-        try {
-            fileTypeIcon.setImageDrawable(FileUtils.getFileIcon(getContext(), fileType));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public RadioButton getRequestCheckButton() {
+        return requestCheckButton;
     }
 
-    public ImageButton getDeleteButton(){
-        return deleteIcon;
+    public YSEditText getRequestCheckText() {
+        return requestCheckText;
     }
+
+
 }

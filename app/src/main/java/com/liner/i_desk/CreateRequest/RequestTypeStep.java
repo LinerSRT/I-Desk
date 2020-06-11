@@ -89,4 +89,8 @@ public class RequestTypeStep extends Step<String> {
                 break;
         }
     }
+
+    public RequestObject.RequestType getResult(){
+        return (RequestObject.RequestType) swipeSelector.getSelectedItem().value;
+    }
 }

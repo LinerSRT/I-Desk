@@ -15,9 +15,11 @@ import studio.carbonylgroup.textfieldboxes.TextFieldBoxes;
 
 @SuppressLint("InflateParams")
 public class RequestTitleStep extends Step<String> {
+    private Activity activity;
     private ExtendedEditText requestTitleStepEditText;
-    public RequestTitleStep( String stepTitle) {
+    public RequestTitleStep(Activity activity, String stepTitle) {
         super(stepTitle);
+        this.activity = activity;
     }
 
     @Override
@@ -57,11 +59,14 @@ public class RequestTitleStep extends Step<String> {
     @Override
     protected void onStepOpened(boolean animated) {
         requestTitleStepEditText.requestFocus();
+        InputMethodManager inputMethodManager = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
     }
 
     @Override
     protected void onStepClosed(boolean animated) {
-
+        InputMethodManager inputMethodManager =(InputMethodManager)activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(requestTitleStepEditText.getWindowToken(), 0);
     }
 
     @Override
@@ -77,5 +82,9 @@ public class RequestTitleStep extends Step<String> {
     @Override
     public void restoreStepData(String stepData) {
         requestTitleStepEditText.setText(stepData);
+    }
+
+    public String getResult(){
+        return requestTitleStepEditText.getText().toString();
     }
 }

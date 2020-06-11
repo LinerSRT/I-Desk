@@ -30,6 +30,13 @@ import java.util.List;
 
 public class FileUtils {
 
+    public static long getListFilesSize(List<File> fileList){
+        long size = 0;
+        for(File file:fileList)
+            size += file.length();
+        return size;
+    }
+
     public static byte[] getFileByteArray(File file) {
         byte[] bytes = new byte[(int) file.length()];
         try {

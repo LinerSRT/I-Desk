@@ -6,31 +6,36 @@
     android:layout_width="match_parent"
     android:elevation="2dp"
     android:padding="8dp"
-    android:layout_marginBottom="@dimen/contentMarginHalf"
+    android:layout_margin="@dimen/contentMarginHalf"
     android:gravity="center"
     android:layout_height="wrap_content">
 
     <RadioButton
+        android:id="@+id/requestCheckButton"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:checked="true"/>
 
     <com.liner.views.YSEditText
+        android:id="@+id/requestCheckText"
         android:layout_width="0dp"
         android:layout_weight="1"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:textColor="?textColor"
         android:textSize="@dimen/tipsTextSize"
+        android:maxLines="150"
         app:ys_type="Medium"
         />
 
     <ImageButton
+        android:id="@+id/requestCheckEditButton"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:src="@drawable/edit_icon"
         android:background="?attr/selectableItemBackground"/>
 
     <ImageButton
+        android:id="@+id/requestDeleteButton"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:src="@drawable/delete_icon"

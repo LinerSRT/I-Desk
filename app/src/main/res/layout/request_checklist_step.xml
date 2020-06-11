@@ -6,16 +6,16 @@
     android:gravity="center"
     android:orientation="vertical">
 
-    <com.liner.views.FileListLayoutView
-        android:id="@+id/requestFileStepView"
+    <com.liner.views.RequestCheckListLayoutView
+        android:id="@+id/requestCheckListStepView"
         android:layout_width="match_parent"
         android:layout_height="300dp"/>
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/requestFileStepAdd"
+        android:id="@+id/requestCheckListStepAdd"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Нажмите что бы выбрать файлы"
+        android:text="Нажмите что бы добавить элемент"
         app:icon="@drawable/add_icon"
         style="@style/AppTheme.Button"
         android:layout_marginTop="@dimen/contentMarginHalf"/>

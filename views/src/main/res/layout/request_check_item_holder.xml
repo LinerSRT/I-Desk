@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:gravity="center"
+    android:orientation="horizontal"
+    android:padding="@dimen/contentMarginHalf"
+    android:layout_height="wrap_content">
+
+    <com.liner.views.RequestCheckView
+        android:id="@+id/requestCheckView"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_marginEnd="@dimen/contentMarginHalf"
+        android:layout_height="wrap_content"/>
+
+
+
+</LinearLayout>

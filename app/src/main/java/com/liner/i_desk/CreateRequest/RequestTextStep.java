@@ -1,8 +1,10 @@
 package com.liner.i_desk.CreateRequest;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 
 import com.liner.i_desk.R;
 
@@ -13,9 +15,11 @@ import studio.carbonylgroup.textfieldboxes.TextFieldBoxes;
 
 @SuppressLint("InflateParams")
 public class RequestTextStep extends Step<String> {
+    private Activity activity;
     private ExtendedEditText requestTextStepEditText;
-    public RequestTextStep(String stepTitle) {
+    public RequestTextStep(Activity activity, String stepTitle) {
         super(stepTitle);
+        this.activity = activity;
     }
 
     @Override
@@ -55,12 +59,16 @@ public class RequestTextStep extends Step<String> {
     @Override
     protected void onStepOpened(boolean animated) {
         requestTextStepEditText.requestFocus();
+        InputMethodManager inputMethodManager = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
 
     }
 
     @Override
     protected void onStepClosed(boolean animated) {
 
+        InputMethodManager inputMethodManager =(InputMethodManager)activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(requestTextStepEditText.getWindowToken(), 0);
     }
 
     @Override
@@ -76,5 +84,9 @@ public class RequestTextStep extends Step<String> {
     @Override
     public void restoreStepData(String stepData) {
         requestTextStepEditText.setText(stepData);
+    }
+
+    public String getResult(){
+        return requestTextStepEditText.getText().toString();
     }
 }

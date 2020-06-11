@@ -8,6 +8,8 @@ import android.view.inputmethod.InputMethodManager;
 
 import com.liner.i_desk.R;
 
+import java.util.List;
+
 import ernestoyaquello.com.verticalstepperform.Step;
 import studio.carbonylgroup.textfieldboxes.ExtendedEditText;
 import studio.carbonylgroup.textfieldboxes.SimpleTextChangedWatcher;
@@ -59,6 +61,8 @@ public class RequestDeviceTextStep extends Step<String> {
     @Override
     protected void onStepOpened(boolean animated) {
         requestDeviceTextStepEditText.requestFocus();
+        InputMethodManager inputMethodManager = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
     }
 
     @Override
@@ -80,5 +84,9 @@ public class RequestDeviceTextStep extends Step<String> {
     @Override
     public void restoreStepData(String stepData) {
         requestDeviceTextStepEditText.setText(stepData);
+    }
+
+    public String getResult(){
+        return requestDeviceTextStepEditText.getText().toString();
     }
 }

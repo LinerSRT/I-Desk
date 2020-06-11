@@ -35,11 +35,6 @@
             android:textColor="@color/color_text_dark"
             android:textSize="@dimen/secondaryTextSize" />
 
-        <FrameLayout
-            android:id="@+id/baseDialogCustomView"
-            android:layout_width="wrap_content"
-            android:layout_gravity="center"
-            android:layout_height="match_parent" />
 
         <ProgressBar
             android:id="@+id/indeterminateProgress"
@@ -49,6 +44,11 @@
             android:indeterminateTint="@color/color_primary_dark"/>
     </LinearLayout>
 
+    <FrameLayout
+        android:id="@+id/baseDialogCustomView"
+        android:layout_width="match_parent"
+        android:layout_gravity="center"
+        android:layout_height="wrap_content" />
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

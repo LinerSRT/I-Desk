@@ -101,4 +101,8 @@ public class RequestPriorityStep extends Step<String> {
                 break;
         }
     }
+
+    public RequestObject.RequestPriority getResult(){
+        return (RequestObject.RequestPriority) swipeSelector.getSelectedItem().value;
+    }
 }

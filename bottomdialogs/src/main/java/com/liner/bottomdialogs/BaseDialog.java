@@ -170,4 +170,8 @@ public class BaseDialog extends BaseBottomSheet {
     public void setDialogCancelText(String dialogCancelText) {
         this.dialogCancelText = dialogCancelText;
     }
+
+    public void setDialogType(BaseDialogBuilder.Type dialogType) {
+        this.dialogType = dialogType;
+    }
 }

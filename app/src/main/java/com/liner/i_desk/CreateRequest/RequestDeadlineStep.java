@@ -10,6 +10,7 @@ import com.liner.utils.Time;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import ernestoyaquello.com.verticalstepperform.Step;
@@ -85,5 +86,9 @@ public class RequestDeadlineStep extends Step<String> {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date(Long.parseLong(stepData)));
         requestDeadlineStepPicker.selectDate(calendar);
+    }
+
+    public long getResult(){
+        return selectedDate.getTime();
     }
 }
