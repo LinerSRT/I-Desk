@@ -1,15 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="color_text">#383838</color>
-    <color name="color_text_dark">#a4a4a4</color>
-    <color name="color_disable">#B6B6B6</color>
-    <color name="color_white">#FFFFFF</color>
-    <color name="color_warning_red">#F16060</color>
-    <color name="color_primary">#0091EA</color>
-    <color name="color_primary_dark">#0277BD</color>
-    <color name="color_background">#FFFAFAFA</color>
-    <color name="color_background_secondary">#EEEEEE</color>
-    <color name="color_background_dark_secondary">#303030</color>
-
-
+    <color name="primary">#10CD1A</color>
+    <color name="primary_dark">#0D9E15</color>
+    <color name="text">#EEEEEE</color>
+    <color name="text_dark">#B1B1B1</color>
+    <color name="disabled">#8C8C8C</color>
+    <color name="window_background">#2A3137</color>
+    <color name="window_background_dark">#1E2327</color>
+    <color name="white">#FFFFFF</color>
+    <color name="red">#D30606</color>
 </resources>

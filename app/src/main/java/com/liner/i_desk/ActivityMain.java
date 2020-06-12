@@ -1,47 +1,61 @@
 package com.liner.i_desk;
 
-
-import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.LinearLayout;
+import android.util.Log;
+import android.widget.Toast;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.irfaan008.irbottomnavigation.SpaceItem;
+import com.irfaan008.irbottomnavigation.SpaceNavigationView;
+import com.irfaan008.irbottomnavigation.SpaceOnClickListener;
+import com.irfaan008.irbottomnavigation.SpaceOnLongClickListener;
 import com.liner.i_desk.Firebase.FireActivity;
-import com.roacult.backdrop.BackdropLayout;
-
-import spencerstudios.com.bungeelib.Bungee;
 
 public class ActivityMain extends FireActivity {
 
 
-    private LinearLayout mainLayoutToProfile;
-    private LinearLayout mainLayoutToAddRequest;
-    private BackdropLayout mainBackdropLayout;
-    private FloatingActionButton addNewRequestButton;
-
+    private SpaceNavigationView spaceNavigationView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_layout);
-        mainLayoutToAddRequest = findViewById(R.id.mainLayoutToProfile);
-        mainLayoutToProfile = findViewById(R.id.mainLayoutToProfile);
-        mainBackdropLayout = findViewById(R.id.mainBackdropLayout);
-        addNewRequestButton = findViewById(R.id.addNewRequestButton);
-        addNewRequestButton.setOnClickListener(new View.OnClickListener() {
+
+        spaceNavigationView = (SpaceNavigationView) findViewById(R.id.space);
+        spaceNavigationView.initWithSaveInstanceState(savedInstanceState);
+        spaceNavigationView.addSpaceItem(new SpaceItem("Заявки", R.drawable.requests_icon));
+        spaceNavigationView.addSpaceItem(new SpaceItem("Профиль", R.drawable.user_icon));
+        spaceNavigationView.setCentreButtonIcon(R.drawable.add_icon_white);
+        spaceNavigationView.setCentreButtonColor(getResources().getColor(R.color.primary));
+        spaceNavigationView.shouldShowFullBadgeText(true);
+        spaceNavigationView.setCentreButtonIconColorFilterEnabled(false);
+
+        spaceNavigationView.setSpaceOnClickListener(new SpaceOnClickListener() {
             @Override
-            public void onClick(View view) {
-                startActivity(new Intent(ActivityMain.this, ActivityCreateRequest.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
-                Bungee.slideUp(ActivityMain.this);
+            public void onCentreButtonClick() {
+                Log.d("onCentreButtonClick ", "onCentreButtonClick");
+                spaceNavigationView.shouldShowFullBadgeText(true);
+            }
+
+            @Override
+            public void onItemClick(int itemIndex, String itemName) {
+                Log.d("onItemClick ", "" + itemIndex + " " + itemName);
+            }
+
+            @Override
+            public void onItemReselected(int itemIndex, String itemName) {
+                Log.d("onItemReselected ", "" + itemIndex + " " + itemName);
             }
         });
 
-
-        mainLayoutToProfile.setOnClickListener(new View.OnClickListener() {
+        spaceNavigationView.setSpaceOnLongClickListener(new SpaceOnLongClickListener() {
             @Override
-            public void onClick(View view) {
-                startActivity(new Intent(ActivityMain.this, ActivityUserProfile.class));
-                Bungee.slideUp(ActivityMain.this);
+            public void onCentreButtonLongClick() {
+//                Toast.makeText(MainActivity.this, "onCentreButtonLongClick", Toast.LENGTH_SHORT).show();
+
+            }
+
+            @Override
+            public void onItemLongClick(int itemIndex, String itemName) {
+                Toast.makeText(ActivityMain.this, itemIndex + " " + itemName, Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -50,6 +64,6 @@ public class ActivityMain extends FireActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        mainBackdropLayout.close();
+
     }
 }

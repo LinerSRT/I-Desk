@@ -6,7 +6,6 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.liner.views.AppBar;
 import com.liner.views.BaseDialog;
 import com.liner.views.BaseDialogBuilder;
 
@@ -35,20 +34,7 @@ public class TestingActivity extends AppCompatActivity {
                 .build();
 
 
-        AppBar appBar = findViewById(R.id.appBar);
-        appBar.setBarCallback(new AppBar.BarCallback() {
-            @Override
-            public void onRequestsOpen() {
-                Toast.makeText(TestingActivity.this, "REQUEST", Toast.LENGTH_SHORT).show();
-                baseDialog.showDialog();
-            }
 
-            @Override
-            public void onProfileOpen() {
-
-                Toast.makeText(TestingActivity.this, "PROFILE", Toast.LENGTH_SHORT).show();
-            }
-        });
 
 
 

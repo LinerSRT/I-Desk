@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal"
-    android:background="@drawable/round_corner_background"
+    android:background="@drawable/background_round"
     android:layout_width="match_parent"
     android:padding="8dp"
     android:gravity="center"
@@ -29,7 +29,7 @@
             android:id="@+id/messageFileName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="?textColor"
+            android:textColor="@color/text"
             android:textSize="@dimen/tipsTextSize"
             android:textStyle="bold"
             />
@@ -39,7 +39,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
-            android:textColor="?textColorDark"
+            android:textColor="@color/text_dark"
             android:textSize="@dimen/tipsTextSize"
             />
 
@@ -51,7 +51,7 @@
         android:id="@+id/fileDownloadBtn"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:background="@drawable/round_corner_background_light"
+        android:background="@drawable/background_round"
         app:progress="10"
         app:progressMax="100"
         app:progressBarIconPadding="8dp"

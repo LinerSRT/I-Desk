@@ -8,7 +8,7 @@
     android:clipChildren="false"
     android:clipToPadding="false"
     android:paddingTop="15dp"
-    android:background="@drawable/round_corner_background_light"
+    android:background="@drawable/background_round"
     android:paddingBottom="15dp"
     android:visibility="visible">
 
@@ -19,7 +19,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         app:shimmer_animation_duration="1500"
-        app:shimmer_color="#ffffff"
+        app:shimmer_color="@color/disabled"
         app:shimmer_reverse_animation="true">
 
 
@@ -60,6 +60,7 @@
         android:layout_alignParentStart="true"
         android:layout_marginLeft="8dp"
         android:gravity="center"
+        android:textColor="@color/text"
         android:text="00:00"
         android:textStyle="bold" />
 

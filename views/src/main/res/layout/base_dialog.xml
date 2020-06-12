@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:animateLayoutChanges="true"
-    android:background="@drawable/round_corner_background_top"
+    android:background="@drawable/background_round_top"
     android:orientation="vertical"
     android:padding="@dimen/contentMarginHalf">
 
@@ -16,7 +16,7 @@
         android:drawablePadding="@dimen/contentMarginHalf"
         android:gravity="center_vertical"
         android:text="The standard Lorem Ipsum passage, used since the 1500s"
-        android:textColor="@color/color_text"
+        android:textColor="@color/text"
         android:textSize="@dimen/primaryTextSize"
         android:textStyle="bold" />
 
@@ -32,7 +32,7 @@
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:text="Lorftware like Aldus P"
-            android:textColor="@color/color_text_dark"
+            android:textColor="@color/text_dark"
             android:textSize="@dimen/secondaryTextSize" />
 
 
@@ -41,7 +41,7 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_gravity="center"
-            android:indeterminateTint="@color/color_primary_dark"/>
+            android:indeterminateTint="@color/primary"/>
     </LinearLayout>
 
     <FrameLayout
@@ -63,7 +63,7 @@
             android:layout_marginEnd="@dimen/contentMargin"
             android:padding="@dimen/contentMarginHalf"
             android:text="Cancel"
-            android:textColor="@color/color_text"
+            android:textColor="@color/text"
             android:textStyle="bold" />
 
         <TextView
@@ -73,7 +73,7 @@
             android:layout_marginEnd="@dimen/contentMarginHalf"
             android:padding="@dimen/contentMarginHalf"
             android:text="Done"
-            android:textColor="@color/color_primary_dark"
+            android:textColor="@color/primary_dark"
             android:textStyle="bold" />
 
     </LinearLayout>

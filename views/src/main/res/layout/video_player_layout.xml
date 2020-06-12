@@ -42,6 +42,7 @@
             android:layout_width="64dp"
             android:layout_height="64dp"
             android:padding="@dimen/contentMarginHalf"
+            android:indeterminateTint="@color/primary"
             android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

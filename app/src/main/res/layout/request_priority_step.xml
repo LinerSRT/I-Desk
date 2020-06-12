@@ -12,8 +12,8 @@
         app:swipe_customFontPath="yandex_font/Light.ttf"
         app:swipe_descriptionGravity="center"
         app:swipe_descriptionTextAppearance="@style/YSContentTextStyle"
-        app:swipe_indicatorActiveColor="@color/color_primary_dark"
-        app:swipe_indicatorInActiveColor="@color/color_disable"
+        app:swipe_indicatorActiveColor="@color/primary"
+        app:swipe_indicatorInActiveColor="@color/disabled"
         app:swipe_indicatorMargin="@dimen/contentMarginHalf"
         app:swipe_titleTextAppearance="@style/YSTitleTextStyle" />
 </LinearLayout>

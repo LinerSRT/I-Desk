@@ -6,6 +6,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:animateLayoutChanges="true"
     android:gravity="center"
+    android:background="@color/window_background_dark"
     android:orientation="vertical"
     tools:context=".ActivitySplash">
 
@@ -15,7 +16,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginBottom="8dp"
-        android:indeterminateTint="@color/color_primary_dark"
+        android:indeterminateTint="@color/primary"
         app:layout_constraintBottom_toTopOf="@+id/splashAppName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

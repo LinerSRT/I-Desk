@@ -88,7 +88,7 @@ public class BaseDialog extends BaseBottomSheet {
                 break;
             case PROGRESS:
                 ProgressBar progressBar = new ProgressBar(getContext(), null, android.R.attr.progressBarStyleHorizontal);
-                progressBar.getProgressDrawable().setColorFilter(getResources().getColor(R.color.color_primary_dark), PorterDuff.Mode.SRC_IN);
+                progressBar.getProgressDrawable().setColorFilter(getResources().getColor(R.color.primary_dark), PorterDuff.Mode.SRC_IN);
                 progressBar.setMax(100);
                 progressBar.setProgress(0);
                 LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);

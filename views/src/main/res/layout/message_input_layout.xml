@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/round_corner_background_top"
+    android:background="@drawable/background_round_top"
     android:orientation="vertical">
 
 
@@ -27,7 +27,7 @@
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:backgroundTint="@color/color_primary_dark"
+            android:backgroundTint="@color/primary"
             android:backgroundTintMode="src_in"
             android:src="@drawable/attachment_icon" />
 
@@ -36,11 +36,12 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@drawable/round_corner_primary"
+            android:background="@drawable/background_round"
+            android:backgroundTint="@color/primary"
             android:hint="Сообщение"
             android:padding="@dimen/contentMarginHalf"
-            android:textColor="@color/color_text"
-            android:textColorHint="@color/color_text_dark"
+            android:textColor="#FFFFFF"
+            android:textColorHint="#CCCCCC"
             android:textSize="@dimen/primaryTextSize" />
 
         <ImageButton
@@ -48,7 +49,7 @@
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:backgroundTint="@color/color_primary_dark"
+            android:backgroundTint="@color/primary"
             android:backgroundTintMode="src_in"
             android:src="@drawable/send_icon" />
 
@@ -74,7 +75,7 @@
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:gravity="center"
                 android:text="Выберите тип"
-                android:textColor="#383838"
+                android:textColor="@color/text"
                 android:textSize="@dimen/secondaryTextSize"
                 app:ys_type="Light" />
 
@@ -96,7 +97,7 @@
                     android:drawableTop="@drawable/video_icon"
                     android:gravity="center"
                     android:text="Видео"
-                    android:textColor="#383838"
+                    android:textColor="@color/text"
                     android:textSize="@dimen/secondaryTextSize"
                     app:ys_type="Light" />
 
@@ -109,7 +110,7 @@
                     android:drawableTop="@drawable/image_icon"
                     android:gravity="center"
                     android:text="Изображение"
-                    android:textColor="#383838"
+                    android:textColor="@color/text"
                     app:ys_type="Light" />
 
 
@@ -122,7 +123,7 @@
                     android:drawableTop="@drawable/music_icon"
                     android:gravity="center"
                     android:text="Аудио"
-                    android:textColor="#383838"
+                    android:textColor="@color/text"
                     app:ys_type="Light" />
 
                 <com.liner.views.YSTextView
@@ -134,7 +135,7 @@
                     android:drawableTop="@drawable/file_icon"
                     android:gravity="center"
                     android:text="Файл"
-                    android:textColor="#383838"
+                    android:textColor="@color/text"
                     app:ys_type="Light" />
 
 
@@ -146,7 +147,7 @@
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:gravity="center"
                 android:text="Или"
-                android:textColor="#383838"
+                android:textColor="@color/text"
                 android:paddingBottom="@dimen/contentMarginHalf"
                 android:textSize="@dimen/secondaryTextSize"
                 app:ys_type="Light" />
@@ -168,7 +169,7 @@
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_gravity="center"
-                    android:background="@drawable/round_corner_background_light"
+                    android:background="@drawable/background_round"
                     android:scaleType="centerInside"
                     app:mic_icon="@drawable/mic_icon" />
 

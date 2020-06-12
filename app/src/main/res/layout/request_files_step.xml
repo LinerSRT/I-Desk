@@ -9,7 +9,7 @@
     <com.liner.views.FileListLayoutView
         android:id="@+id/requestFileStepView"
         android:layout_width="match_parent"
-        android:layout_height="300dp"/>
+        android:layout_height="wrap_content"/>
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/requestFileStepAdd"
