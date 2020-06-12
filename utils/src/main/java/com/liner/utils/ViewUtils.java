@@ -2,9 +2,14 @@ package com.liner.utils;
 
 import android.app.Activity;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 
 import androidx.annotation.IdRes;
 import androidx.annotation.LayoutRes;
@@ -66,5 +71,30 @@ public class ViewUtils {
     @SuppressWarnings("unchecked")
     public static <T extends View> T findById(@NonNull Activity parent, @IdRes int resId) {
         return (T) parent.findViewById(resId);
+    }
+
+    public static void setStatusBarBackground(Activity activity, int resourceID) {
+        Window window = activity.getWindow();
+        Drawable background = activity.getResources().getDrawable(resourceID);
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        window.setStatusBarColor(activity.getResources().getColor(android.R.color.transparent));
+        window.setNavigationBarColor(activity.getResources().getColor(android.R.color.transparent));
+        window.setBackgroundDrawable(background);
+    }
+
+    public static void setStatusBarBackground(Activity activity, Drawable drawable) {
+        Window window = activity.getWindow();
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        window.setStatusBarColor(activity.getResources().getColor(android.R.color.transparent));
+        window.setNavigationBarColor(activity.getResources().getColor(android.R.color.transparent));
+        window.setBackgroundDrawable(drawable);
+    }
+
+    public static void setStatusBarBackground(Activity activity, Bitmap bitmap) {
+        Window window = activity.getWindow();
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        window.setStatusBarColor(activity.getResources().getColor(android.R.color.transparent));
+        window.setNavigationBarColor(activity.getResources().getColor(android.R.color.transparent));
+        window.setBackgroundDrawable(new BitmapDrawable(activity.getResources(), bitmap));
     }
 }

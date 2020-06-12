@@ -18,8 +18,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SnapHelper;
 
 import com.kbeanie.multipicker.api.entity.ChosenFile;
-import com.liner.bottomdialogs.BaseDialog;
-import com.liner.bottomdialogs.BaseDialogBuilder;
 import com.liner.utils.FileUtils;
 
 import java.util.ArrayList;

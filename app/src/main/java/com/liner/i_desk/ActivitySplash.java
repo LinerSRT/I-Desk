@@ -13,8 +13,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityOptionsCompat;
 
 import com.google.firebase.database.DatabaseReference;
-import com.liner.bottomdialogs.BaseDialog;
-import com.liner.bottomdialogs.BaseDialogBuilder;
+import com.liner.views.BaseDialog;
+import com.liner.views.BaseDialogBuilder;
 import com.liner.i_desk.Firebase.Firebase;
 import com.liner.i_desk.Firebase.FirebaseValue;
 import com.liner.i_desk.Firebase.UserObject;

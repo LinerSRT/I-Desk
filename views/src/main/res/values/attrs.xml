@@ -33,29 +33,29 @@
         <attr name="progressBarColor" format="color|reference" />
         <attr name="progressBarBackgroundColor" format="color|reference" />
         <attr name="progressBarThickness" format="dimension|reference" />
-        <attr name="progressBarPadding" format="dimension|reference"/>
-        <attr name="progressBarIconPadding" format="dimension|reference"/>
+        <attr name="progressBarPadding" format="dimension|reference" />
+        <attr name="progressBarIconPadding" format="dimension|reference" />
     </declare-styleable>
 
     <declare-styleable name="YSTextView">
         <attr name="ys_type">
-            <enum name="Bold" value="1"/>
-            <enum name="Light" value="2"/>
-            <enum name="Medium" value="3"/>
-            <enum name="Regular" value="4"/>
-            <enum name="RegularItalic" value="5"/>
-            <enum name="Thin" value="6"/>
+            <enum name="Bold" value="1" />
+            <enum name="Light" value="2" />
+            <enum name="Medium" value="3" />
+            <enum name="Regular" value="4" />
+            <enum name="RegularItalic" value="5" />
+            <enum name="Thin" value="6" />
         </attr>
     </declare-styleable>
 
     <declare-styleable name="YSEditText">
         <attr name="yse_type">
-            <enum name="Bold" value="1"/>
-            <enum name="Light" value="2"/>
-            <enum name="Medium" value="3"/>
-            <enum name="Regular" value="4"/>
-            <enum name="RegularItalic" value="5"/>
-            <enum name="Thin" value="6"/>
+            <enum name="Bold" value="1" />
+            <enum name="Light" value="2" />
+            <enum name="Medium" value="3" />
+            <enum name="Regular" value="4" />
+            <enum name="RegularItalic" value="5" />
+            <enum name="Thin" value="6" />
         </attr>
     </declare-styleable>
 
@@ -63,13 +63,13 @@
         <attr name="left_bg_color" format="color|reference" />
         <attr name="left_image" format="integer|reference" />
         <attr name="left_text" format="string|reference" />
-        <attr name="left_text_size" format="integer|reference"/>
-        <attr name="left_text_color" format="color|reference"/>
+        <attr name="left_text_size" format="integer|reference" />
+        <attr name="left_text_color" format="color|reference" />
         <attr name="right_bg_color" format="color|reference" />
         <attr name="right_image" format="integer|reference" />
         <attr name="right_text" format="string|reference" />
-        <attr name="right_text_size" format="integer|reference"/>
-        <attr name="right_text_color" format="color|reference"/>
+        <attr name="right_text_size" format="integer|reference" />
+        <attr name="right_text_color" format="color|reference" />
     </declare-styleable>
 
     <declare-styleable name="MediaPickerView">
@@ -85,8 +85,16 @@
         <attr name="el_duration" format="integer" />
         <attr name="el_expanded" format="boolean" />
         <attr name="el_parallax" format="float" />
-        <attr name="android:orientation"/>
+        <attr name="android:orientation" />
     </declare-styleable>
-	
+
+
+    <declare-styleable name="GradientImageView">
+        <attr name="giv_gradient_color" format="color|reference" />
+        <attr name="giv_gradient_color_alpha" format="float|reference" />
+        <attr name="giv_gradient_height" format="integer|reference" />
+        <attr name="giv_image" format="integer|reference" />
+    </declare-styleable>
+
 
 </resources>

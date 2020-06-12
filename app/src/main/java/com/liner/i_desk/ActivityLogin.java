@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.View;
-import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -25,14 +24,13 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.iid.FirebaseInstanceId;
-import com.liner.bottomdialogs.BaseDialog;
-import com.liner.bottomdialogs.BaseDialogBuilder;
-import com.liner.bottomdialogs.IndeterminateDialog;
 import com.liner.i_desk.Firebase.Firebase;
 import com.liner.i_desk.Firebase.FirebaseValue;
+import com.liner.i_desk.Firebase.UserObject;
 import com.liner.utils.TextUtils;
 import com.liner.utils.Time;
-import com.liner.i_desk.Firebase.UserObject;
+import com.liner.views.BaseDialog;
+import com.liner.views.BaseDialogBuilder;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -41,14 +39,17 @@ import studio.carbonylgroup.textfieldboxes.ExtendedEditText;
 import studio.carbonylgroup.textfieldboxes.SimpleTextChangedWatcher;
 import studio.carbonylgroup.textfieldboxes.TextFieldBoxes;
 
-@SuppressWarnings( "deprecation" )
+@SuppressWarnings("deprecation")
 public class ActivityLogin extends AppCompatActivity {
     private TextFieldBoxes loginTextFieldEmailBox;
     private TextFieldBoxes loginTextFieldPasswordBox;
     private ExtendedEditText loginExtendedPasswordEdit;
     private String userEmail = "", userPassword = "";
     private BaseDialog errorDialog;
-    private IndeterminateDialog.Builder progressBottomSheetDialog;
+    private BaseDialog progressDialog;
+    private BaseDialog accountTypeSelectionDialog;
+    private String[] accountNames = new String[]{"Заявитель", "Исполнитель"};
+    private UserObject.UserType accountType = UserObject.UserType.CLIENT;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,8 +73,15 @@ public class ActivityLogin extends AppCompatActivity {
             loginExtendedPasswordEdit.setSelection(userPassword.length());
         }
 
-        progressBottomSheetDialog = new IndeterminateDialog.Builder(this)
-                .setDialogText("Вход").setTitleText("Подождите...").build();
+
+        progressDialog = BaseDialogBuilder.buildFast(this,
+                "Вход",
+                "Подождите...",
+                null,
+                "Ок",
+                BaseDialogBuilder.Type.INDETERMINATE,
+                null,
+                null);
 
         errorDialog = BaseDialogBuilder.buildFast(this,
                 "Ошибка",
@@ -122,7 +130,7 @@ public class ActivityLogin extends AppCompatActivity {
                     loginTextFieldEmailBox.removeError();
                     if (TextUtils.isPasswordValid(userPassword)) {
                         loginTextFieldPasswordBox.removeError();
-                        progressBottomSheetDialog.show();
+                        progressDialog.showDialog();
                         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
                         firebaseAuth.signInWithEmailAndPassword(userEmail, userPassword).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                             @Override
@@ -145,12 +153,12 @@ public class ActivityLogin extends AppCompatActivity {
 
                                         @Override
                                         public void onFail(String errorMessage) {
-                                            progressBottomSheetDialog.close();
+                                            progressDialog.closeDialog();
                                             errorDialog.showDialog();
                                         }
                                     });
                                 } else {
-                                    progressBottomSheetDialog.close();
+                                    progressDialog.closeDialog();
                                     errorDialog.showDialog();
                                 }
                             }
@@ -166,9 +174,7 @@ public class ActivityLogin extends AppCompatActivity {
         loginSignWithGoogle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                progressBottomSheetDialog = new IndeterminateDialog.Builder(ActivityLogin.this);
-                progressBottomSheetDialog.setTitleText("Подождите").setDialogText("Выполняется вход в аккаунт").build();
-                progressBottomSheetDialog.show();
+                progressDialog.showDialog();
                 FirebaseAuth.getInstance().signOut();
                 GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                         .requestIdToken(getString(R.string.default_web_client_id))
@@ -178,7 +184,7 @@ public class ActivityLogin extends AppCompatActivity {
                         .enableAutoManage(ActivityLogin.this, new GoogleApiClient.OnConnectionFailedListener() {
                             @Override
                             public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-                                progressBottomSheetDialog.close();
+                                progressDialog.closeDialog();
                                 errorDialog.showDialog();
                             }
                         })
@@ -212,64 +218,80 @@ public class ActivityLogin extends AppCompatActivity {
             if (googleSignInResult.isSuccess()) {
                 final GoogleSignInAccount googleAccount = googleSignInResult.getSignInAccount();
                 if (googleAccount != null) {
-                    AuthCredential authCredential = GoogleAuthProvider.getCredential(googleAccount.getIdToken(), null);
-                    FirebaseAuth.getInstance().signInWithCredential(authCredential).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull final Task<AuthResult> task) {
-                            if (task.isSuccessful()) {
-                                FirebaseValue.getUser(Objects.requireNonNull(Objects.requireNonNull(task.getResult()).getUser()).getUid(), new FirebaseValue.ValueListener() {
-                                    @Override
-                                    public void onSuccess(Object object, DatabaseReference databaseReference) {
-                                        startActivity(new Intent(ActivityLogin.this, ActivityMain.class).addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED));
-                                        finish();
-                                    }
 
-                                    @Override
-                                    public void onFail(String errorMessage) {
-                                        if(Constants.USERS_REQUIRE_EMAIL_VERIFICATION)
-                                            Objects.requireNonNull(Objects.requireNonNull(task.getResult()).getUser()).sendEmailVerification();
-                                        UserObject userObject = new UserObject(
-                                                Objects.requireNonNull(Objects.requireNonNull(task.getResult()).getUser()).getUid(),
-                                                UserObject.UserType.CLIENT,
-                                                FirebaseInstanceId.getInstance().getToken(),
-                                                googleAccount.getDisplayName(),
-                                                googleAccount.getEmail(),
-                                                String.valueOf(googleAccount.getPhotoUrl()),
-                                                "Информация о себе не указана",
-                                                "",
-                                                UserObject.UserStatus.ONLINE,
-                                                Time.getTime(),
-                                                Time.getTime(),
-                                                true,
-                                                new ArrayList<String>(),
-                                                new ArrayList<String>(),
-                                                new ArrayList<String>()
-                                        );
-                                        Objects.requireNonNull(Firebase.getUsersDatabase()).child(userObject.getUserID()).setValue(userObject)
-                                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    accountTypeSelectionDialog = new BaseDialogBuilder(this)
+                            .setDialogTitle("Тип аккаунта")
+                            .setDialogText("Выберите тип вашего аккаунта")
+                            .setDialogType(BaseDialogBuilder.Type.SINGLE_CHOOSE)
+                            .setSelectionList(accountNames)
+                            .setSelectionListener(new BaseDialog.BaseDialogSelectionListener() {
+                                @Override
+                                public void onItemClick(int position) {
+                                    accountType = (position == 0) ? UserObject.UserType.CLIENT : UserObject.UserType.SERVICE;
+                                    AuthCredential authCredential = GoogleAuthProvider.getCredential(googleAccount.getIdToken(), null);
+                                    FirebaseAuth.getInstance().signInWithCredential(authCredential).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                                        @Override
+                                        public void onComplete(@NonNull final Task<AuthResult> task) {
+                                            if (task.isSuccessful()) {
+                                                FirebaseValue.getUser(Objects.requireNonNull(Objects.requireNonNull(task.getResult()).getUser()).getUid(), new FirebaseValue.ValueListener() {
                                                     @Override
-                                                    public void onComplete(@NonNull Task<Void> task) {
+                                                    public void onSuccess(Object object, DatabaseReference databaseReference) {
                                                         startActivity(new Intent(ActivityLogin.this, ActivityMain.class).addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED));
                                                         finish();
                                                     }
+
+                                                    @Override
+                                                    public void onFail(String errorMessage) {
+                                                        if (Constants.USERS_REQUIRE_EMAIL_VERIFICATION)
+                                                            Objects.requireNonNull(Objects.requireNonNull(task.getResult()).getUser()).sendEmailVerification();
+                                                        UserObject userObject = new UserObject(
+                                                                Objects.requireNonNull(Objects.requireNonNull(task.getResult()).getUser()).getUid(),
+                                                                accountType,
+                                                                FirebaseInstanceId.getInstance().getToken(),
+                                                                googleAccount.getDisplayName(),
+                                                                googleAccount.getEmail(),
+                                                                String.valueOf(googleAccount.getPhotoUrl()),
+                                                                "Информация о себе не указана",
+                                                                "",
+                                                                UserObject.UserStatus.ONLINE,
+                                                                Time.getTime(),
+                                                                Time.getTime(),
+                                                                true,
+                                                                new ArrayList<String>(),
+                                                                new ArrayList<String>(),
+                                                                new ArrayList<String>()
+                                                        );
+                                                        Objects.requireNonNull(Firebase.getUsersDatabase()).child(userObject.getUserID()).setValue(userObject)
+                                                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                    @Override
+                                                                    public void onComplete(@NonNull Task<Void> task) {
+                                                                        startActivity(new Intent(ActivityLogin.this, ActivityMain.class).addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED));
+                                                                        finish();
+                                                                    }
+                                                                });
+                                                    }
                                                 });
-                                    }
-                                });
 
 
+                                            } else {
+                                                progressDialog.closeDialog();
+                                                errorDialog.showDialog();
+                                            }
+                                        }
+                                    });
+                                }
+                            })
+                            .build();
 
-                            } else {
-                                progressBottomSheetDialog.close();
-                                errorDialog.showDialog();
-                            }
-                        }
-                    });
+                    accountTypeSelectionDialog.showDialog();
+
+
                 } else {
-                    progressBottomSheetDialog.close();
+                    progressDialog.closeDialog();
                     errorDialog.showDialog();
                 }
             } else {
-                progressBottomSheetDialog.close();
+                progressDialog.closeDialog();
                 errorDialog.showDialog();
             }
         }

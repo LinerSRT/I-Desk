@@ -7,9 +7,8 @@ import android.view.View;
 import androidx.annotation.Nullable;
 
 import com.google.firebase.database.DatabaseReference;
-import com.kbeanie.multipicker.api.entity.ChosenFile;
-import com.liner.bottomdialogs.BaseDialog;
-import com.liner.bottomdialogs.BaseDialogBuilder;
+import com.liner.views.BaseDialog;
+import com.liner.views.BaseDialogBuilder;
 import com.liner.i_desk.CreateRequest.RequestChecklistStep;
 import com.liner.i_desk.CreateRequest.RequestDeadlineStep;
 import com.liner.i_desk.CreateRequest.RequestDeviceTextStep;
@@ -26,11 +25,9 @@ import com.liner.i_desk.Firebase.RequestObject;
 import com.liner.i_desk.Firebase.Storage.FirebaseUploadTask;
 import com.liner.i_desk.Firebase.Storage.TaskListener;
 import com.liner.i_desk.Firebase.UserObject;
-import com.liner.utils.FileUtils;
 import com.liner.utils.TextUtils;
 import com.liner.utils.Time;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.liner.bottomdialogs;
+package com.liner.views;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -8,15 +8,22 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
+import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.arthurivanets.bottomsheets.BaseBottomSheet;
 import com.arthurivanets.bottomsheets.config.BaseConfig;
 import com.liner.utils.ViewUtils;
+
+import java.util.ArrayList;
 
 @SuppressLint("ViewConstructor")
 public class BaseDialog extends BaseBottomSheet {
@@ -34,6 +41,9 @@ public class BaseDialog extends BaseBottomSheet {
     private OnClickListener dialogCancelListener = null;
     private OnClickListener dialogDoneListener = null;
     private BaseDialogBuilder.Type dialogType;
+    private String[] selectionList;
+    private BaseDialogSelectionListener selectionListener;
+
 
     public BaseDialog(@NonNull Activity hostActivity, @NonNull BaseConfig config, BaseDialogBuilder builder) {
         super(hostActivity, config);
@@ -43,6 +53,8 @@ public class BaseDialog extends BaseBottomSheet {
         this.dialogCancelText = builder.dialogCancelText;
         this.dialogView = builder.dialogView;
         this.dialogType = builder.dialogType;
+        this.selectionList = builder.selectionList;
+        this.selectionListener = builder.selectionListener;
     }
 
     @NonNull
@@ -89,6 +101,13 @@ public class BaseDialog extends BaseBottomSheet {
                 indeterminateProgress.setVisibility(VISIBLE);
                 hideActionButtons();
                 break;
+            case SINGLE_CHOOSE:
+                ListView listView = new ListView(getContext());
+                SelectionAdapter selectionAdapter = new SelectionAdapter(getContext(), selectionList);
+                listView.setAdapter(selectionAdapter);
+                dialogCustomView.addView(listView);
+                hideActionButtons();
+                break;
         }
 
         if (dialogView != null) {
@@ -117,6 +136,11 @@ public class BaseDialog extends BaseBottomSheet {
         dialogTitle.setText(dialogTitleText);
         show(true);
     }
+
+
+
+
+
 
     public void closeDialog() {
         if(dialogCustomView.getChildCount() > 0)
@@ -174,4 +198,41 @@ public class BaseDialog extends BaseBottomSheet {
     public void setDialogType(BaseDialogBuilder.Type dialogType) {
         this.dialogType = dialogType;
     }
+
+
+
+
+
+
+
+    public class SelectionAdapter extends ArrayAdapter<String> {
+        public SelectionAdapter(Context context, String[] items) {
+            super(context, 0, items);
+        }
+
+        @NonNull
+        @Override
+        public View getView(final int position, View convertView, @NonNull ViewGroup parent) {
+            if (convertView == null) {
+                convertView = LayoutInflater.from(getContext()).inflate(R.layout.base_dialog_choise_layout, parent, false);
+            }
+            convertView.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View view) {
+                    if(selectionListener != null)
+                        selectionListener.onItemClick(position);
+                    closeDialog();
+                }
+            });
+            YSTextView chooseItem = convertView.findViewById(R.id.selectionText);
+            chooseItem.setText(getItem(position));
+            return convertView;
+        }
+    }
+
+    public interface BaseDialogSelectionListener{
+        void onItemClick(int position);
+    }
+
+
 }

@@ -1,2 +1,2 @@
-include ':app', ':bottomdialogs', ':views', ':utils'
+include ':app', ':views', ':utils'
 rootProject.name='I-Desk'

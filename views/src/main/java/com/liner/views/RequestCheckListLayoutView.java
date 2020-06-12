@@ -3,19 +3,13 @@ package com.liner.views;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Handler;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.AttributeSet;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.view.animation.OvershootInterpolator;
-import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -24,10 +18,6 @@ import androidx.recyclerview.widget.LinearSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SnapHelper;
 
-import com.kbeanie.multipicker.api.entity.ChosenFile;
-import com.liner.bottomdialogs.BaseDialog;
-import com.liner.bottomdialogs.BaseDialogBuilder;
-import com.liner.utils.FileUtils;
 
 import java.util.ArrayList;
 import java.util.List;

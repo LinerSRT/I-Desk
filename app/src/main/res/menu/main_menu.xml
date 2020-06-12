@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:icon="@drawable/profile_icon"
+        android:title="Профиль"
+        app:showAsAction="always" />
+    <item
+        android:icon="@drawable/profile_icon"
+        android:title="Заявки"
+        app:showAsAction="always|withText" />
+
+</menu>

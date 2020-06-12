@@ -1,4 +1,4 @@
-package com.liner.bottomdialogs;
+package com.liner.views;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -34,6 +34,9 @@ public class BaseDialogBuilder {
     public String dialogCancelText = "";
     public View dialogView = null;
     public Type dialogType = Type.INFO;
+    public BaseDialog.BaseDialogSelectionListener selectionListener;
+    public String[] selectionList = new String[]{};
+
 
     public enum Type{
         INFO,
@@ -41,7 +44,8 @@ public class BaseDialogBuilder {
         ERROR,
         QUESTION,
         PROGRESS,
-        INDETERMINATE
+        INDETERMINATE,
+        SINGLE_CHOOSE
     }
 
     public BaseDialogBuilder(Activity activity) {
@@ -55,6 +59,16 @@ public class BaseDialogBuilder {
 
     public BaseDialogBuilder setDismissOnTouchOutside(boolean dismissOnTouchOutside) {
         this.dismissOnTouchOutside = dismissOnTouchOutside;
+        return this;
+    }
+
+    public BaseDialogBuilder setSelectionListener(BaseDialog.BaseDialogSelectionListener selectionListener) {
+        this.selectionListener = selectionListener;
+        return this;
+    }
+
+    public BaseDialogBuilder setSelectionList(String[] selectionList) {
+        this.selectionList = selectionList;
         return this;
     }
 

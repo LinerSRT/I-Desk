@@ -12,10 +12,13 @@
         <item name="colorSecondaryVariant">@color/color_primary_dark</item>
         <item name="colorOnSecondary">@color/white</item>
         <item name="colorPrimaryDark">@color/color_primary_dark</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
         <item name="colorAccent">@color/color_primary</item>
         <item name="disabledColor">@color/color_disable</item>
         <item name="android:windowContentTransitions">true</item>
         <item name="materialButtonStyle">@style/AppTheme.Button</item>
+        <item name="actionBarStyle">@style/AppTheme.AppBar</item>
     </style>
 
     <style name="ScrollbarStyle">
@@ -43,6 +46,11 @@
 
     </style>
 
-
+    <style name="AppTheme.AppBar" parent="Widget.MaterialComponents.ActionBar.Primary">
+        <item name="titleTextStyle">@style/AppTheme.AppBar.TextStyle</item>
+    </style>
+    <style name="AppTheme.AppBar.TextStyle" parent="TextAppearance.AppCompat">
+        <item name="android:textColor">@color/color_white</item>
+    </style>
 
 </resources>

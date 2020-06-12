@@ -3,7 +3,6 @@ package com.liner.i_desk;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -23,9 +22,8 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.iid.FirebaseInstanceId;
-import com.liner.bottomdialogs.BaseDialog;
-import com.liner.bottomdialogs.BaseDialogBuilder;
-import com.liner.bottomdialogs.IndeterminateDialog;
+import com.liner.views.BaseDialog;
+import com.liner.views.BaseDialogBuilder;
 import com.liner.i_desk.Firebase.Firebase;
 import com.liner.i_desk.Firebase.FirebaseValue;
 import com.liner.utils.TextUtils;
@@ -45,7 +43,10 @@ public class ActivityRegister extends AppCompatActivity {
     private TextFieldBoxes registerTextFieldPasswordBox;
     private String userEmail = "", userPassword = "";
     private BaseDialog errorDialog;
-    private IndeterminateDialog.Builder progressBottomSheetDialog;
+    private BaseDialog progressDialog;
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,9 +83,14 @@ public class ActivityRegister extends AppCompatActivity {
             }
         });
 
-        progressBottomSheetDialog = new IndeterminateDialog.Builder(this)
-                .setDialogText("Регистрация").setTitleText("Подождите...").build();
-
+        progressDialog = BaseDialogBuilder.buildFast(this,
+                "Регистрация",
+                "Подождите...",
+                null,
+                "Ок",
+                BaseDialogBuilder.Type.INDETERMINATE,
+                null,
+                null);
         errorDialog = BaseDialogBuilder.buildFast(this,
                 "Ошибка",
                 "Невозможно создать новый аккаунт. Попробуйте позже!",
@@ -108,7 +114,7 @@ public class ActivityRegister extends AppCompatActivity {
                     registerTextFieldEmailBox.removeError();
                     if (TextUtils.isPasswordValid(userPassword)) {
                         registerTextFieldPasswordBox.removeError();
-                        progressBottomSheetDialog.show();
+                        progressDialog.showDialog();
                         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
                         firebaseAuth.createUserWithEmailAndPassword(userEmail, userPassword).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                             @Override
@@ -144,7 +150,7 @@ public class ActivityRegister extends AppCompatActivity {
                                     } else {
                                         errorDialog.setDialogTextText("Невозможно создать новый аккаунт. Попробуйте позже!");
                                     }
-                                    progressBottomSheetDialog.close();
+                                    progressDialog.closeDialog();
                                     errorDialog.showDialog();
                                 }
                             }
@@ -160,9 +166,8 @@ public class ActivityRegister extends AppCompatActivity {
         registerSignWithGoogle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                progressBottomSheetDialog = new IndeterminateDialog.Builder(ActivityRegister.this);
-                progressBottomSheetDialog.setTitleText("Подождите").setDialogText("Выполняется вход в аккаунт").build();
-                progressBottomSheetDialog.show();
+                progressDialog.setDialogTextText("Выполняется вход в аккаунт");
+                progressDialog.showDialog();
                 FirebaseAuth.getInstance().signOut();
                 GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                         .requestIdToken(getString(R.string.default_web_client_id))
@@ -172,7 +177,7 @@ public class ActivityRegister extends AppCompatActivity {
                         .enableAutoManage(ActivityRegister.this, new GoogleApiClient.OnConnectionFailedListener() {
                             @Override
                             public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-                                progressBottomSheetDialog.close();
+                                progressDialog.closeDialog();
                                 errorDialog.showDialog();
                             }
                         })
@@ -241,17 +246,17 @@ public class ActivityRegister extends AppCompatActivity {
                                         });
 
                             } else {
-                                progressBottomSheetDialog.close();
+                                progressDialog.closeDialog();
                                 errorDialog.showDialog();
                             }
                         }
                     });
                 } else {
-                    progressBottomSheetDialog.close();
+                    progressDialog.closeDialog();
                     errorDialog.showDialog();
                 }
             } else {
-                progressBottomSheetDialog.close();
+                progressDialog.closeDialog();
                 errorDialog.showDialog();
             }
         }

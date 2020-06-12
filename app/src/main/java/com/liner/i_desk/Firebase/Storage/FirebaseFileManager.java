@@ -155,9 +155,6 @@ public class FirebaseFileManager {
                                                     fileMetadata.getResult().getCreationTimeMillis(),
                                                     fileMetadata.getResult().getSizeBytes()
                                             );
-                                            if(userObject.getUserFiles() == null)
-                                                userObject.setUserFiles(new ArrayList<String>());
-                                            userObject.getUserFiles().add(fileObject.getFileID());
                                             FirebaseValue.setUser(userUID, userObject);
                                             Firebase.getFilesDatabase().child(fileUID).setValue(fileObject).addOnCompleteListener(new OnCompleteListener<Void>() {
                                                 @Override
