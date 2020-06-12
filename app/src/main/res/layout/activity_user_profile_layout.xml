@@ -1,311 +1,505 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
+    android:id="@+id/main_content"
     android:background="@color/window_background_dark"
-    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <ScrollView
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_height="match_parent">
 
-        <LinearLayout
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/contentMargin"
-                android:orientation="horizontal">
+                android:orientation="vertical">
 
-                <com.liner.views.YSTextView
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity=""
-                    android:text="Username"
-                    android:textColor="@color/text"
-                    android:textSize="22sp"
-                    app:ys_type="Bold" />
-
-                <ImageButton
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:background="?attr/selectableItemBackground"
-                    android:src="@drawable/edit_icon" />
-
-            </LinearLayout>
-
-            <RelativeLayout
-                android:layout_width="128dp"
-                android:layout_height="128dp"
-                android:layout_gravity="center_horizontal">
-
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:layout_width="128dp"
-                    android:layout_height="128dp"
-                    android:src="@drawable/temp_user_photo" />
-
-                <ImageButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentBottom="true"
-                    android:background="@drawable/circle_bg"
-                    android:backgroundTint="@color/primary_dark"
-                    android:src="@drawable/camera_icon" />
-            </RelativeLayout>
-
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/contentMarginHalf"
-                android:layout_marginTop="@dimen/contentMargin"
-                android:layout_marginEnd="@dimen/contentMarginHalf"
-                android:orientation="horizontal"
-                android:padding="@dimen/contentMargin">
-
-                <com.liner.views.YSTextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Никнейм"
-                    android:textColor="@color/text_dark"
-                    android:textSize="@dimen/primaryTextSize"
-                    app:ys_type="Light" />
-
-
-                <com.liner.views.YSTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="LineR2"
-                    android:textColor="@color/text"
-                    android:textSize="@dimen/secondaryTextSize"
-                    app:ys_type="Bold" />
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_margin="@dimen/contentMarginHalf"
-                android:background="?android:attr/listDivider" />
-
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/contentMarginHalf"
-                android:layout_marginEnd="@dimen/contentMarginHalf"
-                android:orientation="horizontal"
-                android:padding="@dimen/contentMargin">
-
-                <com.liner.views.YSTextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Статус"
-                    android:textColor="@color/text_dark"
-                    android:textSize="@dimen/primaryTextSize"
-                    app:ys_type="Light" />
-
-
-                <com.liner.views.YSTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:maxLength="35"
-                    android:text="Что то там со статусом"
-                    android:textColor="@color/text"
-                    android:textSize="@dimen/secondaryTextSize"
-                    app:ys_type="Bold" />
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_margin="@dimen/contentMarginHalf"
-                android:background="?android:attr/listDivider" />
-
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/contentMarginHalf"
-                android:layout_marginEnd="@dimen/contentMarginHalf"
-                android:orientation="horizontal"
-                android:padding="@dimen/contentMargin">
-
-                <com.liner.views.YSTextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Регистрация"
-                    android:textColor="@color/text_dark"
-                    android:textSize="@dimen/primaryTextSize"
-                    app:ys_type="Light" />
-
-
-                <com.liner.views.YSTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:maxLength="35"
-                    android:text="20.20.2020"
-                    android:textColor="@color/text"
-                    android:textSize="@dimen/secondaryTextSize"
-                    app:ys_type="Bold" />
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_margin="@dimen/contentMarginHalf"
-                android:background="?android:attr/listDivider" />
-
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/contentMarginHalf"
-                android:layout_marginEnd="@dimen/contentMarginHalf"
-                android:orientation="horizontal"
-                android:padding="@dimen/contentMargin">
-
-                <com.liner.views.YSTextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Сообщений написано"
-                    android:textColor="@color/text_dark"
-                    android:textSize="@dimen/primaryTextSize"
-                    app:ys_type="Light" />
-
-
-                <com.liner.views.YSTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:maxLength="35"
-                    android:text="20"
-                    android:textColor="@color/text"
-                    android:textSize="@dimen/secondaryTextSize"
-                    app:ys_type="Bold" />
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_margin="@dimen/contentMarginHalf"
-                android:background="?android:attr/listDivider" />
-
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/contentMarginHalf"
-                android:layout_marginEnd="@dimen/contentMarginHalf"
-                android:orientation="horizontal"
-                android:padding="@dimen/contentMargin">
-
-                <com.liner.views.YSTextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Заявок создано"
-                    android:textColor="@color/text_dark"
-                    android:textSize="@dimen/primaryTextSize"
-                    app:ys_type="Light" />
-
-
-                <com.liner.views.YSTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:maxLength="35"
-                    android:text="15"
-                    android:textColor="@color/text"
-                    android:textSize="@dimen/secondaryTextSize"
-                    app:ys_type="Bold" />
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_margin="@dimen/contentMarginHalf"
-                android:background="?android:attr/listDivider" />
-
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/contentMarginHalf"
-                android:layout_marginEnd="@dimen/contentMarginHalf"
-                android:orientation="horizontal"
-                android:padding="@dimen/contentMargin">
-
-                <com.liner.views.YSTextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="E-mail"
-                    android:textColor="@color/text_dark"
-                    android:textSize="@dimen/primaryTextSize"
-                    app:ys_type="Light" />
-
-
-                <com.liner.views.YSTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="blabla@blabla.com"
-                    android:textColor="@color/text"
-                    android:textSize="@dimen/secondaryTextSize"
-                    app:ys_type="Bold" />
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_margin="@dimen/contentMarginHalf"
-                android:background="?android:attr/listDivider" />
-
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/contentMarginHalf"
-                android:layout_marginEnd="@dimen/contentMarginHalf"
-                android:orientation="vertical"
-                android:padding="@dimen/contentMargin">
-
-                <com.liner.views.YSTextView
+                <androidx.appcompat.widget.Toolbar
+                    android:id="@+id/toolbar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="О себе"
-                    android:textColor="@color/text_dark"
-                    android:textSize="@dimen/primaryTextSize"
-                    app:ys_type="Light" />
+                    android:background="?colorPrimaryDark"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:title="@string/app_name"
+                    app:titleTextColor="#fff" />
 
-
-                <com.liner.views.YSTextView
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="end"
-                    android:text="Какой то текст который пользователь может написать о себе и его все увидят"
-                    android:textColor="@color/text"
-                    android:textSize="@dimen/secondaryTextSize"
-                    app:ys_type="Bold" />
+                    android:layout_margin="@dimen/contentMargin"
+                    android:orientation="horizontal">
+
+                    <com.liner.views.YSTextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity=""
+                        android:text="Username"
+                        android:textColor="@color/text"
+                        android:textSize="22sp"
+                        app:ys_type="Bold" />
+
+                    <ImageButton
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:background="?attr/selectableItemBackground"
+                        android:src="@drawable/edit_icon" />
+
+                </LinearLayout>
+
+                <RelativeLayout
+                    android:layout_width="128dp"
+                    android:layout_height="128dp"
+                    android:layout_gravity="center_horizontal">
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:layout_width="128dp"
+                        android:layout_height="128dp"
+                        android:src="@drawable/temp_user_photo" />
+
+                    <ImageButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentBottom="true"
+                        android:background="@drawable/circle_bg"
+                        android:backgroundTint="@color/primary_dark"
+                        android:src="@drawable/camera_icon" />
+                </RelativeLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/contentMarginHalf"
+                    android:layout_marginTop="@dimen/contentMargin"
+                    android:layout_marginEnd="@dimen/contentMarginHalf"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/contentMargin">
+
+                    <com.liner.views.YSTextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Никнейм"
+                        android:textColor="@color/text_dark"
+                        android:textSize="@dimen/primaryTextSize"
+                        app:ys_type="Light" />
+
+
+                    <com.liner.views.YSTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="LineR2"
+                        android:textColor="@color/text"
+                        android:textSize="@dimen/secondaryTextSize"
+                        app:ys_type="Bold" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_margin="@dimen/contentMarginHalf"
+                    android:background="?android:attr/listDivider" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/contentMarginHalf"
+                    android:layout_marginTop="@dimen/contentMargin"
+                    android:layout_marginEnd="@dimen/contentMarginHalf"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/contentMargin">
+
+                    <com.liner.views.YSTextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Никнейм"
+                        android:textColor="@color/text_dark"
+                        android:textSize="@dimen/primaryTextSize"
+                        app:ys_type="Light" />
+
+
+                    <com.liner.views.YSTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="LineR2"
+                        android:textColor="@color/text"
+                        android:textSize="@dimen/secondaryTextSize"
+                        app:ys_type="Bold" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_margin="@dimen/contentMarginHalf"
+                    android:background="?android:attr/listDivider" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/contentMarginHalf"
+                    android:layout_marginTop="@dimen/contentMargin"
+                    android:layout_marginEnd="@dimen/contentMarginHalf"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/contentMargin">
+
+                    <com.liner.views.YSTextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Никнейм"
+                        android:textColor="@color/text_dark"
+                        android:textSize="@dimen/primaryTextSize"
+                        app:ys_type="Light" />
+
+
+                    <com.liner.views.YSTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="LineR2"
+                        android:textColor="@color/text"
+                        android:textSize="@dimen/secondaryTextSize"
+                        app:ys_type="Bold" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_margin="@dimen/contentMarginHalf"
+                    android:background="?android:attr/listDivider" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/contentMarginHalf"
+                    android:layout_marginTop="@dimen/contentMargin"
+                    android:layout_marginEnd="@dimen/contentMarginHalf"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/contentMargin">
+
+                    <com.liner.views.YSTextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Никнейм"
+                        android:textColor="@color/text_dark"
+                        android:textSize="@dimen/primaryTextSize"
+                        app:ys_type="Light" />
+
+
+                    <com.liner.views.YSTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="LineR2"
+                        android:textColor="@color/text"
+                        android:textSize="@dimen/secondaryTextSize"
+                        app:ys_type="Bold" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_margin="@dimen/contentMarginHalf"
+                    android:background="?android:attr/listDivider" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/contentMarginHalf"
+                    android:layout_marginTop="@dimen/contentMargin"
+                    android:layout_marginEnd="@dimen/contentMarginHalf"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/contentMargin">
+
+                    <com.liner.views.YSTextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Никнейм"
+                        android:textColor="@color/text_dark"
+                        android:textSize="@dimen/primaryTextSize"
+                        app:ys_type="Light" />
+
+
+                    <com.liner.views.YSTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="LineR2"
+                        android:textColor="@color/text"
+                        android:textSize="@dimen/secondaryTextSize"
+                        app:ys_type="Bold" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_margin="@dimen/contentMarginHalf"
+                    android:background="?android:attr/listDivider" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/contentMarginHalf"
+                    android:layout_marginTop="@dimen/contentMargin"
+                    android:layout_marginEnd="@dimen/contentMarginHalf"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/contentMargin">
+
+                    <com.liner.views.YSTextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Никнейм"
+                        android:textColor="@color/text_dark"
+                        android:textSize="@dimen/primaryTextSize"
+                        app:ys_type="Light" />
+
+
+                    <com.liner.views.YSTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="LineR2"
+                        android:textColor="@color/text"
+                        android:textSize="@dimen/secondaryTextSize"
+                        app:ys_type="Bold" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_margin="@dimen/contentMarginHalf"
+                    android:background="?android:attr/listDivider" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/contentMarginHalf"
+                    android:layout_marginEnd="@dimen/contentMarginHalf"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/contentMargin">
+
+                    <com.liner.views.YSTextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Статус"
+                        android:textColor="@color/text_dark"
+                        android:textSize="@dimen/primaryTextSize"
+                        app:ys_type="Light" />
+
+
+                    <com.liner.views.YSTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:maxLength="35"
+                        android:text="Что то там со статусом"
+                        android:textColor="@color/text"
+                        android:textSize="@dimen/secondaryTextSize"
+                        app:ys_type="Bold" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_margin="@dimen/contentMarginHalf"
+                    android:background="?android:attr/listDivider" />
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/contentMarginHalf"
+                    android:layout_marginEnd="@dimen/contentMarginHalf"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/contentMargin">
+
+                    <com.liner.views.YSTextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Регистрация"
+                        android:textColor="@color/text_dark"
+                        android:textSize="@dimen/primaryTextSize"
+                        app:ys_type="Light" />
+
+
+                    <com.liner.views.YSTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:maxLength="35"
+                        android:text="20.20.2020"
+                        android:textColor="@color/text"
+                        android:textSize="@dimen/secondaryTextSize"
+                        app:ys_type="Bold" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_margin="@dimen/contentMarginHalf"
+                    android:background="?android:attr/listDivider" />
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/contentMarginHalf"
+                    android:layout_marginEnd="@dimen/contentMarginHalf"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/contentMargin">
+
+                    <com.liner.views.YSTextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Сообщений написано"
+                        android:textColor="@color/text_dark"
+                        android:textSize="@dimen/primaryTextSize"
+                        app:ys_type="Light" />
+
+
+                    <com.liner.views.YSTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:maxLength="35"
+                        android:text="20"
+                        android:textColor="@color/text"
+                        android:textSize="@dimen/secondaryTextSize"
+                        app:ys_type="Bold" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_margin="@dimen/contentMarginHalf"
+                    android:background="?android:attr/listDivider" />
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/contentMarginHalf"
+                    android:layout_marginEnd="@dimen/contentMarginHalf"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/contentMargin">
+
+                    <com.liner.views.YSTextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Заявок создано"
+                        android:textColor="@color/text_dark"
+                        android:textSize="@dimen/primaryTextSize"
+                        app:ys_type="Light" />
+
+
+                    <com.liner.views.YSTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:maxLength="35"
+                        android:text="15"
+                        android:textColor="@color/text"
+                        android:textSize="@dimen/secondaryTextSize"
+                        app:ys_type="Bold" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_margin="@dimen/contentMarginHalf"
+                    android:background="?android:attr/listDivider" />
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/contentMarginHalf"
+                    android:layout_marginEnd="@dimen/contentMarginHalf"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/contentMargin">
+
+                    <com.liner.views.YSTextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="E-mail"
+                        android:textColor="@color/text_dark"
+                        android:textSize="@dimen/primaryTextSize"
+                        app:ys_type="Light" />
+
+
+                    <com.liner.views.YSTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="blabla@blabla.com"
+                        android:textColor="@color/text"
+                        android:textSize="@dimen/secondaryTextSize"
+                        app:ys_type="Bold" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_margin="@dimen/contentMarginHalf"
+                    android:background="?android:attr/listDivider" />
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/contentMarginHalf"
+                    android:layout_marginEnd="@dimen/contentMarginHalf"
+                    android:orientation="vertical"
+                    android:padding="@dimen/contentMargin">
+
+                    <com.liner.views.YSTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="О себе"
+                        android:textColor="@color/text_dark"
+                        android:textSize="@dimen/primaryTextSize"
+                        app:ys_type="Light" />
+
+
+                    <com.liner.views.YSTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:text="Какой то текст который пользователь может написать о себе и его все увидят"
+                        android:textColor="@color/text"
+                        android:textSize="@dimen/secondaryTextSize"
+                        app:ys_type="Bold" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_margin="@dimen/contentMarginHalf"
+                    android:background="?android:attr/listDivider" />
+
             </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_margin="@dimen/contentMarginHalf"
-                android:background="?android:attr/listDivider" />
-
-        </LinearLayout>
-    </ScrollView>
-
-    <com.liner.views.AppBar
+    <com.irfaan008.irbottomnavigation.SpaceNavigationView
+        android:id="@+id/profileNavigation"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-</LinearLayout>
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        app:centre_part_linear="true"
+        app:layout_behavior="com.irfaan008.irbottomnavigation.SpaceNavigationViewBehavior" />
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

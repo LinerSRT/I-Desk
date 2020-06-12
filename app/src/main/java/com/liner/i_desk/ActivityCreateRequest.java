@@ -27,14 +27,14 @@ import com.liner.i_desk.Firebase.Storage.TaskListener;
 import com.liner.i_desk.Firebase.UserObject;
 import com.liner.utils.TextUtils;
 import com.liner.utils.Time;
+import com.liner.views.verticalstepperform.VerticalStepperFormView;
+import com.liner.views.verticalstepperform.listener.StepperFormListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
-import ernestoyaquello.com.verticalstepperform.VerticalStepperFormView;
-import ernestoyaquello.com.verticalstepperform.listener.StepperFormListener;
 
 public class ActivityCreateRequest extends FireActivity implements StepperFormListener {
     private RequestTypeStep requestTypeStep;
@@ -45,8 +45,6 @@ public class ActivityCreateRequest extends FireActivity implements StepperFormLi
     private RequestDeadlineStep requestDeadlineStep;
     private RequestFileStep requestFileStep;
     private RequestChecklistStep requestChecklistStep;
-
-
     private BaseDialog cancelConfirm;
     private VerticalStepperFormView verticalStepperForm;
     private BaseDialog uploadFilesDialog;
@@ -58,14 +56,14 @@ public class ActivityCreateRequest extends FireActivity implements StepperFormLi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_request);
-        requestTypeStep = new RequestTypeStep("Тип заявки");
-        requestPriorityStep = new RequestPriorityStep("Приоритет заявки");
-        requestTitleStep = new RequestTitleStep(ActivityCreateRequest.this, "Заголовок заявки");
-        requestTextStep = new RequestTextStep(ActivityCreateRequest.this, "Текст заявки");
-        requestDeviceTextStep = new RequestDeviceTextStep(ActivityCreateRequest.this, "Описание оборудования");
-        requestDeadlineStep = new RequestDeadlineStep("Деделайн");
-        requestFileStep = new RequestFileStep(ActivityCreateRequest.this, "Прикрепить файлы");
-        requestChecklistStep = new RequestChecklistStep(ActivityCreateRequest.this, "Список задач");
+        requestTypeStep = new RequestTypeStep("Тип заявки", "Выберите тип заявки");
+        requestPriorityStep = new RequestPriorityStep("Приоритет заявки", "Укажите приоритет");
+        requestTitleStep = new RequestTitleStep(ActivityCreateRequest.this, "Заголовок заявки", "Укажите кратко заголовок");
+        requestTextStep = new RequestTextStep(ActivityCreateRequest.this, "Текст заявки", "Укажите кратко суть заявки");
+        requestDeviceTextStep = new RequestDeviceTextStep(ActivityCreateRequest.this, "Описание оборудования", "Укажите оборудование");
+        requestDeadlineStep = new RequestDeadlineStep("Деделайн", "Укажите время дедлайна");
+        requestFileStep = new RequestFileStep(ActivityCreateRequest.this, "Прикрепить файлы", "Прикрепите файлы (необязательно)");
+        requestChecklistStep = new RequestChecklistStep(ActivityCreateRequest.this, "Список задач", "Добавьте пункты (необязательно)");
 
         verticalStepperForm = findViewById(R.id.stepper_form);
         verticalStepperForm
@@ -79,7 +77,6 @@ public class ActivityCreateRequest extends FireActivity implements StepperFormLi
                         requestFileStep,
                         requestChecklistStep
                 )
-                .lastStepNextButtonText("Создать заявку")
                 .init();
         uploadFilesDialog = BaseDialogBuilder.buildFast(
                 this,

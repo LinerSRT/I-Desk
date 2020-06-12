@@ -30,7 +30,7 @@
         app:layout_constraintBottom_toTopOf="@+id/view"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:panelBackgroundColor="@color/white"
+        app:panelBackgroundColor="@color/window_background"
         app:primaryColor="?colorPrimaryDark"
         app:useDenseSpacing="true">
 
@@ -38,6 +38,7 @@
             android:id="@+id/loginExtendedEmailEdit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColor="@color/text"
             android:inputType="textEmailAddress"
             android:textSize="@dimen/secondaryTextSize" />
 
@@ -78,7 +79,7 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/view"
-        app:panelBackgroundColor="@color/white"
+        app:panelBackgroundColor="@color/window_background"
         app:primaryColor="?colorPrimaryDark"
         app:useDenseSpacing="true">
 
@@ -86,6 +87,7 @@
             android:id="@+id/loginExtendedPasswordEdit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColor="@color/text"
             android:inputType="textPassword"
             android:textSize="@dimen/secondaryTextSize" />
 

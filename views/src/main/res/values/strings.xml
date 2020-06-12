@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Views</string>
+	    <string name="vertical_stepper_form_continue_button">Continue</string>
+    <string name="vertical_stepper_form_cancel_button">Cancel</string>
+    <string name="vertical_stepper_form_confirm_button">Confirm data</string>
+    <string name="vertical_stepper_form_confirmation_step_title">Confirmation</string>
+	    <string name="space_scrolling_view_behavior">com.irfaan008.irbottomnavigation.SpaceNavigationViewBehavior</string>
+
 </resources>

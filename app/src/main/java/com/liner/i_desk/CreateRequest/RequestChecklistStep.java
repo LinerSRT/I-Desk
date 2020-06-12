@@ -8,10 +8,10 @@ import android.widget.Button;
 
 import com.liner.i_desk.R;
 import com.liner.views.RequestCheckListLayoutView;
+import com.liner.views.verticalstepperform.Step;
 
 import java.util.HashMap;
 
-import ernestoyaquello.com.verticalstepperform.Step;
 
 @SuppressLint("InflateParams")
 public class RequestChecklistStep extends Step<String> {
@@ -21,6 +21,11 @@ public class RequestChecklistStep extends Step<String> {
 
     public RequestChecklistStep(Activity activity, String stepTitle) {
         super(stepTitle);
+        this.activity = activity;
+    }
+
+    public RequestChecklistStep(Activity activity, String title, String subtitle) {
+        super(title, subtitle);
         this.activity = activity;
     }
 

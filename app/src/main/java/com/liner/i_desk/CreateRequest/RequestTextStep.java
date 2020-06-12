@@ -8,7 +8,7 @@ import android.view.inputmethod.InputMethodManager;
 
 import com.liner.i_desk.R;
 
-import ernestoyaquello.com.verticalstepperform.Step;
+import com.liner.views.verticalstepperform.Step;
 import studio.carbonylgroup.textfieldboxes.ExtendedEditText;
 import studio.carbonylgroup.textfieldboxes.SimpleTextChangedWatcher;
 import studio.carbonylgroup.textfieldboxes.TextFieldBoxes;
@@ -17,6 +17,12 @@ import studio.carbonylgroup.textfieldboxes.TextFieldBoxes;
 public class RequestTextStep extends Step<String> {
     private Activity activity;
     private ExtendedEditText requestTextStepEditText;
+
+    public RequestTextStep(Activity activity, String title, String subtitle) {
+        super(title, subtitle);
+        this.activity = activity;
+    }
+
     public RequestTextStep(Activity activity, String stepTitle) {
         super(stepTitle);
         this.activity = activity;

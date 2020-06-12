@@ -9,14 +9,18 @@ import com.liner.i_desk.R;
 import com.roughike.swipeselector.SwipeItem;
 import com.roughike.swipeselector.SwipeSelector;
 
-import ernestoyaquello.com.verticalstepperform.Step;
-
+import com.liner.views.verticalstepperform.Step;
 @SuppressLint("InflateParams")
 public class RequestTypeStep extends Step<String> {
     private SwipeSelector swipeSelector;
 
+
     public RequestTypeStep(String stepTitle) {
         super(stepTitle);
+    }
+
+    public RequestTypeStep(String title, String subtitle) {
+        super(title, subtitle);
     }
 
     @Override

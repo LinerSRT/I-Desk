@@ -22,13 +22,14 @@
         app:helperText="Введите текст заявки"
         app:helperTextColor="?textColorDark"
         app:minCharacters="10"
-        app:panelBackgroundColor="@color/white"
+        app:panelBackgroundColor="@color/window_background"
         app:primaryColor="?colorPrimaryDark"
         app:useDenseSpacing="true">
 
         <studio.carbonylgroup.textfieldboxes.ExtendedEditText
             android:id="@+id/requestTextStepEditText"
             android:layout_width="match_parent"
+            android:textColor="@color/text"
             android:layout_height="wrap_content"
             android:textSize="@dimen/secondaryTextSize" />
 

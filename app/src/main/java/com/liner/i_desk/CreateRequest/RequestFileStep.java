@@ -24,7 +24,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import ernestoyaquello.com.verticalstepperform.Step;
+import com.liner.views.verticalstepperform.Step;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
@@ -38,6 +38,79 @@ public class RequestFileStep extends Step<String> {
     private BaseDialog processingDialog;
     private BaseDialog maxSizeLimitDialog;
     private BaseDialog errorDialog;
+
+    public RequestFileStep(Activity activity, String title, String subtitle) {
+        super(title, subtitle);
+        this.activity = activity;
+        this.filePicker = new FilePicker(activity);
+        filePicker.allowMultiple();
+        filePicker.setFilePickerCallback(new FilePickerCallback() {
+            @Override
+            public void onFilesChosen(List<ChosenFile> list) {
+                long selectedFilesSize = 0;
+                long existedFilesSize = 0;
+                for (ChosenFile existFile : requestFileStepView.getFileItemList())
+                    existedFilesSize += existFile.getSize();
+                List<String> skippedFilenames = new ArrayList<>();
+                for (ChosenFile file : list) {
+                    selectedFilesSize += file.getSize();
+                    if ((existedFilesSize + selectedFilesSize) > Constants.USER_STORAGE_SIZE) {
+                        skippedFilenames.add(file.getDisplayName());
+                    } else {
+                        requestFileStepView.addFile(file);
+                    }
+                }
+                if (!skippedFilenames.isEmpty()) {
+                    StringBuilder message = new StringBuilder();
+                    for (String filename : skippedFilenames)
+                        message.append(" - ").append(filename).append("\n");
+                    maxSizeLimitDialog.setDialogTextText("Выбранные файлы превышают лимит объема! (" + FileUtils.humanReadableByteCount(Constants.USER_STORAGE_SIZE) + ")\n" + "\nСледующие файлы были пропущены:\n" + message.toString());
+                    maxSizeLimitDialog.showDialog();
+                }
+                processingDialog.closeDialog();
+            }
+
+            @Override
+            public void onError(String s) {
+                processingDialog.closeDialog();
+                errorDialog.showDialog();
+            }
+        });
+        processingDialog = BaseDialogBuilder.buildFast(activity,
+                "Обработка...",
+                "Идет обработка, пожалуйста подождите",
+                null,
+                null,
+                BaseDialogBuilder.Type.INDETERMINATE,
+                null,
+                null);
+        maxSizeLimitDialog = BaseDialogBuilder.buildFast(activity,
+                "Внимание",
+                "Выбранные файлы превышают лимит! (" + FileUtils.humanReadableByteCount(Constants.USER_STORAGE_SIZE) + ")",
+                null,
+                "Понятно",
+                BaseDialogBuilder.Type.WARNING,
+                null,
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        maxSizeLimitDialog.closeDialog();
+                    }
+                });
+        errorDialog = BaseDialogBuilder.buildFast(activity,
+                "Ошибка",
+                "Произошла ошибка при добавлении файлов. Попробуйте выбрать другие файлы",
+                null,
+                "Понятно",
+                BaseDialogBuilder.Type.ERROR,
+                null,
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        maxSizeLimitDialog.closeDialog();
+                    }
+                });
+    }
 
     public RequestFileStep(Activity activity, String stepTitle) {
         super(stepTitle);

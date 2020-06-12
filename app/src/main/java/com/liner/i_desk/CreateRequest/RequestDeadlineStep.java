@@ -13,15 +13,17 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import ernestoyaquello.com.verticalstepperform.Step;
-import studio.carbonylgroup.textfieldboxes.ExtendedEditText;
-import studio.carbonylgroup.textfieldboxes.SimpleTextChangedWatcher;
-import studio.carbonylgroup.textfieldboxes.TextFieldBoxes;
+import com.liner.views.verticalstepperform.Step;
 
 @SuppressLint("InflateParams")
 public class RequestDeadlineStep extends Step<String> {
     private SingleDateAndTimePicker requestDeadlineStepPicker;
     private Date selectedDate;
+
+    public RequestDeadlineStep(String title, String subtitle) {
+        super(title, subtitle);
+    }
+
     public RequestDeadlineStep(String stepTitle) {
         super(stepTitle);
     }

@@ -9,11 +9,15 @@ import com.liner.i_desk.R;
 import com.roughike.swipeselector.SwipeItem;
 import com.roughike.swipeselector.SwipeSelector;
 
-import ernestoyaquello.com.verticalstepperform.Step;
+import com.liner.views.verticalstepperform.Step;
 
 @SuppressLint("InflateParams")
 public class RequestPriorityStep extends Step<String> {
     private SwipeSelector swipeSelector;
+
+    public RequestPriorityStep(String title, String subtitle) {
+        super(title, subtitle);
+    }
 
     public RequestPriorityStep(String stepTitle) {
         super(stepTitle);

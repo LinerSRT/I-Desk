@@ -16,7 +16,7 @@
         app:titleTextColor="#fff" />
 
 
-    <ernestoyaquello.com.verticalstepperform.VerticalStepperFormView
+    <com.liner.views.verticalstepperform.VerticalStepperFormView
         android:id="@+id/stepper_form"
         style="@style/AppTheme"
         android:layout_width="match_parent"

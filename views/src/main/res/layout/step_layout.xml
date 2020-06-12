@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_marginEnd="12dp"
+    android:layout_marginTop="8dp"
+    android:orientation="vertical"
+    android:clickable="true"
+    android:focusable="true">
+
+    <LinearLayout
+        android:id="@+id/step_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:clickable="true"
+        android:focusable="true">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <FrameLayout
+                android:id="@+id/step_number_circle"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:background="@drawable/circle_step_done">
+
+                <TextView
+                    android:id="@+id/step_number"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:textColor="#ffffff"
+                    android:background="@drawable/circle_bg_without_padding"
+                    android:backgroundTint="@color/window_background"
+                    android:visibility="visible"
+                    android:textSize="@dimen/tipsTextSize"
+                    android:gravity="center"
+                    tools:text="1" />
+
+                <ImageView
+                    android:id="@+id/step_done_icon"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/circle_bg"
+                    android:backgroundTint="@color/primary"
+                    android:padding="6dp"
+                    android:src="@drawable/done_icon_white"
+                    android:scaleType="centerInside"
+                    android:visibility="gone"
+                    tools:visibility="visible"/>
+
+            </FrameLayout>
+
+            <View
+                android:id="@+id/line1"
+                android:layout_marginTop="8dp"
+                android:layout_width="@dimen/vertical_stepper_form_width_vertical_line"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:background="@color/disabled"
+                android:layout_gravity="center" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/title_subtitle_container"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_marginStart="@dimen/contentMarginHalf"
+            android:paddingBottom="8dp">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <View
+                    android:id="@+id/spacing1"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/vertical_stepper_form_width_circle"
+                    android:layout_gravity="top"/>
+
+                <TextView
+                    android:id="@+id/step_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/text"
+                    android:textSize="@dimen/primaryTextSize"
+                    android:layout_gravity="center_vertical"
+                    tools:text="Step 1" />
+
+            </FrameLayout>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <View
+                    android:id="@+id/spacing2"
+                    android:layout_width="match_parent"
+                    android:layout_height="10dp" />
+
+                <TextView
+                    android:id="@+id/step_subtitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/secondaryTextSize"
+                    android:textColor="@color/text_dark"
+                    tools:visibility="visible"
+                    tools:text="Little description of this step" />
+
+            </FrameLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <FrameLayout
+            android:layout_width="22dp"
+            android:layout_height="match_parent">
+
+            <View
+                android:id="@+id/line2"
+                android:layout_width="@dimen/vertical_stepper_form_width_vertical_line"
+                android:layout_height="match_parent"
+                android:background="@color/disabled"
+                android:layout_gravity="center" />
+
+        </FrameLayout>
+
+        <com.liner.views.ExpandLayout
+            android:id="@+id/stepContainer"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            app:el_expanded="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginStart="@dimen/contentMarginHalf">
+
+                <LinearLayout
+                    android:id="@+id/step_error_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="@dimen/contentMarginHalf"
+                    android:layout_gravity="center_vertical"
+                    tools:visibility="visible">
+
+                    <ImageView
+                        android:id="@+id/step_error_icon"
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:src="@drawable/error_icon"
+                        android:layout_marginEnd="4dp"
+                        android:layout_gravity="center_vertical"/>
+
+                    <TextView
+                        android:id="@+id/step_error_message"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/primaryTextSize"
+                        android:textColor="#af1212"
+                        tools:text="Some data is missing"
+                        android:layout_gravity="center_vertical"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/step_content_and_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <FrameLayout
+                        android:id="@+id/step_content"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="1dp"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/step_button"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Далее"
+                            android:layout_marginTop="@dimen/contentMargin"
+                            android:layout_marginBottom="4dp"/>
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"/>
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/step_cancel_button"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Отмена"
+                            android:layout_marginTop="@dimen/contentMargin"
+                            android:layout_marginBottom="4dp"
+                            android:layout_marginStart="8dp"
+                            android:visibility="gone"/>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </com.liner.views.ExpandLayout>
+
+
+
+
+    </LinearLayout>
+
+</LinearLayout>

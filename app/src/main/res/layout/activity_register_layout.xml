@@ -31,7 +31,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:minCharacters="6"
-        app:panelBackgroundColor="@color/white"
+        app:panelBackgroundColor="@color/window_background"
         app:primaryColor="?colorPrimaryDark"
         app:useDenseSpacing="true">
 
@@ -39,6 +39,7 @@
             android:id="@+id/registerExtendedEmailEdit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColor="@color/text"
             android:inputType="textEmailAddress"
             android:textSize="@dimen/secondaryTextSize" />
 
@@ -80,7 +81,7 @@
         app:layout_constraintTop_toBottomOf="@+id/view"
         app:maxCharacters="20"
         app:minCharacters="6"
-        app:panelBackgroundColor="@color/white"
+        app:panelBackgroundColor="@color/window_background"
         app:primaryColor="?colorPrimaryDark"
         app:useDenseSpacing="true">
 
@@ -88,6 +89,7 @@
             android:id="@+id/registerExtendedPasswordEdit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColor="@color/text"
             android:textSize="@dimen/secondaryTextSize" />
 
     </studio.carbonylgroup.textfieldboxes.TextFieldBoxes>

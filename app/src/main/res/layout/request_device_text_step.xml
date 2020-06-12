@@ -22,7 +22,7 @@
         app:helperText="Введите текст заявки"
         app:helperTextColor="?textColorDark"
         app:minCharacters="10"
-        app:panelBackgroundColor="@color/white"
+        app:panelBackgroundColor="@color/window_background"
         app:primaryColor="?colorPrimaryDark"
         app:useDenseSpacing="true">
 
@@ -30,6 +30,7 @@
             android:id="@+id/requestDeviceTextStepEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColor="@color/text"
             android:textSize="@dimen/secondaryTextSize" />
 
     </studio.carbonylgroup.textfieldboxes.TextFieldBoxes>

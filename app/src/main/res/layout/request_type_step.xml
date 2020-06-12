@@ -11,6 +11,8 @@
         android:layout_width="match_parent"
         android:layout_height="120dp"
         app:swipe_customFontPath="yandex_font/Light.ttf"
+        app:swipe_leftButtonResource="@drawable/arrow_back"
+        app:swipe_rightButtonResource="@drawable/arrow_next"
         app:swipe_descriptionGravity="center"
         app:swipe_descriptionTextAppearance="@style/YSContentTextStyle"
         app:swipe_indicatorActiveColor="@color/primary"

@@ -26,7 +26,7 @@ public class BaseDialogBuilder {
     public float dimAmount = 0.2f;
     public int animationDuration = 500;
     public Interpolator animationInterpolator = new OvershootInterpolator();
-    public int backgroundColor = Color.WHITE;
+    public int backgroundColor = Color.TRANSPARENT;
     public float cornerRadius = ViewUtils.dpToPx(8);
     public String dialogTitleText = "";
     public String dialogTextText = "";

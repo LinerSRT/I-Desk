@@ -33,13 +33,14 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:minCharacters="6"
-        app:panelBackgroundColor="@color/white"
+        app:panelBackgroundColor="@color/window_background"
         app:primaryColor="?colorPrimaryDark"
         app:useDenseSpacing="true">
 
         <studio.carbonylgroup.textfieldboxes.ExtendedEditText
             android:id="@+id/createProfileNickName"
             android:layout_width="match_parent"
+            android:textColor="@color/text"
             android:layout_height="wrap_content"
             android:textSize="@dimen/secondaryTextSize" />
 
@@ -68,13 +69,14 @@
         app:layout_constraintBottom_toTopOf="@+id/view"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:panelBackgroundColor="@color/white"
+        app:panelBackgroundColor="@color/window_background"
         app:primaryColor="?colorPrimaryDark"
         app:useDenseSpacing="true">
 
         <studio.carbonylgroup.textfieldboxes.ExtendedEditText
             android:id="@+id/createProfileAboutEdit"
             android:layout_width="match_parent"
+            android:textColor="@color/text"
             android:layout_height="wrap_content"
             android:textSize="@dimen/secondaryTextSize" />
 

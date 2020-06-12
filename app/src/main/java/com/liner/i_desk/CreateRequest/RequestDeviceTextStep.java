@@ -10,7 +10,7 @@ import com.liner.i_desk.R;
 
 import java.util.List;
 
-import ernestoyaquello.com.verticalstepperform.Step;
+import com.liner.views.verticalstepperform.Step;
 import studio.carbonylgroup.textfieldboxes.ExtendedEditText;
 import studio.carbonylgroup.textfieldboxes.SimpleTextChangedWatcher;
 import studio.carbonylgroup.textfieldboxes.TextFieldBoxes;
@@ -21,6 +21,11 @@ public class RequestDeviceTextStep extends Step<String> {
     private Activity activity;
     public RequestDeviceTextStep(Activity activity, String stepTitle) {
         super(stepTitle);
+        this.activity = activity;
+    }
+
+    public RequestDeviceTextStep(Activity activity, String title, String subtitle) {
+        super(title, subtitle);
         this.activity = activity;
     }
 
