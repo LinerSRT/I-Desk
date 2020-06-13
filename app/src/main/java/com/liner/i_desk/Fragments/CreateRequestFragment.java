@@ -270,6 +270,7 @@ public class CreateRequestFragment extends Fragment implements StepperFormListen
                     @Override
                     public void onClick(View view) {
                         cancelConfirm.closeDialog();
+                        verticalStepperForm.cancelFormCompletionOrCancellationAttempt();
                     }
                 });
         cancelConfirm.showDialog();
