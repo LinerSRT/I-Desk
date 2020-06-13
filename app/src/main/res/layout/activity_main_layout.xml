@@ -2,30 +2,32 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/main_content"
-    android:background="@color/window_background_dark"
     android:layout_width="match_parent"
-    android:orientation="vertical"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/window_background_dark"
+    android:orientation="vertical">
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?colorPrimaryDark"
-            app:title="@string/app_name"
-            app:titleTextColor="#fff" />
-
-        <FrameLayout
-            android:id="@+id/fragmentContainer"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"/>
+    <com.liner.views.YSTextView
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@color/window_background"
+        android:gravity="center_vertical"
+        android:paddingStart="@dimen/contentMargin"
+        android:text="@string/app_name"
+        android:textColor="@color/text"
+        android:textSize="@dimen/primaryTextSizeLarge" />
 
 
-        <com.liner.views.irbottomnavigation.SpaceNavigationView
-            android:id="@+id/space"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:centre_part_linear="true"
-            />
+    <FrameLayout
+        android:id="@+id/fragmentContainer"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+
+    <com.liner.views.irbottomnavigation.SpaceNavigationView
+        android:id="@+id/space"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:centre_part_linear="true" />
 </LinearLayout>

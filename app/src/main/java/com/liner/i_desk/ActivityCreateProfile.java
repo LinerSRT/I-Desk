@@ -25,6 +25,7 @@ import com.liner.utils.ImageUtils;
 import com.liner.utils.TextUtils;
 import com.liner.utils.Time;
 import com.liner.i_desk.Firebase.UserObject;
+import com.liner.utils.ViewUtils;
 import com.liner.views.BaseDialog;
 import com.liner.views.BaseDialogBuilder;
 import com.squareup.picasso.Picasso;
@@ -59,8 +60,7 @@ public class ActivityCreateProfile extends FireActivity {
     private String[] accountNames = new String[]{"Заявитель","Исполнитель"};
     private UserObject.UserType accountType = UserObject.UserType.CLIENT;
 
-
-
+    private String userPhotoURL;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,6 +96,7 @@ public class ActivityCreateProfile extends FireActivity {
                                     userObject.setUserAboutText(userAbout);
                                 userObject.setUserType(accountType);
                                 userObject.setUserName(userNickName);
+                                userObject.setUserProfilePhotoURL(userPhotoURL);
                                 userObject.setUserRegisteredAt(Time.getTime());
                                 userObject.setUserLastOnlineAt(Time.getTime());
                                 userObject.setUserStatus(UserObject.UserStatus.ONLINE);
@@ -167,6 +168,8 @@ public class ActivityCreateProfile extends FireActivity {
             }
         });
 
+
+
         mediaPicker = new MediaPicker(this);
         mediaPicker.setMediaPickerCallback(new MediaPickerCallback() {
             @Override
@@ -188,7 +191,7 @@ public class ActivityCreateProfile extends FireActivity {
                             @Override
                             public void onFinish(FileObject result, String fileUID) {
                                 Picasso.get().load(new File(list.get(0).getOriginalPath())).into(createProfilePhoto);
-                                userObject.setUserProfilePhotoURL(result.getFileURL());
+                                userPhotoURL = result.getFileURL();
                                 uploadingDialog.closeDialog();
                             }
 

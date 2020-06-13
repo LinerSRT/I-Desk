@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityOptionsCompat;
 
 import com.google.firebase.database.DatabaseReference;
+import com.liner.utils.ViewUtils;
 import com.liner.views.BaseDialog;
 import com.liner.views.BaseDialogBuilder;
 import com.liner.i_desk.Firebase.Firebase;
@@ -26,7 +27,11 @@ import java.util.ArrayList;
 
 public class ActivitySplash extends AppCompatActivity {
     private TextView splashAppName;
-
+    @Override
+    protected void onStart() {
+        super.onStart();
+        ViewUtils.setStatusBarColor(this, getResources().getColor(R.color.window_background_dark));
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

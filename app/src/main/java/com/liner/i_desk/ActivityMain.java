@@ -13,6 +13,7 @@ import com.liner.i_desk.Firebase.FireActivity;
 import com.liner.i_desk.Fragments.CreateRequestFragment;
 import com.liner.i_desk.Fragments.MainFragment;
 import com.liner.i_desk.Fragments.UserProfileFragment;
+import com.liner.utils.ViewUtils;
 import com.liner.views.BaseDialog;
 import com.liner.views.BaseDialogBuilder;
 import com.liner.views.irbottomnavigation.SpaceItem;
@@ -28,6 +29,12 @@ public class ActivityMain extends FireActivity {
     private CreateRequestFragment createRequestFragment;
 
     private BaseDialog exitDialog;
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        ViewUtils.setStatusBarColor(this, getResources().getColor(R.color.window_background));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
