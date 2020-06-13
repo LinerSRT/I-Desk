@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +22,7 @@ import android.widget.TextView;
 import androidx.annotation.ColorInt;
 import androidx.core.content.ContextCompat;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.liner.utils.ViewUtils;
 import com.liner.views.R;
 
 import java.util.ArrayList;
@@ -113,7 +114,7 @@ public class SpaceNavigationView extends RelativeLayout {
 
     private boolean shouldShowBadgeWithNinePlus = true;
 
-    
+
     public SpaceNavigationView(Context context) {
         this(context, null);
     }
@@ -128,7 +129,7 @@ public class SpaceNavigationView extends RelativeLayout {
         init(attrs);
     }
 
-    
+
     private void init(AttributeSet attrs) {
         if (attrs != null) {
             Resources resources = getResources();
@@ -156,7 +157,7 @@ public class SpaceNavigationView extends RelativeLayout {
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 
-        
+
         if (spaceBackgroundColor == NOT_DEFINED)
             spaceBackgroundColor = ContextCompat.getColor(context, R.color.space_default_color);
 
@@ -190,7 +191,7 @@ public class SpaceNavigationView extends RelativeLayout {
         if (inActiveCentreButtonIconColor == NOT_DEFINED)
             inActiveCentreButtonIconColor = ContextCompat.getColor(context, R.color.default_inactive_item_color);
 
-        
+
         ViewGroup.LayoutParams params = getLayoutParams();
         params.width = ViewGroup.LayoutParams.MATCH_PARENT;
         params.height = spaceNavigationHeight;
@@ -202,10 +203,10 @@ public class SpaceNavigationView extends RelativeLayout {
     protected void onSizeChanged(int width, int height, int oldWidth, int oldHeight) {
         super.onSizeChanged(width, height, oldWidth, oldHeight);
 
-        
+
         restoreCurrentItem();
 
-        
+
         if (spaceItems.size() < MIN_SPACE_ITEM_SIZE && !isInEditMode()) {
             throw new NullPointerException("Your space item count must be greater than 1 ," +
                     " your current items count isa : " + spaceItems.size());
@@ -216,43 +217,36 @@ public class SpaceNavigationView extends RelativeLayout {
                     " your current items count is : " + spaceItems.size());
         }
 
-        
+
         contentWidth = (width - spaceNavigationHeight) / 2;
 
-        
+
         removeAllViews();
 
-        
+
         initAndAddViewsToMainView();
 
-        
+
         postRequestLayout();
 
-        
 
         restoreTranslation();
     }
 
-   
 
-    
     private void initAndAddViewsToMainView() {
 
         RelativeLayout mainContent = new RelativeLayout(context);
         centreBackgroundView = new RelativeLayout(context);
 
         leftContent = new LinearLayout(context);
+        leftContent.setGravity(Gravity.CENTER);
         rightContent = new LinearLayout(context);
-
+        rightContent.setGravity(Gravity.CENTER);
         centreContent = buildBezierView();
-
         centreButton = new CentreButton(context);
-        //centreButton.setSize(FloatingActionButton.SIZE_MINI);
-        //centreButton.setUseCompatPadding(false);
-        //centreButton.setRippleColor(centreButtonRippleColor);
         centreButton.setBackgroundTintList(ColorStateList.valueOf(centreButtonColor));
         centreButton.setImageResource(centreButtonIcon);
-
         if (isCentreButtonIconColorFilterEnabled || isCentreButtonSelectable)
             centreButton.getDrawable().setColorFilter(inActiveCentreButtonIconColor, PorterDuff.Mode.SRC_IN);
 
@@ -275,170 +269,140 @@ public class SpaceNavigationView extends RelativeLayout {
             }
         });
 
-        
+
         LayoutParams fabParams = new LayoutParams(centreButtonSize, centreButtonSize);
         fabParams.addRule(RelativeLayout.CENTER_IN_PARENT);
 
-        
+
         LayoutParams mainContentParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, mainContentHeight);
         mainContentParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
 
-        
+
         LayoutParams centreContentParams = new LayoutParams(centreContentWight, spaceNavigationHeight);
         centreContentParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
         centreContentParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
 
-        
+
         LayoutParams centreBackgroundViewParams = new LayoutParams(centreContentWight, mainContentHeight);
         centreBackgroundViewParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
         centreBackgroundViewParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
 
-        
+
         LayoutParams leftContentParams = new LayoutParams(contentWidth, mainContentHeight);
         leftContentParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
         leftContentParams.addRule(LinearLayout.HORIZONTAL);
         leftContentParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
 
-        
         LayoutParams rightContentParams = new LayoutParams(contentWidth, mainContentHeight);
         rightContentParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
         rightContentParams.addRule(LinearLayout.HORIZONTAL);
         rightContentParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
 
-        
+
         setBackgroundColors();
 
-        
+
         centreContent.addView(centreButton, fabParams);
 
-        
+
         addView(leftContent, leftContentParams);
         addView(rightContent, rightContentParams);
 
 
-        
         addView(centreBackgroundView, centreBackgroundViewParams);
         addView(centreContent, centreContentParams);
         addView(mainContent, mainContentParams);
 
-        
+
         restoreChangedIconsAndTexts();
 
-        
+
         addSpaceItems(leftContent, rightContent);
     }
 
-    
+
     private void addSpaceItems(LinearLayout leftContent, LinearLayout rightContent) {
 
-        
+
         if (leftContent.getChildCount() > 0 || rightContent.getChildCount() > 0) {
             leftContent.removeAllViews();
             rightContent.removeAllViews();
         }
-
-        
         spaceItemList.clear();
         badgeList.clear();
-
-        
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-        for (int i = 0; i < spaceItems.size(); i++) {
-            final int index = i;
-            int targetWidth;
-
-            if (spaceItems.size() > MIN_SPACE_ITEM_SIZE) {
-                targetWidth = contentWidth / 2;
+        for (SpaceItem item : spaceItems) {
+            final int index = spaceItems.indexOf(item);
+            View container = inflater.inflate(R.layout.space_item_view, null, false);
+            ImageView itemIcon = container.findViewById(R.id.space_icon);
+            TextView itemText = container.findViewById(R.id.space_text);
+            RelativeLayout badgeContainer = container.findViewById(R.id.badge_container);
+            if (item.isShowIcon()) {
+                if (item.getIcon() != -1) {
+                    itemIcon.setVisibility(VISIBLE);
+                    itemIcon.setImageResource(item.getIcon());
+                }
             } else {
-                targetWidth = contentWidth;
+                itemIcon.setVisibility(GONE);
             }
-
-            RelativeLayout.LayoutParams textAndIconContainerParams = new RelativeLayout.LayoutParams(
-                    targetWidth, mainContentHeight);
-            RelativeLayout textAndIconContainer = (RelativeLayout) inflater.inflate(R.layout.space_item_view, this, false);
-            textAndIconContainer.setLayoutParams(textAndIconContainerParams);
-
-            ImageView spaceItemIcon = (ImageView) textAndIconContainer.findViewById(R.id.space_icon);
-            TextView spaceItemText = (TextView) textAndIconContainer.findViewById(R.id.space_text);
-            RelativeLayout badgeContainer = (RelativeLayout) textAndIconContainer.findViewById(R.id.badge_container);
-            spaceItemIcon.setImageResource(spaceItems.get(i).getItemIcon());
-            spaceItemText.setText(spaceItems.get(i).getItemName());
-            spaceItemText.setTextSize(TypedValue.COMPLEX_UNIT_PX, spaceItemTextSize);
-
-            
-            if (isCustomFont)
-                spaceItemText.setTypeface(customFont);
-
-            
-            if (isTextOnlyMode)
-                Utils.changeViewVisibilityGone(spaceItemIcon);
-
-            
-            ViewGroup.LayoutParams iconParams = spaceItemIcon.getLayoutParams();
-            if (isIconOnlyMode) {
-                iconParams.height = spaceItemIconOnlySize;
-                iconParams.width = spaceItemIconOnlySize;
-                spaceItemIcon.setLayoutParams(iconParams);
-                Utils.changeViewVisibilityGone(spaceItemText);
+            if (item.isShowText()) {
+                if (isCustomFont)
+                    itemText.setTypeface(customFont);
+                itemText.setTextSize(TypedValue.COMPLEX_UNIT_PX, spaceItemTextSize);
+                if (!(item.getText().length() <= 0) || item.getText() != null) {
+                    itemText.setVisibility(VISIBLE);
+                    itemText.setText(item.getText());
+                }
             } else {
-                iconParams.height = spaceItemIconSize;
-                iconParams.width = spaceItemIconSize;
-                spaceItemIcon.setLayoutParams(iconParams);
+                itemText.setVisibility(GONE);
             }
-
-            
-            spaceItemList.add(textAndIconContainer);
-
-            
+            badgeContainer.setVisibility((item.isShowBadge())? VISIBLE:GONE);
+            switch (item.getAlign()) {
+                case LEFT:
+                    RelativeLayout.LayoutParams params = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                    params.addRule(CENTER_IN_PARENT);
+                    leftContent.addView(container, params);
+                    break;
+                case RIGHT:
+                    RelativeLayout.LayoutParams params2 = new LayoutParams(contentWidth/2, ViewGroup.LayoutParams.MATCH_PARENT);
+                    params2.addRule(CENTER_IN_PARENT);
+                    rightContent.addView(container, params2);
+                    break;
+            }
+            spaceItemList.add(container);
             badgeList.add(badgeContainer);
-
-            
-            if (spaceItems.size() == MIN_SPACE_ITEM_SIZE && leftContent.getChildCount() == 1) {
-                rightContent.addView(textAndIconContainer, textAndIconContainerParams);
-            } else if (spaceItems.size() > MIN_SPACE_ITEM_SIZE && leftContent.getChildCount() == 2) {
-                rightContent.addView(textAndIconContainer, textAndIconContainerParams);
+            if (index == currentSelectedItem) {
+                itemText.setTextColor(activeSpaceItemColor);
+                Utils.changeImageViewTint(itemIcon, activeSpaceItemColor);
             } else {
-                leftContent.addView(textAndIconContainer, textAndIconContainerParams);
+                itemText.setTextColor(inActiveSpaceItemColor);
+                Utils.changeImageViewTint(itemIcon, inActiveSpaceItemColor);
             }
-
-            
-            if (i == currentSelectedItem) {
-                spaceItemText.setTextColor(activeSpaceItemColor);
-                Utils.changeImageViewTint(spaceItemIcon, activeSpaceItemColor);
-            } else {
-                spaceItemText.setTextColor(inActiveSpaceItemColor);
-                Utils.changeImageViewTint(spaceItemIcon, inActiveSpaceItemColor);
-            }
-
-            textAndIconContainer.setOnClickListener(new OnClickListener() {
+            container.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     updateSpaceItems(index);
                 }
             });
-
-            textAndIconContainer.setOnLongClickListener(new OnLongClickListener() {
+            container.setOnLongClickListener(new OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
                     if (spaceOnLongClickListener != null)
-                        spaceOnLongClickListener.onItemLongClick(index, spaceItems.get(index).getItemName());
+                        spaceOnLongClickListener.onItemLongClick(index, spaceItems.get(index).getText());
                     return true;
                 }
             });
         }
-
-        
         restoreBadges();
     }
 
-    
+
     private void updateSpaceItems(final int selectedIndex) {
 
-        
+
         if (currentSelectedItem == selectedIndex) {
             if (spaceOnClickListener != null && selectedIndex >= 0)
-                spaceOnClickListener.onItemReselected(selectedIndex, spaceItems.get(selectedIndex).getItemName());
+                spaceOnClickListener.onItemReselected(selectedIndex, spaceItems.get(selectedIndex).getText());
 
             return;
         }
@@ -468,21 +432,21 @@ public class SpaceNavigationView extends RelativeLayout {
         for (int i = 0; i < spaceItemList.size(); i++) {
             if (i == selectedIndex) {
                 RelativeLayout textAndIconContainer = (RelativeLayout) spaceItemList.get(selectedIndex);
-                ImageView spaceItemIcon = (ImageView) textAndIconContainer.findViewById(R.id.space_icon);
-                TextView spaceItemText = (TextView) textAndIconContainer.findViewById(R.id.space_text);
+                ImageView spaceItemIcon = textAndIconContainer.findViewById(R.id.space_icon);
+                TextView spaceItemText = textAndIconContainer.findViewById(R.id.space_text);
                 spaceItemText.setTextColor(activeSpaceItemColor);
                 Utils.changeImageViewTint(spaceItemIcon, activeSpaceItemColor);
             } else if (i == currentSelectedItem) {
                 RelativeLayout textAndIconContainer = (RelativeLayout) spaceItemList.get(i);
-                ImageView spaceItemIcon = (ImageView) textAndIconContainer.findViewById(R.id.space_icon);
-                TextView spaceItemText = (TextView) textAndIconContainer.findViewById(R.id.space_text);
+                ImageView spaceItemIcon = textAndIconContainer.findViewById(R.id.space_icon);
+                TextView spaceItemText = textAndIconContainer.findViewById(R.id.space_text);
                 spaceItemText.setTextColor(inActiveSpaceItemColor);
                 Utils.changeImageViewTint(spaceItemIcon, inActiveSpaceItemColor);
             }
         }
 
         if (spaceOnClickListener != null && selectedIndex >= 0)
-            spaceOnClickListener.onItemClick(selectedIndex, spaceItems.get(selectedIndex).getItemName());
+            spaceOnClickListener.onItemClick(selectedIndex, spaceItems.get(selectedIndex).getText());
 
         currentSelectedItem = selectedIndex;
     }
@@ -544,8 +508,8 @@ public class SpaceNavigationView extends RelativeLayout {
                     SpaceItem spaceItem;
                     for (int i = 0; i < changedItemAndIconHashMap.size(); i++) {
                         spaceItem = changedItemAndIconHashMap.get(i);
-                        spaceItems.get(i).setItemIcon(spaceItem.getItemIcon());
-                        spaceItems.get(i).setItemName(spaceItem.getItemName());
+                        spaceItems.get(i).setIcon(spaceItem.getIcon());
+                        spaceItems.get(i).setText(spaceItem.getText());
                     }
                 }
             }
@@ -777,9 +741,9 @@ public class SpaceNavigationView extends RelativeLayout {
         } else {
             SpaceItem spaceItem = spaceItems.get(itemIndex);
             RelativeLayout textAndIconContainer = (RelativeLayout) spaceItemList.get(itemIndex);
-            ImageView spaceItemIcon = (ImageView) textAndIconContainer.findViewById(R.id.space_icon);
+            ImageView spaceItemIcon = textAndIconContainer.findViewById(R.id.space_icon);
             spaceItemIcon.setImageResource(newIcon);
-            spaceItem.setItemIcon(newIcon);
+            spaceItem.setIcon(newIcon);
             changedItemAndIconHashMap.put(itemIndex, spaceItem);
         }
     }
@@ -790,9 +754,9 @@ public class SpaceNavigationView extends RelativeLayout {
         } else {
             SpaceItem spaceItem = spaceItems.get(itemIndex);
             RelativeLayout textAndIconContainer = (RelativeLayout) spaceItemList.get(itemIndex);
-            TextView spaceItemIcon = (TextView) textAndIconContainer.findViewById(R.id.space_text);
+            TextView spaceItemIcon = textAndIconContainer.findViewById(R.id.space_text);
             spaceItemIcon.setText(newText);
-            spaceItem.setItemName(newText);
+            spaceItem.setText(newText);
             changedItemAndIconHashMap.put(itemIndex, spaceItem);
         }
     }

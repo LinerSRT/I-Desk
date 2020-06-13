@@ -262,6 +262,7 @@ public class CreateRequestFragment extends Fragment implements StepperFormListen
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        cancelConfirm.closeDialog();
                         if (closeCallback != null)
                             closeCallback.onClose();
                     }

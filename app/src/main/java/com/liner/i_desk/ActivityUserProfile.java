@@ -22,8 +22,7 @@ public class ActivityUserProfile extends FireActivity {
         setContentView(R.layout.activity_user_profile_layout);
         profileNavigation = findViewById(R.id.profileNavigation);
         profileNavigation.initWithSaveInstanceState(savedInstanceState);
-        profileNavigation.addSpaceItem(new SpaceItem("Заявки", R.drawable.requests_icon));
-        profileNavigation.addSpaceItem(new SpaceItem("Профиль", R.drawable.user_icon));
+
         profileNavigation.changeCurrentItem(1);
         profileNavigation.setCentreButtonIcon(R.drawable.add_icon_white);
         profileNavigation.setCentreButtonColor(getResources().getColor(R.color.primary));
@@ -36,7 +35,6 @@ public class ActivityUserProfile extends FireActivity {
                 Log.d("onCentreButtonClick ", "onCentreButtonClick");
                 profileNavigation.showBadgeAtIndex(1, 2, getResources().getColor(R.color.red));
                 profileNavigation.shouldShowFullBadgeText(true);
-                startActivity(new Intent(ActivityUserProfile.this, ActivityCreateRequest.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK));
             }
 
             @Override

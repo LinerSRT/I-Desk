@@ -77,7 +77,4 @@
             android:textStyle="bold" />
 
     </LinearLayout>
-    <View
-        android:layout_width="wrap_content"
-        android:layout_height="@dimen/contentHeight"/>
 </LinearLayout>

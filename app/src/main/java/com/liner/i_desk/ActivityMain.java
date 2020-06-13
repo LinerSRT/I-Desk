@@ -3,9 +3,8 @@ package com.liner.i_desk;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
+import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -14,6 +13,8 @@ import com.liner.i_desk.Firebase.FireActivity;
 import com.liner.i_desk.Fragments.CreateRequestFragment;
 import com.liner.i_desk.Fragments.MainFragment;
 import com.liner.i_desk.Fragments.UserProfileFragment;
+import com.liner.views.BaseDialog;
+import com.liner.views.BaseDialogBuilder;
 import com.liner.views.irbottomnavigation.SpaceItem;
 import com.liner.views.irbottomnavigation.SpaceNavigationView;
 import com.liner.views.irbottomnavigation.SpaceOnClickListener;
@@ -25,6 +26,8 @@ public class ActivityMain extends FireActivity {
     private MainFragment mainFragment;
     private UserProfileFragment userProfileFragment;
     private CreateRequestFragment createRequestFragment;
+
+    private BaseDialog exitDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,13 +46,13 @@ public class ActivityMain extends FireActivity {
         getSupportFragmentManager().beginTransaction().add(R.id.fragmentContainer, mainFragment).commit();
         spaceNavigationView = findViewById(R.id.space);
         spaceNavigationView.initWithSaveInstanceState(savedInstanceState);
-        spaceNavigationView.addSpaceItem(new SpaceItem("Заявки", R.drawable.requests_icon));
-        spaceNavigationView.addSpaceItem(new SpaceItem("Профиль", R.drawable.user_icon));
+        spaceNavigationView.addSpaceItem(new SpaceItem("Заявки", R.drawable.requests_icon, SpaceItem.Align.LEFT));
+        spaceNavigationView.addSpaceItem(new SpaceItem(R.drawable.user_icon, SpaceItem.Align.RIGHT));
+        spaceNavigationView.addSpaceItem(new SpaceItem(R.drawable.message_icon, SpaceItem.Align.RIGHT));
         spaceNavigationView.setCentreButtonIcon(R.drawable.add_icon_white);
         spaceNavigationView.setCentreButtonColor(getResources().getColor(R.color.primary));
         spaceNavigationView.shouldShowFullBadgeText(true);
         spaceNavigationView.setCentreButtonIconColorFilterEnabled(false);
-
         spaceNavigationView.setSpaceOnClickListener(new SpaceOnClickListener() {
             @Override
             public void onCentreButtonClick() {
@@ -60,7 +63,6 @@ public class ActivityMain extends FireActivity {
                     }
                 }, 200);
             }
-
             @Override
             public void onItemClick(int itemIndex, String itemName) {
                 if(itemIndex == 0)
@@ -68,7 +70,6 @@ public class ActivityMain extends FireActivity {
                 else if (itemIndex == 1)
                     replaceFragment(userProfileFragment);
             }
-
             @Override
             public void onItemReselected(int itemIndex, String itemName) {
                 if(itemIndex == 0)
@@ -77,6 +78,8 @@ public class ActivityMain extends FireActivity {
                     replaceFragment(userProfileFragment);
             }
         });
+
+
     }
 
     @Override
@@ -85,6 +88,30 @@ public class ActivityMain extends FireActivity {
 
     }
 
+    @Override
+    public void onBackPressed() {
+        exitDialog = BaseDialogBuilder.buildFast(this,
+                "Выход",
+                "Вы действительно хотите выйти из приложения?",
+                "Выйти",
+                "Остаться",
+                BaseDialogBuilder.Type.WARNING,
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        exitDialog.closeDialog();
+                        ActivityMain.super.onBackPressed();
+                    }
+                },
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        exitDialog.closeDialog();
+                    }
+                }
+        );
+        exitDialog.showDialog();
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {

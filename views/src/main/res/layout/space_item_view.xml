@@ -23,7 +23,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_marginLeft="10dp"
+            android:layout_marginLeft="@dimen/contentMarginHalf"
             android:lines="1"
             android:textSize="@dimen/space_item_text_default_size"
             tools:text="Label One" />
