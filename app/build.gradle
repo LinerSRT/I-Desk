@@ -35,6 +35,7 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     implementation 'com.google.firebase:firebase-analytics:17.4.3'
     implementation 'com.firebaseui:firebase-ui-auth:4.3.1'
+    implementation 'com.firebaseui:firebase-ui-database:6.2.1'
     implementation 'com.google.firebase:firebase-database:19.3.0'
     implementation 'com.google.firebase:firebase-auth:19.3.1'
     implementation 'com.google.firebase:firebase-firestore:21.4.3'
@@ -78,6 +79,7 @@ dependencies {
     implementation 'com.github.Binary-Finery:Bungee:2.0'
     implementation 'com.roughike:swipe-selector:1.0.6'
     implementation 'com.kbeanie:multipicker:1.6@aar'
-    //implementation 'com.github.irfaan008:IRBottomNavigationView:1.0.1'
+    implementation 'com.github.jd-alexander:LikeButton:0.2.3'
+    implementation 'com.github.sujithkanna:smileyrating:2.0.0'
 
 }

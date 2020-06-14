@@ -83,6 +83,12 @@ public class FirebaseValue {
         Objects.requireNonNull(Firebase.getUsersDatabase()).child(userID).setValue(value);
     }
 
+    public static void setRequest(String requestID, Object value) {
+        if (!Firebase.isUserLoginned())
+            return;
+        Objects.requireNonNull(Firebase.getRequestsDatabase()).child(requestID).setValue(value);
+    }
+
     public static void deleteFile(final String creatorID, final String fileID, String fileName){
         final StorageReference path = FirebaseStorage.getInstance().getReference(Firebase.getUserUID()+File.separator+fileName);
         path.delete();

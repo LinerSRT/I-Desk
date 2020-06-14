@@ -90,6 +90,7 @@ public class CreateRequestFragment extends Fragment implements StepperFormListen
             stepList.add(requestTypeStep);
             stepList.add(requestPriorityStep);
             stepList.add(requestTitleStep);
+            stepList.add(requestTextStep);
             stepList.add(requestDeviceTextStep);
             stepList.add(requestDeadlineStep);
             stepList.add(requestFileStep);
@@ -141,7 +142,7 @@ public class CreateRequestFragment extends Fragment implements StepperFormListen
                     new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            errorDialog.closeDialog();
+                            finishDialog.closeDialog();
                             if (closeCallback != null)
                                 closeCallback.onClose();
                         }

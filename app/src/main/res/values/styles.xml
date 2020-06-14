@@ -18,7 +18,7 @@
         <item name="android:windowContentTransitions">true</item>
         <item name="materialButtonStyle">@style/AppTheme.Button</item>
         <item name="actionBarStyle">@style/AppTheme.AppBar</item>
-        <item name="android:textColorTertiary">@color/primary_dark</item>
+        <item name="android:textColorTertiary">@color/primary</item>
     </style>
     <style name="ScrollbarStyle">
         <item name="android:scrollbarAlwaysDrawVerticalTrack">true</item>

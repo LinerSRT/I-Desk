@@ -8,6 +8,7 @@ public class RequestObject implements Serializable {
     private RequestType requestType;
     private RequestPriority requestPriority;
     private RequestStatus requestStatus;
+    private RequestClose requestClose;
     private String requestTitle;
     private String requestText;
     private String requestUserDeviceText;
@@ -24,6 +25,8 @@ public class RequestObject implements Serializable {
     private String requestAcceptorName;
     private String requestAcceptorPhotoURL;
     private long requestAcceptorLastOnlineTime;
+    private boolean requestRated = false;
+    private int requestRate = 0;
 
     /**
      * Конструктор для Firebase должен быть пустой.
@@ -101,6 +104,31 @@ public class RequestObject implements Serializable {
     /**
      * Стандартные get'еры и set'еры
      */
+
+    public boolean isRequestRated() {
+        return requestRated;
+    }
+
+    public void setRequestRated(boolean requestRated) {
+        this.requestRated = requestRated;
+    }
+
+    public int getRequestRate() {
+        return requestRate;
+    }
+
+    public void setRequestRate(int requestRate) {
+        this.requestRate = requestRate;
+    }
+
+    public RequestClose getRequestClose() {
+        return requestClose;
+    }
+
+    public void setRequestClose(RequestClose requestClose) {
+        this.requestClose = requestClose;
+    }
+
     public String getRequestID() {
         return requestID;
     }
@@ -284,6 +312,8 @@ public class RequestObject implements Serializable {
                 ", requestAcceptorName='" + requestAcceptorName + '\'' +
                 ", requestAcceptorPhotoURL='" + requestAcceptorPhotoURL + '\'' +
                 ", requestAcceptorLastOnlineTime=" + requestAcceptorLastOnlineTime +
+                ", requestRated=" + requestRated +
+                ", requestRate=" + requestRate +
                 '}';
     }
 
@@ -314,5 +344,11 @@ public class RequestObject implements Serializable {
         MEDIUM,
         HIGH,
         VERY_HIGH
+    }
+
+    public enum RequestClose {
+        SEND,
+        ACCEPTED,
+        DENIED
     }
 }

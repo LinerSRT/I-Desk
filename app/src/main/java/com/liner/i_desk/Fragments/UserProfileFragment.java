@@ -1,8 +1,6 @@
 package com.liner.i_desk.Fragments;
 
-import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +17,7 @@ import com.liner.i_desk.Firebase.UserObject;
 import com.liner.i_desk.R;
 import com.liner.utils.Time;
 import com.liner.views.YSTextView;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -36,8 +35,6 @@ public class UserProfileFragment extends Fragment {
 
 
     private UserObject currentUser;
-    private int messagesCount = 0;
-    private int requestsCount = 0;
 
 
     @Nullable
@@ -52,47 +49,43 @@ public class UserProfileFragment extends Fragment {
         userRequestCount = view.findViewById(R.id.userRequestCount);
         userEmail = view.findViewById(R.id.userEmail);
         userAboutText = view.findViewById(R.id.userAboutText);
-        return view;
-    }
-
-
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
+        userRequestCount.setText("0");
+        userMessageCount.setText("0");
         databaseListener = new DatabaseListener() {
             @Override
-            public void onUserAdded(UserObject userObject) {
-                super.onUserAdded(userObject);
-                if(userObject.getUserID().equals(Firebase.getUserUID())){
+            public void onUserAdded(UserObject userObject, int position) {
+                super.onUserAdded(userObject, position);
+                if (userObject.getUserID().equals(Firebase.getUserUID())) {
                     currentUser = userObject;
                     updateUserData();
                 }
             }
 
             @Override
-            public void onUserChanged(UserObject userObject) {
-                super.onUserChanged(userObject);
-                if(userObject.getUserID().equals(Firebase.getUserUID())){
+            public void onUserChanged(UserObject userObject, int position) {
+                super.onUserChanged(userObject, position);
+                if (userObject.getUserID().equals(Firebase.getUserUID())) {
                     currentUser = userObject;
                     updateUserData();
                 }
             }
 
             @Override
-            public void onRequestAdded(RequestObject requestObject) {
-                super.onRequestAdded(requestObject);
-                if(requestObject.getRequestCreatorID().equals(Firebase.getUserUID()))
-                    requestsCount ++;
+            public void onRequestAdded(RequestObject requestObject, int position) {
+                super.onRequestAdded(requestObject, position);
+                if (requestObject.getRequestCreatorID().equals(Firebase.getUserUID()))
+                    userRequestCount.setText(String.valueOf(Integer.parseInt(userRequestCount.getText().toString().trim())+1));
             }
 
             @Override
-            public void onMessageAdded(MessageObject messageObject) {
-                super.onMessageAdded(messageObject);
-                if(messageObject.getCreatorID().equals(Firebase.getUserUID()))
-                    messagesCount ++;
+            public void onMessageAdded(MessageObject messageObject, int position) {
+                super.onMessageAdded(messageObject, position);
+                if (messageObject.getCreatorID().equals(Firebase.getUserUID()))
+                    userMessageCount.setText(String.valueOf(Integer.parseInt(userMessageCount.getText().toString().trim())+1));
             }
         };
         databaseListener.startListening();
+        return view;
     }
 
     @Override
@@ -102,13 +95,11 @@ public class UserProfileFragment extends Fragment {
         super.onDetach();
     }
 
-    private void updateUserData(){
-        Picasso.get().load(currentUser.getUserProfilePhotoURL()).into(userPhoto);
+    private void updateUserData() {
+        Picasso.get().load(currentUser.getUserProfilePhotoURL()).networkPolicy(NetworkPolicy.OFFLINE).into(userPhoto);
         userName.setText(currentUser.getUserName());
         userStatus.setText(currentUser.getUserStatusText());
         userRegisterAt.setText(Time.getHumanReadableTime(currentUser.getUserRegisteredAt(), "dd.MM.yyyy"));
-        userMessageCount.setText(String.valueOf(messagesCount));
-        userRequestCount.setText(String.valueOf(requestsCount));
         userEmail.setText(currentUser.getUserEmail());
         userAboutText.setText(currentUser.getUserAboutText());
     }

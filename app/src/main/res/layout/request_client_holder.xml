@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/contentMarginHalf"
+    android:background="@drawable/background_round"
+    android:elevation="2dp"
+    android:orientation="vertical">
+
+    <com.liner.views.YSTextView
+        android:id="@+id/clientHolderTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:maxLength="1000"
+        android:layout_marginTop="8dp"
+        android:text="Тайтл"
+        android:textColor="@color/text"
+        android:textSize="@dimen/primaryTextSizeLarge"
+        app:layout_constraintEnd_toStartOf="@+id/clientHolderOpenRequest"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:ys_type="Medium" />
+
+    <com.liner.views.YSTextView
+        android:id="@+id/clientHolderText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:maxLength="500"
+        android:text="Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui. Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum. Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus. Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc,"
+        android:textColor="@color/text_dark"
+        android:textSize="@dimen/secondaryTextSize"
+        app:layout_constraintEnd_toStartOf="@+id/clientHolderOpenRequest"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/clientHolderTitle"
+        app:ys_type="Medium" />
+
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/clientHolderText">
+
+        <com.liner.views.YSTextView
+            android:id="@+id/clientHolderDeadline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/timer_icon"
+            android:gravity="center_vertical"
+            android:background="@drawable/background_round"
+            android:backgroundTint="@color/window_background_dark"
+            android:maxLength="500"
+            android:padding="@dimen/contentMarginHalf"
+            android:text="20.20.2020 20.20"
+            android:textColor="@color/text_dark"
+            android:textSize="@dimen/secondaryTextSize"
+            app:ys_type="Light" />
+
+        <com.liner.views.YSTextView
+            android:id="@+id/clientHolderStatus"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:maxLength="500"
+            android:padding="@dimen/contentMarginHalf"
+            android:text="В процессе"
+            android:textColor="@color/text_dark"
+            android:textSize="@dimen/secondaryTextSize"
+            app:ys_type="Light" />
+
+        <com.liner.views.YSTextView
+            android:id="@+id/clientHolderAcceptorName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/request_user_icon"
+            android:backgroundTint="@color/window_background_dark"
+            android:drawablePadding="@dimen/contentMarginHalf"
+            android:gravity="center_vertical"
+            android:maxLength="500"
+            android:padding="@dimen/contentMarginHalf"
+            android:background="@drawable/background_round"
+            android:text="Liner"
+            android:textColor="@color/text_dark"
+            android:textSize="@dimen/secondaryTextSize"
+            app:ys_type="Medium" />
+
+
+    </LinearLayout>
+
+    <ImageButton
+        android:id="@+id/clientHolderOpenRequest"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:paddingStart="@dimen/contentMarginHalf"
+        android:paddingEnd="@dimen/contentMarginHalf"
+        android:background="?attr/selectableItemBackground"
+        android:src="@drawable/arrow_next"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

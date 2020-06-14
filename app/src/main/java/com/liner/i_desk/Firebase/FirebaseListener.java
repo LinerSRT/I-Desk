@@ -20,94 +20,29 @@ import java.util.List;
 import java.util.Objects;
 
 @SuppressWarnings("unchecked")
-public abstract class FirebaseListener <T>{
+public abstract class FirebaseListener<T> {
     private String TAG = "FirebaseListener";
     private Query query;
     private List<T> items;
     private List<String> keys;
     private HashMap<String, DatabaseReference> referenceHashMap;
-
-
-    public FirebaseListener(String referencePath) {
-        this(FirebaseDatabase.getInstance().getReference(referencePath).limitToLast(100));
-    }
-
-    public FirebaseListener(Query query) {
-        this(query, new ArrayList<T>(), new ArrayList<String>());
-    }
-
-    public FirebaseListener(Query query, List<T> items, List<String> keys) {
-        this.query = query;
-        this.items = items;
-        this.keys = keys;
-        this.referenceHashMap = new HashMap<>();
-    }
-
-    public void destroy(){
-        query.removeEventListener(queryListener);
-    }
-    public void start(){
-        query.addChildEventListener(queryListener);
-    }
-
-    public HashMap<String, DatabaseReference> getReferenceHashMap() {
-        return referenceHashMap;
-    }
-
-    public List<T> getItems(){
-        return items;
-    }
-
-    public List<String> getKeys() {
-        return keys;
-    }
-
-    public int getPositionForItem(T item) {
-        return items != null && items.size() > 0 ? items.indexOf(item) : -1;
-    }
-
-    public boolean contains(T item) {
-        return items != null && items.contains(item);
-    }
-
-
-
-    public abstract void onItemAdded(String key, T item, int pos, DatabaseReference reference);
-    public abstract void onItemChanged(String key, T item, int pos, DatabaseReference reference);
-    public abstract void onItemRemoved(String key, T item, int pos, DatabaseReference reference);
-    public abstract void onItemMoved(String key, T item, int pos, int newPos);
-
-
-    private T getObject(DataSnapshot dataSnapshot){
-        try {
-            return dataSnapshot.getValue(getGenericClass());
-        } catch (DatabaseException e){
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    private Class<T> getGenericClass() {
-        return (Class<T>) ((ParameterizedType) Objects.requireNonNull(this.getClass().getGenericSuperclass())).getActualTypeArguments()[0];
-    }
-
     private ChildEventListener queryListener = new ChildEventListener() {
         @Override
         public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
             String key = dataSnapshot.getKey();
-            if(!referenceHashMap.containsKey(key))
+            if (!referenceHashMap.containsKey(key))
                 referenceHashMap.put(key, dataSnapshot.getRef());
-            if(!keys.contains(key)){
+            if (!keys.contains(key)) {
                 T item = getObject(dataSnapshot);
                 int position;
-                if(s == null){
+                if (s == null) {
                     items.add(item);
                     keys.add(key);
                     position = 0;
                 } else {
                     int previousIndex = key.indexOf(s);
                     int nextIndex = previousIndex + 1;
-                    if(nextIndex == items.size()){
+                    if (nextIndex == items.size()) {
                         items.add(item);
                         keys.add(key);
                     } else {
@@ -116,7 +51,7 @@ public abstract class FirebaseListener <T>{
                     }
                     position = nextIndex;
                 }
-                Log.i(TAG, "New item added. Key={"+key+"}, position={"+position+"}");
+                Log.i(TAG, "New item added. Key={" + key + "}, position={" + position + "}");
                 onItemAdded(key, item, position, referenceHashMap.get(key));
             }
         }
@@ -124,34 +59,32 @@ public abstract class FirebaseListener <T>{
         @Override
         public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
             String key = dataSnapshot.getKey();
-            if(referenceHashMap.containsKey(key)) {
+            if (referenceHashMap.containsKey(key)) {
                 referenceHashMap.remove(key);
                 referenceHashMap.put(key, dataSnapshot.getRef());
             }
-            if(keys.contains(key)){
+            if (keys.contains(key)) {
                 int index = keys.indexOf(key);
                 T newItem = getObject(dataSnapshot);
                 items.set(index, newItem);
                 onItemChanged(key, newItem, index, referenceHashMap.get(key));
-                Log.i(TAG, "Item changed. Key={"+key+"}, position={"+index+"}");
+                Log.i(TAG, "Item changed. Key={" + key + "}, position={" + index + "}");
             }
         }
 
         @Override
         public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
             String key = dataSnapshot.getKey();
-            if(referenceHashMap.containsKey(key)) {
+            if (referenceHashMap.containsKey(key)) {
                 referenceHashMap.remove(key);
             }
-            if(keys.contains(key)){
-                int index = Objects.requireNonNull(key).indexOf(key);
+            if (keys.contains(key)) {
+                int index = Objects.requireNonNull(keys).indexOf(key);
                 T item = items.get(index);
                 keys.remove(index);
                 items.remove(index);
                 onItemRemoved(key, item, index, referenceHashMap.get(key));
-                Log.i(TAG, "Item removed. Key={"+key+"}, position={"+index+"}");
             }
-
 
 
         }
@@ -180,7 +113,7 @@ public abstract class FirebaseListener <T>{
                 }
                 newPosition = nextIndex;
             }
-            Log.i(TAG, "Item moved. Key={"+key+"}, position={"+index+"}");
+            Log.i(TAG, "Item moved. Key={" + key + "}, position={" + index + "}");
             onItemMoved(key, item, index, newPosition);
         }
 
@@ -189,4 +122,68 @@ public abstract class FirebaseListener <T>{
 
         }
     };
+
+    public FirebaseListener(String referencePath) {
+        this(FirebaseDatabase.getInstance().getReference(referencePath).limitToLast(100));
+    }
+
+    public FirebaseListener(Query query) {
+        this(query, new ArrayList<T>(), new ArrayList<String>());
+    }
+
+    public FirebaseListener(Query query, List<T> items, List<String> keys) {
+        this.query = query;
+        this.items = items;
+        this.keys = keys;
+        this.referenceHashMap = new HashMap<>();
+    }
+
+    public void destroy() {
+        query.removeEventListener(queryListener);
+    }
+
+    public void start() {
+        query.addChildEventListener(queryListener);
+    }
+
+    public HashMap<String, DatabaseReference> getReferenceHashMap() {
+        return referenceHashMap;
+    }
+
+    public List<T> getItems() {
+        return items;
+    }
+
+    public List<String> getKeys() {
+        return keys;
+    }
+
+    public int getPositionForItem(T item) {
+        return items != null && items.size() > 0 ? items.indexOf(item) : -1;
+    }
+
+    public boolean contains(T item) {
+        return items != null && items.contains(item);
+    }
+
+    public abstract void onItemAdded(String key, T item, int pos, DatabaseReference reference);
+
+    public abstract void onItemChanged(String key, T item, int pos, DatabaseReference reference);
+
+    public abstract void onItemRemoved(String key, T item, int pos, DatabaseReference reference);
+
+    public abstract void onItemMoved(String key, T item, int pos, int newPos);
+
+    private T getObject(DataSnapshot dataSnapshot) {
+        try {
+            return dataSnapshot.getValue(getGenericClass());
+        } catch (DatabaseException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private Class<T> getGenericClass() {
+        return (Class<T>) ((ParameterizedType) Objects.requireNonNull(this.getClass().getGenericSuperclass())).getActualTypeArguments()[0];
+    }
 }

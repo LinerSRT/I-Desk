@@ -9,4 +9,16 @@
     <color name="window_background_dark">#1E2327</color>
     <color name="white">#FFFFFF</color>
     <color name="red">#D30606</color>
+
+
+    <color name="service_request">#0091EA</color>
+    <color name="incident_request">#FFAB00</color>
+    <color name="consultation_request">#7B1FA2</color>
+
+    <color name="very_low_priority">#44B33F</color>
+    <color name="low_priority">#81A548</color>
+    <color name="medium_priority">#885532</color>
+    <color name="high_priority">#AE2C21</color>
+    <color name="very_high_priority">#B60000</color>
+
 </resources>

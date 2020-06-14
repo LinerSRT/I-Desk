@@ -1,8 +1,12 @@
 package com.liner.i_desk;
 
 import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.PowerManager;
+import android.provider.Settings;
 import android.view.View;
 import android.widget.FrameLayout;
 
@@ -10,17 +14,23 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.liner.i_desk.Firebase.FireActivity;
+import com.liner.i_desk.Firebase.MessagingService;
 import com.liner.i_desk.Fragments.CreateRequestFragment;
 import com.liner.i_desk.Fragments.MainFragment;
 import com.liner.i_desk.Fragments.UserProfileFragment;
+import com.liner.i_desk.Utils.Test;
 import com.liner.utils.ViewUtils;
 import com.liner.views.BaseDialog;
 import com.liner.views.BaseDialogBuilder;
 import com.liner.views.irbottomnavigation.SpaceItem;
 import com.liner.views.irbottomnavigation.SpaceNavigationView;
 import com.liner.views.irbottomnavigation.SpaceOnClickListener;
+import com.liner.views.irbottomnavigation.SpaceOnLongClickListener;
 
 public class ActivityMain extends FireActivity {
+    private Intent messagingService;
+
+
     private SpaceNavigationView spaceNavigationView;
     private FrameLayout fragmentContainer;
 
@@ -34,6 +44,21 @@ public class ActivityMain extends FireActivity {
     protected void onStart() {
         super.onStart();
         ViewUtils.setStatusBarColor(this, getResources().getColor(R.color.window_background));
+        PowerManager pm = (PowerManager) getApplicationContext().getSystemService(POWER_SERVICE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (!pm.isIgnoringBatteryOptimizations(getApplicationContext().getPackageName())) {
+                Intent intent = new Intent();
+                intent.setAction(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
+                intent.setData(Uri.parse("package:" + getApplicationContext().getPackageName()));
+                startActivity(intent);
+            }
+        }
+        if (MessagingService.serviceIntent == null) {
+            messagingService = new Intent(this, MessagingService.class);
+            startService(messagingService);
+        } else {
+            messagingService = MessagingService.serviceIntent;
+        }
     }
 
     @Override
@@ -70,22 +95,35 @@ public class ActivityMain extends FireActivity {
                     }
                 }, 200);
             }
+
             @Override
             public void onItemClick(int itemIndex, String itemName) {
-                if(itemIndex == 0)
+                if (itemIndex == 0)
                     replaceFragment(mainFragment);
                 else if (itemIndex == 1)
                     replaceFragment(userProfileFragment);
             }
+
             @Override
             public void onItemReselected(int itemIndex, String itemName) {
-                if(itemIndex == 0)
+                if (itemIndex == 0)
                     replaceFragment(mainFragment);
                 else if (itemIndex == 1)
                     replaceFragment(userProfileFragment);
             }
         });
 
+        spaceNavigationView.setSpaceOnLongClickListener(new SpaceOnLongClickListener() {
+            @Override
+            public void onCentreButtonLongClick() {
+                Test.createTestRequest(5);
+            }
+
+            @Override
+            public void onItemLongClick(int itemIndex, String itemName) {
+
+            }
+        });
 
     }
 
@@ -126,7 +164,7 @@ public class ActivityMain extends FireActivity {
         createRequestFragment.requestFileStep.submitPicker(requestCode, resultCode, data);
     }
 
-    private void replaceFragment(final Fragment fragment){
+    private void replaceFragment(final Fragment fragment) {
         getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer, fragment).commit();
     }
 }

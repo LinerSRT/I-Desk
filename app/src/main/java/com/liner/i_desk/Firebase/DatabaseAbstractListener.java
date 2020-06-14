@@ -1,15 +1,15 @@
 package com.liner.i_desk.Firebase;
 
 public interface DatabaseAbstractListener{
-    void onUserAdded(UserObject userObject);
-    void onUserChanged(UserObject userObject);
-    void onRequestAdded(RequestObject requestObject);
-    void onRequestChanged(RequestObject requestObject);
-    void onRequestDeleted(RequestObject requestObject);
-    void onMessageAdded(MessageObject messageObject);
-    void onMessageChanged(MessageObject messageObject);
-    void onMessageDeleted(MessageObject messageObject);
-    void onFileAdded(FileObject fileObject);
-    void onFileChanged(FileObject fileObject);
-    void onFileDeleted(FileObject fileObject);
+    void onUserAdded(UserObject userObject, int position);
+    void onUserChanged(UserObject userObject, int position);
+    void onRequestAdded(RequestObject requestObject, int position);
+    void onRequestChanged(RequestObject requestObject, int position);
+    void onRequestDeleted(RequestObject requestObject, int position);
+    void onMessageAdded(MessageObject messageObject, int position);
+    void onMessageChanged(MessageObject messageObject, int position);
+    void onMessageDeleted(MessageObject messageObject, int position);
+    void onFileAdded(FileObject fileObject, int position);
+    void onFileChanged(FileObject fileObject, int position);
+    void onFileDeleted(FileObject fileObject, int position);
 }

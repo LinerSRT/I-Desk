@@ -30,25 +30,12 @@ public abstract class FireActivity extends AppCompatActivity {
         if(!Firebase.isUserLoginned()){
             sendToSplash();
         }
-        onlineUpdater.postDelayed(onlineUpdaterRunnable, TimeUnit.SECONDS.toMillis(1));
-    }
-
-    @Override
-    protected void onPause() {
-        FirebaseValue.setUserValue(Firebase.getUserUID(), "userStatus", UserObject.UserStatus.OFFLINE);
-        super.onPause();
-    }
-
-    @Override
-    protected void onResume() {
-        FirebaseValue.setUserValue(Firebase.getUserUID(), "userStatus", UserObject.UserStatus.ONLINE);
-        super.onResume();
+        onlineUpdater.postDelayed(onlineUpdaterRunnable, TimeUnit.MINUTES.toMillis(1));
     }
 
     @Override
     protected void onDestroy() {
         onlineUpdater.removeCallbacks(onlineUpdaterRunnable);
-        FirebaseValue.setUserValue(Firebase.getUserUID(), "userStatus", UserObject.UserStatus.OFFLINE);
         super.onDestroy();
     }
 

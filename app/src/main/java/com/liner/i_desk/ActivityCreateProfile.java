@@ -28,6 +28,7 @@ import com.liner.i_desk.Firebase.UserObject;
 import com.liner.utils.ViewUtils;
 import com.liner.views.BaseDialog;
 import com.liner.views.BaseDialogBuilder;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -190,7 +191,7 @@ public class ActivityCreateProfile extends FireActivity {
 
                             @Override
                             public void onFinish(FileObject result, String fileUID) {
-                                Picasso.get().load(new File(list.get(0).getOriginalPath())).into(createProfilePhoto);
+                                Picasso.get().load(new File(list.get(0).getOriginalPath())).networkPolicy(NetworkPolicy.OFFLINE).into(createProfilePhoto);
                                 userPhotoURL = result.getFileURL();
                                 uploadingDialog.closeDialog();
                             }

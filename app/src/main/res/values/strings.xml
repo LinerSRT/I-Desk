@@ -2,5 +2,9 @@
     <string name="app_name">I-Desk</string>
     <string name="navigation_drawer_open">Open</string>
     <string name="navigation_drawer_close">Close</string>
-
+    <string name="smile_rating_terrible">Ужасно</string>
+    <string name="smile_rating_bad">Плохо</string>
+    <string name="smile_rating_okay">Нормально</string>
+    <string name="smile_rating_good">Хорошо</string>
+    <string name="smile_rating_great">Отлично</string>
 </resources>
