@@ -6,11 +6,15 @@ import android.content.Context;
 import android.graphics.PorterDuff;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -19,14 +23,21 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.arthurivanets.bottomsheets.BaseBottomSheet;
-import com.arthurivanets.bottomsheets.config.BaseConfig;
+import com.liner.utils.TextUtils;
 import com.liner.utils.ViewUtils;
+import com.liner.views.bottomsheetcore.BaseBottomSheet;
+import com.liner.views.bottomsheetcore.config.BaseConfig;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import studio.carbonylgroup.textfieldboxes.ExtendedEditText;
+import studio.carbonylgroup.textfieldboxes.SimpleTextChangedWatcher;
+import studio.carbonylgroup.textfieldboxes.TextFieldBoxes;
 
 @SuppressLint("ViewConstructor")
 public class BaseDialog extends BaseBottomSheet {
+    private Activity activity;
     private TextView dialogTitle;
     private FrameLayout dialogCustomView;
     private ProgressBar indeterminateProgress;
@@ -42,11 +53,20 @@ public class BaseDialog extends BaseBottomSheet {
     private OnClickListener dialogDoneListener = null;
     private BaseDialogBuilder.Type dialogType;
     private String[] selectionList;
+    private List<BaseDialogSelectionItem> selectionItemList;
+    private TextFieldBoxes baseDialogEditBox;
+    private ExtendedEditText baseDialogEditText;
+
     private BaseDialogSelectionListener selectionListener;
+    private BaseDialogEditListener editListener;
+    private int editMinCharacters;
+    private String editHelpText;
+    private String resultText;
 
 
     public BaseDialog(@NonNull Activity hostActivity, @NonNull BaseConfig config, BaseDialogBuilder builder) {
         super(hostActivity, config);
+        this.activity = hostActivity;
         this.dialogTitleText = builder.dialogTitleText;
         this.dialogTextText = builder.dialogTextText;
         this.dialogDoneText = builder.dialogDoneText;
@@ -55,6 +75,10 @@ public class BaseDialog extends BaseBottomSheet {
         this.dialogType = builder.dialogType;
         this.selectionList = builder.selectionList;
         this.selectionListener = builder.selectionListener;
+        this.selectionItemList = builder.selectionItemList;
+        this.editListener = builder.editListener;
+        this.editMinCharacters = builder.editMinCharacters;
+        this.editHelpText = builder.editHelpText;
     }
 
     @NonNull
@@ -67,12 +91,39 @@ public class BaseDialog extends BaseBottomSheet {
         dialogCancel = view.findViewById(R.id.baseDialogCancel);
         dialogDone = view.findViewById(R.id.baseDialogDone);
         indeterminateProgress = view.findViewById(R.id.indeterminateProgress);
+        baseDialogEditBox = view.findViewById(R.id.baseDialogEditBox);
+        baseDialogEditText = view.findViewById(R.id.baseDialogEditText);
         return view;
     }
 
     public void showDialog() {
         indeterminateProgress.setIndeterminate(true);
         indeterminateProgress.setVisibility(GONE);
+
+        if (dialogView != null) {
+            dialogCustomView.removeAllViews();
+            dialogCustomView.addView(dialogView);
+        }
+        if (dialogCancelListener == null) {
+            dialogCancel.setVisibility(GONE);
+        } else {
+            dialogCancel.setText(dialogCancelText);
+            dialogCancel.setOnClickListener(dialogCancelListener);
+        }
+
+        dialogDone.setText(dialogDoneText);
+        if (dialogDoneListener == null) {
+            dialogCancel.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    dismiss(true);
+                }
+            });
+        } else {
+            dialogDone.setOnClickListener(dialogDoneListener);
+        }
+        dialogText.setText(dialogTextText);
+        dialogTitle.setText(dialogTitleText);
         switch (dialogType) {
             case ERROR:
                 dialogTitle.setCompoundDrawablesWithIntrinsicBounds(getContext().getResources().getDrawable(R.drawable.error_icon), null, null, null);
@@ -103,37 +154,56 @@ public class BaseDialog extends BaseBottomSheet {
                 break;
             case SINGLE_CHOOSE:
                 ListView listView = new ListView(getContext());
-                SelectionAdapter selectionAdapter = new SelectionAdapter(getContext(), selectionList);
+                SelectionAdapter selectionAdapter = new SelectionAdapter();
                 listView.setAdapter(selectionAdapter);
                 dialogCustomView.addView(listView);
                 hideActionButtons();
                 break;
+            case EDIT:
+                baseDialogEditBox.setVisibility(VISIBLE);
+                dialogText.setVisibility(GONE);
+                baseDialogEditBox.setMinCharacters(editMinCharacters);
+                baseDialogEditBox.setHelperText(editHelpText);
+                baseDialogEditBox.setSimpleTextChangeWatcher(new SimpleTextChangedWatcher() {
+                    @Override
+                    public void onTextChanged(String theNewText, boolean isError) {
+                        resultText = theNewText;
+                        if(baseDialogEditBox.isOnError()){
+                            dialogDone.setEnabled(false);
+                            dialogDone.setTextColor(getResources().getColor(R.color.disabled));
+                        } else {
+                            dialogDone.setEnabled(true);
+                            dialogDone.setTextColor(getResources().getColor(R.color.primary_dark));
+                        }
+                    }
+                });
+                dialogCancel.setText("Отмена");
+                dialogDone.setText("Сохранить");
+                dialogDone.setOnClickListener(new View.OnClickListener(){
+                    @Override
+                    public void onClick(View view) {
+                        if(resultText == null || resultText.length() <= 0){
+                            baseDialogEditBox.setError("Поле не может быть пустое", true);
+                        } else {
+                            if (editListener != null) {
+                                editListener.onEditFinished(resultText);
+                            }
+                            TextUtils.hideKeyboard(activity);
+                            closeDialog();
+                        }
+                    }
+                });
+                dialogCancel.setOnClickListener(new View.OnClickListener(){
+                    @Override
+                    public void onClick(View view) {
+                        closeDialog();
+                    }
+                });
+                dialogCancel.setVisibility(VISIBLE);
+                dialogDone.setVisibility(VISIBLE);
+                break;
         }
 
-        if (dialogView != null) {
-            dialogCustomView.removeAllViews();
-            dialogCustomView.addView(dialogView);
-        }
-        if (dialogCancelListener == null) {
-            dialogCancel.setVisibility(GONE);
-        } else {
-            dialogCancel.setText(dialogCancelText);
-            dialogCancel.setOnClickListener(dialogCancelListener);
-        }
-
-        dialogDone.setText(dialogDoneText);
-        if (dialogDoneListener == null) {
-            dialogCancel.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    dismiss(true);
-                }
-            });
-        } else {
-            dialogDone.setOnClickListener(dialogDoneListener);
-        }
-        dialogText.setText(dialogTextText);
-        dialogTitle.setText(dialogTitleText);
         show(true);
     }
 
@@ -145,7 +215,7 @@ public class BaseDialog extends BaseBottomSheet {
     public void closeDialog() {
         if(dialogCustomView.getChildCount() > 0)
             dialogCustomView.removeAllViews();
-        dismiss(false);
+        dismiss(true);
     }
 
     public ProgressBar getProgressBar() {
@@ -205,34 +275,61 @@ public class BaseDialog extends BaseBottomSheet {
 
 
 
-    public class SelectionAdapter extends ArrayAdapter<String> {
-        public SelectionAdapter(Context context, String[] items) {
-            super(context, 0, items);
+    public class SelectionAdapter extends BaseAdapter {
+        public SelectionAdapter() {
+        }
+        @Override
+        public int getCount() {
+            return selectionItemList == null ? selectionList == null? 0:selectionList.length:selectionItemList.size();
+        }
+
+        @Override
+        public Object getItem(int i) {
+            return selectionItemList == null?selectionList[i]:selectionItemList.get(i);
+        }
+
+        @Override
+        public long getItemId(int i) {
+            return i;
         }
 
         @NonNull
         @Override
-        public View getView(final int position, View convertView, @NonNull ViewGroup parent) {
-            if (convertView == null) {
-                convertView = LayoutInflater.from(getContext()).inflate(R.layout.base_dialog_choise_layout, parent, false);
+        public View getView(final int position, View view, @NonNull ViewGroup parent) {
+            if (view == null) {
+                view = LayoutInflater.from(getContext()).inflate(R.layout.base_dialog_choise_layout, parent, false);
             }
-            convertView.setOnClickListener(new View.OnClickListener(){
-                @Override
-                public void onClick(View view) {
-                    if(selectionListener != null)
-                        selectionListener.onItemClick(position);
-                    closeDialog();
-                }
-            });
-            YSTextView chooseItem = convertView.findViewById(R.id.selectionText);
-            chooseItem.setText(getItem(position));
-            return convertView;
+            ImageView selectionIcon = view.findViewById(R.id.selectionIcon);
+            YSTextView selectionText = view.findViewById(R.id.selectionText);
+            Object item = getItem(position);
+            if(item instanceof BaseDialogSelectionItem){
+                selectionIcon.setImageResource(((BaseDialogSelectionItem) item).getIconResource());
+                selectionText.setText(((BaseDialogSelectionItem) item).getItemName());
+                view.setOnClickListener(((BaseDialogSelectionItem) item).getClickListener());
+            } else if (item instanceof String){
+                selectionIcon.setImageResource(R.drawable.radiobutton_unchecked);
+                selectionText.setText(String.valueOf(item));
+                view.setOnClickListener(new View.OnClickListener(){
+                    @Override
+                    public void onClick(View view) {
+                        if(selectionListener != null)
+                            selectionListener.onItemClick(position);
+                        closeDialog();
+                    }
+                });
+            }
+            return view;
         }
     }
 
     public interface BaseDialogSelectionListener{
         void onItemClick(int position);
     }
+
+    public interface BaseDialogEditListener{
+        void onEditFinished(String text);
+    }
+
 
 
 }

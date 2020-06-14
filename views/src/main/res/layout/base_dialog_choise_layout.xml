@@ -4,15 +4,16 @@
     android:layout_height="wrap_content"
     android:layout_marginStart="@dimen/contentMarginHalf"
     android:layout_marginEnd="@dimen/contentMarginHalf"
+    android:padding="@dimen/contentMargin"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal">
 
-    <RadioButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:clickable="false"
-        android:checked="false"
-        android:buttonTint="@color/primary"/>
+    <ImageView
+        android:id="@+id/selectionIcon"
+        android:layout_width="24dp"
+        android:layout_gravity="center_vertical"
+        android:scaleType="centerInside"
+        android:layout_height="24dp"/>
 
     <com.liner.views.YSTextView
         android:id="@+id/selectionText"

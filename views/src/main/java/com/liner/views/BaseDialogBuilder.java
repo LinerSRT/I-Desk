@@ -12,11 +12,12 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-
-import com.arthurivanets.bottomsheets.BaseBottomSheet;
-import com.arthurivanets.bottomsheets.config.BaseConfig;
-import com.arthurivanets.bottomsheets.config.Config;
+import com.liner.views.bottomsheetcore.BaseBottomSheet;
+import com.liner.views.bottomsheetcore.config.BaseConfig;
+import com.liner.views.bottomsheetcore.config.Config;
 import com.liner.utils.ViewUtils;
+
+import java.util.List;
 
 @SuppressLint("ViewConstructor")
 public class BaseDialogBuilder {
@@ -35,7 +36,11 @@ public class BaseDialogBuilder {
     public View dialogView = null;
     public Type dialogType = Type.INFO;
     public BaseDialog.BaseDialogSelectionListener selectionListener;
+    public BaseDialog.BaseDialogEditListener editListener;
     public String[] selectionList = new String[]{};
+    public List<BaseDialogSelectionItem> selectionItemList;
+    public int editMinCharacters = 6;
+    public String editHelpText;
 
 
     public enum Type{
@@ -45,7 +50,8 @@ public class BaseDialogBuilder {
         QUESTION,
         PROGRESS,
         INDETERMINATE,
-        SINGLE_CHOOSE
+        SINGLE_CHOOSE,
+        EDIT
     }
 
     public BaseDialogBuilder(Activity activity) {
@@ -72,6 +78,21 @@ public class BaseDialogBuilder {
         return this;
     }
 
+    public BaseDialogBuilder setEditMinCharacters(int editMinCharacters) {
+        this.editMinCharacters = editMinCharacters;
+        return this;
+    }
+
+    public BaseDialogBuilder setEditHelpText(String editHelpText) {
+        this.editHelpText = editHelpText;
+        return this;
+    }
+
+    public BaseDialogBuilder setSelectionList(List<BaseDialogSelectionItem> selectionItemList) {
+        this.selectionItemList = selectionItemList;
+        return this;
+    }
+
     public BaseDialogBuilder setDialogTitle(String title){
         BaseDialogBuilder.this.dialogTitleText = title;
         return this;
@@ -89,6 +110,11 @@ public class BaseDialogBuilder {
 
     public BaseDialogBuilder setDimAmount(float dimAmount) {
         BaseDialogBuilder.this.dimAmount = dimAmount;
+        return this;
+    }
+
+    public BaseDialogBuilder setEditListener(BaseDialog.BaseDialogEditListener editListener) {
+        this.editListener = editListener;
         return this;
     }
 
@@ -113,7 +139,7 @@ public class BaseDialogBuilder {
     }
 
     public BaseDialog build() {
-        this.config = new Config.Builder(activity)
+        this.config = (Config) new Config.Builder(activity)
                 .dismissOnTouchOutside(dismissOnTouchOutside)
                 .dimAmount(dimAmount)
                 .sheetAnimationDuration(animationDuration)

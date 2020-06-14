@@ -20,6 +20,7 @@ import androidx.core.app.NotificationCompat;
 
 import com.liner.i_desk.ActivityMain;
 import com.liner.i_desk.R;
+import com.liner.utils.ImageUtils;
 import com.liner.utils.TextUtils;
 import com.liner.utils.Time;
 import com.squareup.picasso.NetworkPolicy;
@@ -55,7 +56,7 @@ public class MessagingService extends Service {
                 if (userObject != null) {
                     long currentTime = Time.getTime();
                     long requestCreationTime = requestObject.getRequestCreatedAt();
-                    long triggerTime = TimeUnit.MINUTES.toMillis(5);
+                    long triggerTime = TimeUnit.MINUTES.toMillis(10);
                     switch (userObject.getUserType()) {
                         case SERVICE:
                         case ADMIN:
@@ -64,6 +65,11 @@ public class MessagingService extends Service {
                             }
                             break;
                         case CLIENT:
+                            if(requestObject.getRequestCreatorID().equals(Firebase.getUserUID())){
+                                if (currentTime - requestCreationTime <= triggerTime) {
+                                    makeNotification(requestObject, NotificationType.NEW_REQUEST);
+                                }
+                            }
                             break;
                     }
                 }
@@ -73,6 +79,7 @@ public class MessagingService extends Service {
             @Override
             public void onRequestChanged(RequestObject requestObject, int position) {
                 super.onRequestChanged(requestObject, position);
+
             }
 
             @Override
@@ -127,22 +134,26 @@ public class MessagingService extends Service {
 
 
     private void makeNotification(final RequestObject requestObject, final NotificationType notificationType) {
-        Picasso.get().load(requestObject.getRequestCreatorPhotoURL()).networkPolicy(NetworkPolicy.OFFLINE).into(new Target() {
-            @Override
-            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                sendNotification(requestObject, notificationType, bitmap);
-            }
+        if(requestObject.getRequestCreatorPhotoURL() != null) {
+            Picasso.get().load(requestObject.getRequestCreatorPhotoURL()).into(new Target() {
+                @Override
+                public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                    sendNotification(requestObject, notificationType, bitmap);
+                }
 
-            @Override
-            public void onBitmapFailed(Exception e, Drawable errorDrawable) {
-                sendNotification(requestObject, notificationType, null);
-            }
+                @Override
+                public void onBitmapFailed(Exception e, Drawable errorDrawable) {
+                    sendNotification(requestObject, notificationType, ImageUtils.drawableToBitmap(getResources().getDrawable(R.drawable.temp_user_photo)));
+                }
 
-            @Override
-            public void onPrepareLoad(Drawable placeHolderDrawable) {
+                @Override
+                public void onPrepareLoad(Drawable placeHolderDrawable) {
 
-            }
-        });
+                }
+            });
+        } else {
+            sendNotification(requestObject, notificationType, ImageUtils.drawableToBitmap(getResources().getDrawable(R.drawable.temp_user_photo)));
+        }
     }
 
     private void sendNotification(final RequestObject requestObject, final NotificationType notificationType, Bitmap bitmap){

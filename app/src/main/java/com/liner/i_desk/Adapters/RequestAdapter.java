@@ -214,7 +214,7 @@ public class RequestAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 ((ClientViewHolder) holder).clientHolderAcceptorName.setText(item.getRequestAcceptorName());
             }
         } else if (holder instanceof ServiceViewHolder) {
-            Picasso.get().load(item.getRequestCreatorPhotoURL()).networkPolicy(NetworkPolicy.OFFLINE).into(new Target() {
+            Picasso.get().load(item.getRequestCreatorPhotoURL()).into(new Target() {
                 @Override
                 public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
                     ((ServiceViewHolder) holder).serviceHolderUserPhoto.setImageBitmap(bitmap);

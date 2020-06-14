@@ -31,10 +31,6 @@ public class IDesk extends Application {
         FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         Picasso.Builder builder = new Picasso.Builder(this);
         builder.downloader(new OkHttp3Downloader(this, Integer.MAX_VALUE));
-        Picasso builtPicasso = builder.build();
-        builtPicasso.setIndicatorsEnabled(true);
-        builtPicasso.setLoggingEnabled(true);
-        Picasso.setSingletonInstance(builtPicasso);
         FileDownloader.setupOnApplicationOnCreate(this)
                 .connectionCreator(new FileDownloadUrlConnection
                         .Creator(new FileDownloadUrlConnection.Configuration()

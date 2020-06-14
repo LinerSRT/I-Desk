@@ -2,6 +2,7 @@ package com.liner.i_desk.Fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,6 +33,7 @@ import com.liner.views.YSTextView;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 public class MainFragment extends Fragment implements PullRefreshLayout.OnRefreshListener, RequestAdapter.AdapterCallback {
     private RequestAdapter requestAdapter;
@@ -72,16 +74,21 @@ public class MainFragment extends Fragment implements PullRefreshLayout.OnRefres
             }
 
             @Override
-            public void onUserChanged(UserObject userObject, int position) {
+            public void onUserChanged(final UserObject userObject, int position) {
                 super.onUserChanged(userObject, position);
-                if(userObject.getUserID().equals(Firebase.getUserUID())){
-                    if(requestAdapter != null)
-                        requestAdapter.onDestroy();
-                    requestAdapter = new RequestAdapter(userObject, getActivity());
-                    requestAdapter.setAdapterCallback(MainFragment.this);
-                    requestRecycler.setAdapter(requestAdapter);
-                    requestAdapter.onStart();
-                }
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(userObject.getUserID().equals(Firebase.getUserUID())){
+                            if(requestAdapter != null)
+                                requestAdapter.onDestroy();
+                            requestAdapter = new RequestAdapter(userObject, getActivity());
+                            requestAdapter.setAdapterCallback(MainFragment.this);
+                            requestRecycler.setAdapter(requestAdapter);
+                            requestAdapter.onStart();
+                        }
+                    }
+                }, TimeUnit.SECONDS.toMillis(1));
             }
         };
         databaseListener.startListening();

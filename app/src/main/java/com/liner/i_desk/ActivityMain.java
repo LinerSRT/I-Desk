@@ -161,7 +161,9 @@ public class ActivityMain extends FireActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        createRequestFragment.requestFileStep.submitPicker(requestCode, resultCode, data);
+        if(createRequestFragment.requestFileStep != null)
+            createRequestFragment.requestFileStep.submitPicker(requestCode, resultCode, data);
+        userProfileFragment.onActivityResult(requestCode, resultCode, data);
     }
 
     private void replaceFragment(final Fragment fragment) {

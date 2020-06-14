@@ -191,7 +191,7 @@ public class ActivityCreateProfile extends FireActivity {
 
                             @Override
                             public void onFinish(FileObject result, String fileUID) {
-                                Picasso.get().load(new File(list.get(0).getOriginalPath())).networkPolicy(NetworkPolicy.OFFLINE).into(createProfilePhoto);
+                                Picasso.get().load(new File(list.get(0).getOriginalPath())).into(createProfilePhoto);
                                 userPhotoURL = result.getFileURL();
                                 uploadingDialog.closeDialog();
                             }
