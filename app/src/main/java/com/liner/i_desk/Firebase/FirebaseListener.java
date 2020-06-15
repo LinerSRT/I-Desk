@@ -21,7 +21,6 @@ import java.util.Objects;
 
 @SuppressWarnings("unchecked")
 public abstract class FirebaseListener<T> {
-    private String TAG = "FirebaseListener";
     private Query query;
     private List<T> items;
     private List<String> keys;
@@ -51,7 +50,6 @@ public abstract class FirebaseListener<T> {
                     }
                     position = nextIndex;
                 }
-                Log.i(TAG, "New item added. Key={" + key + "}, position={" + position + "}");
                 onItemAdded(key, item, position, referenceHashMap.get(key));
             }
         }
@@ -68,7 +66,6 @@ public abstract class FirebaseListener<T> {
                 T newItem = getObject(dataSnapshot);
                 items.set(index, newItem);
                 onItemChanged(key, newItem, index, referenceHashMap.get(key));
-                Log.i(TAG, "Item changed. Key={" + key + "}, position={" + index + "}");
             }
         }
 
@@ -113,7 +110,6 @@ public abstract class FirebaseListener<T> {
                 }
                 newPosition = nextIndex;
             }
-            Log.i(TAG, "Item moved. Key={" + key + "}, position={" + index + "}");
             onItemMoved(key, item, index, newPosition);
         }
 

@@ -23,6 +23,7 @@ import com.liner.i_desk.R;
 import com.liner.utils.ImageUtils;
 import com.liner.utils.TextUtils;
 import com.liner.utils.Time;
+import com.liner.utils.ViewUtils;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
@@ -135,7 +136,7 @@ public class MessagingService extends Service {
 
     private void makeNotification(final RequestObject requestObject, final NotificationType notificationType) {
         if(requestObject.getRequestCreatorPhotoURL() != null) {
-            Picasso.get().load(requestObject.getRequestCreatorPhotoURL()).into(new Target() {
+            Picasso.get().load(requestObject.getRequestCreatorPhotoURL()).resize(ViewUtils.dpToPx(64), ViewUtils.dpToPx(64)).into(new Target() {
                 @Override
                 public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
                     sendNotification(requestObject, notificationType, bitmap);

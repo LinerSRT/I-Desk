@@ -1,12 +1,12 @@
 package com.liner.views.MediaPicker;
 
+import android.app.Dialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,7 +19,6 @@ import androidx.recyclerview.widget.SimpleItemAnimator;
 import com.github.florent37.shapeofview.shapes.RoundRectView;
 import com.liner.utils.FileUtils;
 import com.liner.utils.PickerFileFilter;
-import com.liner.views.BaseDialogBuilder;
 import com.liner.views.R;
 import com.liner.views.YSTextView;
 
@@ -31,24 +30,20 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
-public class FilePickerFragment extends Fragment {
+public class ImagePickerFragment extends Fragment {
     private YSTextView mediaNoItems;
     private RecyclerView mediaPathRecycler;
     private RecyclerView mediaRecycler;
     private List<MediaPickerFile> mediaPickerFileList;
     private List<File> pathList;
-    private MediaPickerAdapter mediaPickerAdapter;
     private MediaPickerPathAdapter mediaPickerPathAdapter;
     private File startDirectory;
-    private PickerFileFilter.FileType fileType;
     private RoundRectView mediaFileProgress;
+    private MediaPickerImageAdapter mediaPickerImageAdapter;
 
 
-
-
-    public FilePickerFragment(File startDirectory, PickerFileFilter.FileType fileType) {
+    public ImagePickerFragment(File startDirectory) {
         this.startDirectory = startDirectory;
-        this.fileType = fileType;
     }
 
     @Nullable
@@ -82,20 +77,20 @@ public class FilePickerFragment extends Fragment {
                 }
             }
         });
-        mediaRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
-        mediaPickerAdapter = new MediaPickerAdapter(mediaPickerFileList, getContext());
-        mediaPickerAdapter.setAdapterCallback(new MediaPickerAdapter.AdapterCallback() {
+        mediaRecycler.setLayoutManager(new GridLayoutManager(getContext(), 2));
+        mediaPickerImageAdapter = new MediaPickerImageAdapter(mediaPickerFileList, getContext());
+        mediaPickerImageAdapter.setAdapterCallback(new MediaPickerImageAdapter.AdapterCallback() {
             @Override
             public void onItemClick(int position, MediaPickerFile mediaPickerFile) {
                 processClick(position, mediaPickerFile);
             }
 
             @Override
-            public void onItemLongClick(int position, MediaPickerFile mediaPickerFile) {
+            public void onItemLongClick(int position, ImageView imageView) {
 
             }
         });
-        mediaRecycler.setAdapter(mediaPickerAdapter);
+        mediaRecycler.setAdapter(mediaPickerImageAdapter);
         RecyclerView.ItemAnimator animator = mediaRecycler.getItemAnimator();
         if (animator instanceof SimpleItemAnimator) {
             ((SimpleItemAnimator) animator).setSupportsChangeAnimations(false);
@@ -114,10 +109,14 @@ public class FilePickerFragment extends Fragment {
             mediaPickerFileList.clear();
             new AsyncLoadFiles(mediaPickerFile.getFile()).execute();
         } else {
-            for (MediaPickerFile item : mediaPickerFileList)
-                item.setSelected(false);
+            for (int i = 0; i < mediaPickerFileList.size(); i++) {
+                if (mediaPickerFileList.get(i).isSelected()) {
+                    mediaPickerFileList.get(i).setSelected(false);
+                    mediaPickerImageAdapter.notifyItemChanged(i, "SELECTION");
+                }
+            }
             mediaPickerFileList.get(position).setSelected(!mediaPickerFile.isSelected());
-            mediaPickerAdapter.notifyDataSetChanged();
+            mediaPickerImageAdapter.notifyItemChanged(position, "SELECTION");
         }
     }
 
@@ -148,12 +147,7 @@ public class FilePickerFragment extends Fragment {
         @Override
         protected List<File> doInBackground(Object... objects) {
             List<File> listFiles = new ArrayList<>();
-            File[] childFiles = directory.listFiles(new PickerFileFilter(fileType));
-            for (File childFile : Objects.requireNonNull(childFiles)) {
-                if (!childFile.getName().startsWith(".") && childFile.canRead()) {
-                    listFiles.add(childFile);
-                }
-            }
+            listFiles.addAll(searchForFile(directory, new PickerFileFilter(PickerFileFilter.FileType.IMAGE)));
             if (!listFiles.isEmpty())
                 Collections.sort(listFiles, new Comparator<File>() {
                     @Override
@@ -168,7 +162,7 @@ public class FilePickerFragment extends Fragment {
             List<File> results = new ArrayList<>();
             for (File currentItem : Objects.requireNonNull(rootDirectory.listFiles(filter))) {
                 if (currentItem.isDirectory()) {
-                    if(currentItem.getPath().contains(FileUtils.AllowedMediaSearchFolders.DCIM) || currentItem.getPath().contains(FileUtils.AllowedMediaSearchFolders.PICTURES))
+                    if (currentItem.getPath().contains(FileUtils.AllowedMediaSearchFolders.DCIM) || currentItem.getPath().contains(FileUtils.AllowedMediaSearchFolders.PICTURES))
                         results.addAll(searchForFile(currentItem, filter));
                 } else {
                     results.add(currentItem);
@@ -192,12 +186,11 @@ public class FilePickerFragment extends Fragment {
                         return selectableFile.getFile().compareTo(t1.getFile());
                     }
                 });
-            mediaPickerAdapter.notifyDataSetChanged();
+            mediaPickerImageAdapter.notifyDataSetChanged();
             if (mediaPickerFileList.isEmpty())
                 mediaNoItems.setVisibility(View.VISIBLE);
             else
                 mediaNoItems.setVisibility(View.GONE);
-
             mediaFileProgress.setVisibility(View.GONE);
         }
     }

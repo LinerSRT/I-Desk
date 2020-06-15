@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="100dp"
-    android:layout_height="100dp"
+    android:layout_width="144dp"
+    android:layout_height="256dp"
     android:layout_margin="@dimen/contentMarginHalf">
 
     <com.github.florent37.shapeofview.shapes.RoundRectView
@@ -21,6 +21,7 @@
             <ImageView
                 android:id="@+id/mediaPickerImageItem"
                 android:layout_width="match_parent"
+                android:scaleType="centerCrop"
                 android:layout_height="match_parent" />
         </LinearLayout>
 
@@ -32,6 +33,7 @@
         android:layout_height="40dp"
         android:layout_centerInParent="true"
         android:background="@drawable/circle_bg"
+        android:visibility="gone"
         android:backgroundTint="@color/window_background"
         android:padding="@dimen/contentMarginHalf"
         android:src="@drawable/done_icon" />
@@ -39,10 +41,11 @@
     <com.liner.views.YSMarqueTextView
         android:id="@+id/mediaPickerImageFilename"
         android:layout_width="match_parent"
+        android:gravity="center"
         android:layout_height="wrap_content"
+        android:background="#90000000"
+        android:visibility="gone"
         android:layout_alignParentBottom="true"
-        android:layout_marginStart="3dp"
-        android:layout_marginEnd="3dp"
         android:layout_marginBottom="@dimen/contentMarginHalf"
         android:maxLines="1"
         android:textColor="@color/text"

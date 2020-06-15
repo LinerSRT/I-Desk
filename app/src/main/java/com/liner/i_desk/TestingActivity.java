@@ -35,7 +35,7 @@ public class TestingActivity extends AppCompatActivity {
                 })
                 .build();
 
-
+        baseDialog.showDialog();
         testSSSS1 = findViewById(R.id.testSSSS1);
         testSSSS1.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -50,7 +50,7 @@ public class TestingActivity extends AppCompatActivity {
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                baseDialog.showDialog();
+
             }
         });
 

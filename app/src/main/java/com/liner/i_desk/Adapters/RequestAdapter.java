@@ -1,8 +1,6 @@
 package com.liner.i_desk.Adapters;
 
 import android.app.Activity;
-import android.app.IntentService;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.PorterDuff;
@@ -15,7 +13,6 @@ import android.widget.ImageButton;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.button.MaterialButton;
 import com.liner.i_desk.ActivityRequestDetail;
 import com.liner.i_desk.Firebase.DatabaseListener;
 import com.liner.i_desk.Firebase.Firebase;
@@ -24,19 +21,21 @@ import com.liner.i_desk.Firebase.RequestObject;
 import com.liner.i_desk.Firebase.UserObject;
 import com.liner.i_desk.R;
 import com.liner.utils.Time;
+import com.liner.utils.ViewUtils;
 import com.liner.views.BaseDialog;
 import com.liner.views.BaseDialogBuilder;
 import com.liner.views.YSTextView;
-import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class RequestAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestViewHolder> {
     private AdapterCallback adapterCallback;
     private UserObject.UserType userType;
     private UserObject currentUser;
@@ -81,6 +80,7 @@ public class RequestAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     if(adapterCallback != null)
                         adapterCallback.onDataChanged(requestObjectList.size());
                 }
+                sortRequests();
             }
 
             @Override
@@ -93,6 +93,7 @@ public class RequestAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     if(adapterCallback != null)
                         adapterCallback.onDataChanged(requestObjectList.size());
                 }
+                sortRequests();
             }
 
             @Override
@@ -105,6 +106,7 @@ public class RequestAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     if(adapterCallback != null)
                         adapterCallback.onDataChanged(requestObjectList.size());
                 }
+                sortRequests();
             }
         };
 
@@ -177,142 +179,68 @@ public class RequestAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         );
     }
 
+    private void sortRequests(){
+        Collections.sort(requestObjectList, new Comparator<RequestObject>() {
+            @Override
+            public int compare(RequestObject a, RequestObject b) {
+                return Long.compare(b.getRequestCreatedAt(), a.getRequestCreatedAt());
+            }
+        });
+    }
+
 
     @NonNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        switch (userType) {
-            case ADMIN:
-            case SERVICE:
-                return new ServiceViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.request_service_holder, parent, false));
-            case CLIENT:
-            default:
-                return new ClientViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.request_client_holder, parent, false));
-        }
+    public RequestViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        return new RequestViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.request_service_holder, parent, false));
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final RequestViewHolder holder, int position) {
         adapterPosition = position;
         RequestObject item = requestObjectList.get(position);
-        if (holder instanceof ClientViewHolder) {
-            ((ClientViewHolder) holder).clientHolderTitle.setText(item.getRequestTitle());
-            ((ClientViewHolder) holder).clientHolderText.setText(item.getRequestText());
-            ((ClientViewHolder) holder).clientHolderDeadline.setText(Time.getHumanReadableTime(item.getRequestDeadlineAt(), "dd MMM HH:mm"));
-            switch (item.getRequestStatus()) {
-                case CLOSED:
-                    ((ClientViewHolder) holder).clientHolderStatus.setText("Закрыта");
-                    break;
-                case PENDING:
-                    ((ClientViewHolder) holder).clientHolderStatus.setText("В обработке");
-                    break;
-                case PROCESSING:
-                    ((ClientViewHolder) holder).clientHolderStatus.setText("В процессе");
-                    break;
-            }
-            if (item.getRequestAcceptorName() == null || item.getRequestAcceptorName().length() <= 0) {
-                ((ClientViewHolder) holder).clientHolderAcceptorName.setVisibility(View.GONE);
-            } else {
-                ((ClientViewHolder) holder).clientHolderAcceptorName.setVisibility(View.VISIBLE);
-                ((ClientViewHolder) holder).clientHolderAcceptorName.setText(item.getRequestAcceptorName());
-            }
-        } else if (holder instanceof ServiceViewHolder) {
-            Picasso.get().load(item.getRequestCreatorPhotoURL()).into(new Target() {
-                @Override
-                public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                    ((ServiceViewHolder) holder).serviceHolderUserPhoto.setImageBitmap(bitmap);
-                }
-
-                @Override
-                public void onBitmapFailed(Exception e, Drawable errorDrawable) {
-
-                }
-
-                @Override
-                public void onPrepareLoad(Drawable placeHolderDrawable) {
-
-                }
-            });
-            ((ServiceViewHolder) holder).serviceHolderUserName.setText(item.getRequestCreatorName());
-            ((ServiceViewHolder) holder).serviceHolderTitle.setText(item.getRequestTitle());
-            ((ServiceViewHolder) holder).serviceHolderText.setText(item.getRequestText());
+            Picasso.get().load(item.getRequestCreatorPhotoURL()).resize(ViewUtils.dpToPx(48),ViewUtils.dpToPx(48)).into(holder.serviceHolderUserPhoto);
+            holder.serviceHolderUserName.setText(item.getRequestCreatorName());
+            holder.serviceHolderTitle.setText(item.getRequestTitle());
+            holder.serviceHolderText.setText(item.getRequestText());
             switch (item.getRequestType()) {
                 case SERVICE:
-                    ((ServiceViewHolder) holder).serviceHolderRequestType.setText("Сервис");
-                    ((ServiceViewHolder) holder).serviceHolderRequestType.getBackground().setColorFilter(activity.getResources().getColor(R.color.service_request), PorterDuff.Mode.SRC_IN);
+                    holder.serviceHolderRequestType.setText("Сервис");
+                    holder.serviceHolderRequestType.getBackground().setColorFilter(activity.getResources().getColor(R.color.service_request), PorterDuff.Mode.SRC_IN);
                     break;
                 case INCIDENT:
-                    ((ServiceViewHolder) holder).serviceHolderRequestType.setText("Инцидент");
-                    ((ServiceViewHolder) holder).serviceHolderRequestType.getBackground().setColorFilter(activity.getResources().getColor(R.color.incident_request), PorterDuff.Mode.SRC_IN);
+                    holder.serviceHolderRequestType.setText("Инцидент");
+                    holder.serviceHolderRequestType.getBackground().setColorFilter(activity.getResources().getColor(R.color.incident_request), PorterDuff.Mode.SRC_IN);
                     break;
                 case CONSULTATION:
-                    ((ServiceViewHolder) holder).serviceHolderRequestType.setText("Консультация");
-                    ((ServiceViewHolder) holder).serviceHolderRequestType.getBackground().setColorFilter(activity.getResources().getColor(R.color.consultation_request), PorterDuff.Mode.SRC_IN);
+                    holder.serviceHolderRequestType.setText("Консультация");
+                    holder.serviceHolderRequestType.getBackground().setColorFilter(activity.getResources().getColor(R.color.consultation_request), PorterDuff.Mode.SRC_IN);
                     break;
             }
             switch (item.getRequestPriority()) {
                 case VERY_LOW:
-                    ((ServiceViewHolder) holder).serviceHolderRequestPriority.setText("Очень низкий приоритет");
-                    ((ServiceViewHolder) holder).serviceHolderRequestPriority.getBackground().setColorFilter(activity.getResources().getColor(R.color.very_low_priority), PorterDuff.Mode.SRC_IN);
+                    holder.serviceHolderRequestPriority.setText("Очень низкий приоритет");
+                    holder.serviceHolderRequestPriority.getBackground().setColorFilter(activity.getResources().getColor(R.color.very_low_priority), PorterDuff.Mode.SRC_IN);
                     break;
                 case LOW:
-                    ((ServiceViewHolder) holder).serviceHolderRequestPriority.setText("Низкий приоритет");
-                    ((ServiceViewHolder) holder).serviceHolderRequestPriority.getBackground().setColorFilter(activity.getResources().getColor(R.color.low_priority), PorterDuff.Mode.SRC_IN);
+                    holder.serviceHolderRequestPriority.setText("Низкий приоритет");
+                    holder.serviceHolderRequestPriority.getBackground().setColorFilter(activity.getResources().getColor(R.color.low_priority), PorterDuff.Mode.SRC_IN);
                     break;
                 case MEDIUM:
-                    ((ServiceViewHolder) holder).serviceHolderRequestPriority.setText("Нормальный приоритет");
-                    ((ServiceViewHolder) holder).serviceHolderRequestPriority.getBackground().setColorFilter(activity.getResources().getColor(R.color.medium_priority), PorterDuff.Mode.SRC_IN);
+                    holder.serviceHolderRequestPriority.setText("Нормальный приоритет");
+                    holder.serviceHolderRequestPriority.getBackground().setColorFilter(activity.getResources().getColor(R.color.medium_priority), PorterDuff.Mode.SRC_IN);
                     break;
                 case HIGH:
-                    ((ServiceViewHolder) holder).serviceHolderRequestPriority.setText("Очень высокий приоритет");
-                    ((ServiceViewHolder) holder).serviceHolderRequestPriority.getBackground().setColorFilter(activity.getResources().getColor(R.color.high_priority), PorterDuff.Mode.SRC_IN);
+                    holder.serviceHolderRequestPriority.setText("Очень высокий приоритет");
+                    holder.serviceHolderRequestPriority.getBackground().setColorFilter(activity.getResources().getColor(R.color.high_priority), PorterDuff.Mode.SRC_IN);
                     break;
                 case VERY_HIGH:
-                    ((ServiceViewHolder) holder).serviceHolderRequestPriority.setText("Высокий приоритет");
-                    ((ServiceViewHolder) holder).serviceHolderRequestPriority.getBackground().setColorFilter(activity.getResources().getColor(R.color.very_high_priority), PorterDuff.Mode.SRC_IN);
+                    holder.serviceHolderRequestPriority.setText("Высокий приоритет");
+                    holder.serviceHolderRequestPriority.getBackground().setColorFilter(activity.getResources().getColor(R.color.very_high_priority), PorterDuff.Mode.SRC_IN);
                     break;
             }
-            ((ServiceViewHolder) holder).serviceHolderCreatedAt.setText(Time.getHumanReadableTime(item.getRequestCreatedAt(), "dd MMM HH:mm"));
-            ((ServiceViewHolder) holder).serviceHolderDeadlineAt.setText(Time.getHumanReadableTime(item.getRequestDeadlineAt(), "dd MMM HH:mm"));
-            if (item.getRequestAcceptorID() != null) {
-                if (item.getRequestAcceptorID().equals(Firebase.getUserUID())) {
-                    ((ServiceViewHolder) holder).serviceHolderAcceptorName.setText("Вы приняли эту заявку");
-                    ((ServiceViewHolder) holder).serviceHolderAcceptRequest.setVisibility(View.GONE);
-
-                    ((ServiceViewHolder) holder).serviceHolderCloseRequest.setVisibility(View.VISIBLE);
-                    if(item.getRequestClose() != null){
-                        switch (item.getRequestClose()){
-                            case SEND:
-                                ((ServiceViewHolder) holder).serviceHolderCloseRequest.setEnabled(false);
-                                ((ServiceViewHolder) holder).serviceHolderCloseRequest.setText("Ожидание");
-                                break;
-                            case DENIED:
-                                ((ServiceViewHolder) holder).serviceHolderCloseRequest.setEnabled(true);
-                                ((ServiceViewHolder) holder).serviceHolderCloseRequest.setText("Закрыть");
-                                break;
-                            case ACCEPTED:
-                                ((ServiceViewHolder) holder).serviceHolderCloseRequest.setEnabled(false);
-                                ((ServiceViewHolder) holder).serviceHolderCloseRequest.setText("Закрыто");
-
-                                //todo показывать что заявка закрыта
-
-
-
-                                break;
-                        }
-                    }
-
-
-
-                } else {
-                    ((ServiceViewHolder) holder).serviceHolderAcceptorName.setText("Эту заявку принял: "+item.getRequestAcceptorName());
-                    ((ServiceViewHolder) holder).serviceHolderAcceptRequest.setVisibility(View.GONE);
-                    ((ServiceViewHolder) holder).serviceHolderCloseRequest.setVisibility(View.GONE);
-                }
-            } else {
-                ((ServiceViewHolder) holder).serviceHolderCloseRequest.setVisibility(View.GONE);
-            }
-        }
+            holder.serviceHolderCreatedAt.setText(Time.getHumanReadableTime(item.getRequestCreatedAt(), "dd MMM HH:mm"));
+            holder.serviceHolderDeadlineAt.setText(Time.getHumanReadableTime(item.getRequestDeadlineAt(), "dd MMM HH:mm"));
 
     }
 
@@ -321,35 +249,7 @@ public class RequestAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         return requestObjectList.size();
     }
 
-    class ClientViewHolder extends RecyclerView.ViewHolder {
-        private YSTextView clientHolderTitle;
-        private YSTextView clientHolderText;
-        private YSTextView clientHolderDeadline;
-        private YSTextView clientHolderStatus;
-        private YSTextView clientHolderAcceptorName;
-        private ImageButton clientHolderOpenRequest;
-
-        public ClientViewHolder(@NonNull View itemView) {
-            super(itemView);
-            clientHolderTitle = itemView.findViewById(R.id.clientHolderTitle);
-            clientHolderText = itemView.findViewById(R.id.clientHolderText);
-            clientHolderDeadline = itemView.findViewById(R.id.clientHolderDeadline);
-            clientHolderStatus = itemView.findViewById(R.id.clientHolderStatus);
-            clientHolderAcceptorName = itemView.findViewById(R.id.clientHolderAcceptorName);
-            clientHolderOpenRequest = itemView.findViewById(R.id.clientHolderOpenRequest);
-            clientHolderOpenRequest.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent intent = new Intent(activity, ActivityRequestDetail.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    intent.putExtra("requestObject", requestObjectList.get(getAdapterPosition()));
-                    activity.startActivity(intent);
-                }
-            });
-        }
-    }
-
-    class ServiceViewHolder extends RecyclerView.ViewHolder {
+    class RequestViewHolder extends RecyclerView.ViewHolder {
         private CircleImageView serviceHolderUserPhoto;
         private YSTextView serviceHolderUserName;
         private YSTextView serviceHolderTitle;
@@ -358,12 +258,9 @@ public class RequestAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         private YSTextView serviceHolderRequestPriority;
         private YSTextView serviceHolderCreatedAt;
         private YSTextView serviceHolderDeadlineAt;
-        private YSTextView serviceHolderAcceptorName;
         private ImageButton serviceHolderOpenRequest;
-        private MaterialButton serviceHolderAcceptRequest;
-        private MaterialButton serviceHolderCloseRequest;
 
-        public ServiceViewHolder(@NonNull View itemView) {
+        public RequestViewHolder(@NonNull View itemView) {
             super(itemView);
             serviceHolderUserPhoto = itemView.findViewById(R.id.serviceHolderUserPhoto);
             serviceHolderUserName = itemView.findViewById(R.id.serviceHolderUserName);
@@ -373,24 +270,7 @@ public class RequestAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             serviceHolderRequestPriority = itemView.findViewById(R.id.serviceHolderRequestPriority);
             serviceHolderCreatedAt = itemView.findViewById(R.id.serviceHolderCreatedAt);
             serviceHolderDeadlineAt = itemView.findViewById(R.id.serviceHolderDeadlineAt);
-            serviceHolderAcceptorName = itemView.findViewById(R.id.serviceHolderAcceptorName);
             serviceHolderOpenRequest = itemView.findViewById(R.id.serviceHolderOpenRequest);
-            serviceHolderAcceptRequest = itemView.findViewById(R.id.serviceHolderAcceptRequest);
-            serviceHolderCloseRequest = itemView.findViewById(R.id.serviceHolderCloseRequest);
-            serviceHolderAcceptRequest.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    adapterPosition = getLayoutPosition();
-                    acceptRequestDialog.showDialog();
-                }
-            });
-            serviceHolderCloseRequest.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    adapterPosition = getLayoutPosition();
-                    closeRequestDialog.showDialog();
-                }
-            });
             serviceHolderOpenRequest.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

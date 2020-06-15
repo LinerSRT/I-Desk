@@ -31,6 +31,7 @@ import com.liner.i_desk.Firebase.Storage.TaskListener;
 import com.liner.i_desk.Firebase.UserObject;
 import com.liner.i_desk.R;
 import com.liner.utils.Time;
+import com.liner.utils.ViewUtils;
 import com.liner.views.BaseDialog;
 import com.liner.views.BaseDialogBuilder;
 import com.liner.views.BaseDialogSelectionItem;
@@ -296,7 +297,7 @@ public class UserProfileFragment extends Fragment implements ImagePickerCallback
     }
 
     private void updateUserData() {
-        Picasso.get().load(currentUser.getUserProfilePhotoURL()).into(new Target() {
+        Picasso.get().load(currentUser.getUserProfilePhotoURL()).resize(ViewUtils.dpToPx(250), ViewUtils.dpToPx(250)).into(new Target() {
             @Override
             public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
                 userPhoto.setImageBitmap(bitmap);
@@ -348,7 +349,7 @@ public class UserProfileFragment extends Fragment implements ImagePickerCallback
 
                                 @Override
                                 public void onFinish(FileObject result, String fileUID) {
-                                    Picasso.get().load(new File(pickedPhotoPath)).into(userPhoto);
+                                    Picasso.get().load(new File(pickedPhotoPath)).resize(ViewUtils.dpToPx(250), ViewUtils.dpToPx(250)).into(userPhoto);
                                     for(RequestObject requestObject:databaseListener.getRequests()){
                                         if(requestObject.getRequestAcceptorID() != null && requestObject.getRequestAcceptorID().equals(Firebase.getUserUID())){
                                             requestObject.setRequestAcceptorPhotoURL(result.getFileURL());
@@ -393,7 +394,7 @@ public class UserProfileFragment extends Fragment implements ImagePickerCallback
 
                     @Override
                     public void onFinish(FileObject result, String fileUID) {
-                        Picasso.get().load(new File(list.get(0).getOriginalPath())).into(userPhoto);
+                        Picasso.get().load(new File(list.get(0).getOriginalPath())).resize(ViewUtils.dpToPx(250), ViewUtils.dpToPx(250)).into(userPhoto);
                         FirebaseValue.setUserValue(Firebase.getUserUID(), "userProfilePhotoURL", result.getFileURL());
                         uploadingDialog.closeDialog();
                     }

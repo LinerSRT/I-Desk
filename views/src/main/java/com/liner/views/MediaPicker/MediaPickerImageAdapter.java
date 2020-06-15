@@ -1,14 +1,15 @@
 package com.liner.views.MediaPicker;
 
-import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
-import android.graphics.drawable.BitmapDrawable;
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.OvershootInterpolator;
 import android.widget.ImageView;
@@ -16,23 +17,27 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.liner.utils.FileUtils;
+import com.liner.utils.ImageUtils;
 import com.liner.views.R;
 import com.liner.views.YSMarqueTextView;
-import com.liner.views.YSTextView;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
-import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class MediaPickerImageAdapter extends RecyclerView.Adapter<MediaPickerImageAdapter.ViewHolder> {
     private List<MediaPickerFile> mediaPickerFileList;
     private Context context;
     private AdapterCallback adapterCallback;
+    private List<Bitmap> bitmaps;
 
     public MediaPickerImageAdapter(List<MediaPickerFile> mediaPickerFileList, Context context) {
         this.mediaPickerFileList = mediaPickerFileList;
         this.context = context;
+        this.bitmaps = new ArrayList<>();
     }
 
     public void setAdapterCallback(AdapterCallback adapterCallback) {
@@ -46,11 +51,59 @@ public class MediaPickerImageAdapter extends RecyclerView.Adapter<MediaPickerIma
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        MediaPickerFile mediaPickerFile = mediaPickerFileList.get(position);
-        Picasso.get().load(mediaPickerFile.getFile()).into(holder.mediaPickerImageItem);
+    public void onBindViewHolder(@NonNull final ViewHolder holder, int position, final List<Object> payloads) {
+        final MediaPickerFile mediaPickerFile = mediaPickerFileList.get(position);
+        if(!payloads.isEmpty()){
+            for(Object object:payloads){
+                if(object.equals("SELECTION")){
+                    holder.mediaPickerImageSelection.setVisibility((mediaPickerFile.isSelected()) ? View.VISIBLE : View.GONE);
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (mediaPickerFile.isSelected()) {
+                                holder.itemView.animate()
+                                        .scaleX(0.95f)
+                                        .scaleY(0.95f)
+                                        .alpha(0.8f)
+                                        .setInterpolator(new OvershootInterpolator())
+                                        .setDuration(300)
+                                        .start();
+                            } else {
+                                holder.itemView.animate()
+                                        .scaleX(1f)
+                                        .scaleY(1f)
+                                        .alpha(1f)
+                                        .setInterpolator(new OvershootInterpolator())
+                                        .setDuration(300)
+                                        .start();
+                            }
+                        }
+                    }, 100);
+                }
+            }
+        } else {
+            onBindViewHolder(holder, position);
+        }
+
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
+        final MediaPickerFile mediaPickerFile = mediaPickerFileList.get(position);
+        Picasso.get().load(mediaPickerFile.getFile()).into(holder.mediaPickerImageItem, new Callback() {
+            @Override
+            public void onSuccess() {
+                bitmaps.add(ImageUtils.drawableToBitmap(holder.mediaPickerImageItem.getDrawable()));
+            }
+
+            @Override
+            public void onError(Exception e) {
+
+            }
+        });
         holder.mediaPickerImageFilename.setText(mediaPickerFile.getFile().getName());
-        holder.mediaPickerImageSelection.setVisibility((mediaPickerFile.isSelected())?View.VISIBLE:View.GONE);
+        holder.mediaPickerImageSelection.setVisibility((mediaPickerFile.isSelected()) ? View.VISIBLE : View.GONE);
+        holder.mediaPickerImageFilename.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -58,6 +111,12 @@ public class MediaPickerImageAdapter extends RecyclerView.Adapter<MediaPickerIma
         return mediaPickerFileList.size();
     }
 
+
+    public interface AdapterCallback {
+        void onItemClick(int position, MediaPickerFile mediaPickerFile);
+
+        void onItemLongClick(int position, ImageView imageView);
+    }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         ImageView mediaPickerImageItem;
@@ -72,51 +131,33 @@ public class MediaPickerImageAdapter extends RecyclerView.Adapter<MediaPickerIma
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if(adapterCallback != null)
+                    if (adapterCallback != null)
                         adapterCallback.onItemClick(getAdapterPosition(), mediaPickerFileList.get(getAdapterPosition()));
                 }
             });
             itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
-                    if(adapterCallback != null)
-                        adapterCallback.onItemLongClick(getAdapterPosition(), mediaPickerFileList.get(getAdapterPosition()));
-                    return true;
-                }
-            });
-
-            itemView.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View view, MotionEvent motionEvent) {
-                    switch (motionEvent.getAction()){
-                        case MotionEvent.ACTION_DOWN:
-                            itemView.animate()
-                                    .scaleX(3f)
-                                    .scaleY(3f)
-                                    .setInterpolator(new OvershootInterpolator())
-                                    .setDuration(300)
-                                    .start();
-                            break;
-                        case MotionEvent.ACTION_UP:
-                            itemView.animate()
-                                    .scaleX(1f)
-                                    .scaleY(1f)
-                                    .setInterpolator(new AccelerateInterpolator())
-                                    .setDuration(300)
-                                    .start();
-                            break;
-                    }
-
-
+                    if (adapterCallback != null)
+                        adapterCallback.onItemLongClick(getAdapterPosition(), mediaPickerImageItem);
+                    showFullPreview(bitmaps.get(getAdapterPosition()));
                     return true;
                 }
             });
         }
     }
 
-
-    public interface AdapterCallback{
-        void onItemClick(int position, MediaPickerFile mediaPickerFile);
-        void onItemLongClick(int position, MediaPickerFile mediaPickerFile);
+    public void showFullPreview(Bitmap bitmap){
+        final Dialog dialog = new Dialog(context, R.style.FullScreenDialog);
+        dialog.setCanceledOnTouchOutside(true);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(true);
+        Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawableResource(android.R.color.transparent);
+        Objects.requireNonNull(dialog.getWindow()).getAttributes().windowAnimations = R.anim.item_in;
+        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT);
+        dialog.setContentView(R.layout.image_preview);
+        ImageView imageView = dialog.findViewById(R.id.mediaPickerImagePreview);
+        imageView.setImageBitmap(bitmap);
+        dialog.show();
     }
 }

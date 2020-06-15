@@ -29,6 +29,7 @@ import com.liner.utils.PickerFileFilter;
 import com.liner.utils.TextUtils;
 import com.liner.utils.ViewUtils;
 import com.liner.views.MediaPicker.FilePickerFragment;
+import com.liner.views.MediaPicker.ImagePickerFragment;
 import com.liner.views.bottomsheetcore.BaseBottomSheet;
 import com.liner.views.bottomsheetcore.config.BaseConfig;
 
@@ -212,7 +213,7 @@ public class BaseDialog extends BaseBottomSheet {
                 dialogDone.setVisibility(VISIBLE);
                 break;
             case FILE_CHOOSE:
-                final FilePickerFragment filePickerFragment = new FilePickerFragment(Environment.getExternalStorageDirectory(), dialogType, fileType);
+                final FilePickerFragment filePickerFragment = new FilePickerFragment(Environment.getExternalStorageDirectory(), fileType);
                 activity.getSupportFragmentManager().beginTransaction().add(R.id.baseDialogCustomView, filePickerFragment).commit();
                 dialogCancel.setText("Отмена");
                 dialogDone.setText("Выбрать");
@@ -238,16 +239,16 @@ public class BaseDialog extends BaseBottomSheet {
                 break;
 
             case IMAGE_CHOOSE:
-                final FilePickerFragment filePickerFragment1 = new FilePickerFragment(Environment.getExternalStorageDirectory(), dialogType, PickerFileFilter.FileType.IMAGE);
-                activity.getSupportFragmentManager().beginTransaction().add(R.id.baseDialogCustomView, filePickerFragment1).commit();
+                final ImagePickerFragment imagePickerFragment = new ImagePickerFragment(Environment.getExternalStorageDirectory());
+                activity.getSupportFragmentManager().beginTransaction().add(R.id.baseDialogCustomView, imagePickerFragment).commit();
                 dialogCancel.setText("Отмена");
                 dialogDone.setText("Выбрать");
                 dialogDone.setOnClickListener(new View.OnClickListener(){
                     @Override
                     public void onClick(View view) {
-                        if(filePickerFragment1.getSelectedFile() != null){
+                        if(imagePickerFragment.getSelectedFile() != null){
                             if(filePickListener != null) {
-                                filePickListener.onFileSelected(filePickerFragment1.getSelectedFile());
+                                filePickListener.onFileSelected(imagePickerFragment.getSelectedFile());
                                 closeDialog();
                             }
                         }
