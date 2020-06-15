@@ -21,4 +21,9 @@
     <color name="high_priority">#AE2C21</color>
     <color name="very_high_priority">#B60000</color>
 
+
+    <color name="request_status_processing">#2B79B4</color>
+    <color name="request_status_closed">#390D80</color>
+    <color name="request_status_pending">#FBC02D</color>
+
 </resources>

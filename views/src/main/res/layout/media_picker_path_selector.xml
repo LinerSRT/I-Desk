@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:gravity="center">
+
+    <com.liner.views.YSTextView
+        android:id="@+id/mediaPickerFilePath"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="FILEPATH"
+        android:layout_marginEnd="@dimen/contentMarginHalf"
+        android:layout_marginStart="@dimen/contentMarginHalf"
+        app:ys_type="Bold"
+        android:textColor="@color/text"
+        android:textSize="@dimen/primaryTextSize"
+        android:gravity="center_vertical"
+        />
+
+    <ImageView
+        android:src="@drawable/arrow_next"
+        android:tint="@color/primary"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>

@@ -7,7 +7,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.liner.i_desk.ActivitySplash;
+import com.liner.i_desk.R;
 import com.liner.utils.Time;
+import com.liner.utils.ViewUtils;
 
 import java.util.concurrent.TimeUnit;
 
@@ -30,6 +32,7 @@ public abstract class FireActivity extends AppCompatActivity {
         if(!Firebase.isUserLoginned()){
             sendToSplash();
         }
+        ViewUtils.setStatusBarColor(this, getResources().getColor(R.color.window_background));
         onlineUpdater.postDelayed(onlineUpdaterRunnable, TimeUnit.MINUTES.toMillis(1));
     }
 

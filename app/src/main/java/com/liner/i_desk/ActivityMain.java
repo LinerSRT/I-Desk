@@ -14,6 +14,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.liner.i_desk.Firebase.FireActivity;
+import com.liner.i_desk.Firebase.Firebase;
 import com.liner.i_desk.Firebase.MessagingService;
 import com.liner.i_desk.Fragments.CreateRequestFragment;
 import com.liner.i_desk.Fragments.MainFragment;
@@ -43,7 +44,6 @@ public class ActivityMain extends FireActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        ViewUtils.setStatusBarColor(this, getResources().getColor(R.color.window_background));
         PowerManager pm = (PowerManager) getApplicationContext().getSystemService(POWER_SERVICE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (!pm.isIgnoringBatteryOptimizations(getApplicationContext().getPackageName())) {
@@ -67,7 +67,7 @@ public class ActivityMain extends FireActivity {
         setContentView(R.layout.activity_main_layout);
         fragmentContainer = findViewById(R.id.fragmentContainer);
         mainFragment = new MainFragment();
-        userProfileFragment = new UserProfileFragment();
+        userProfileFragment = new UserProfileFragment(Firebase.getUserUID());
         createRequestFragment = new CreateRequestFragment();
         createRequestFragment.setCloseCallback(new CreateRequestFragment.CloseCallback() {
             @Override
@@ -161,9 +161,12 @@ public class ActivityMain extends FireActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(createRequestFragment.requestFileStep != null)
-            createRequestFragment.requestFileStep.submitPicker(requestCode, resultCode, data);
-        userProfileFragment.onActivityResult(requestCode, resultCode, data);
+        try {
+            userProfileFragment.onActivityResult(requestCode, resultCode, data);
+            createRequestFragment.onActivityResult(requestCode, resultCode, data);
+        } catch (NullPointerException e){
+            e.printStackTrace();
+        }
     }
 
     private void replaceFragment(final Fragment fragment) {

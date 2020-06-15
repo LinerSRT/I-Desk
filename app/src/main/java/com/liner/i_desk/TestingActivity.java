@@ -1,39 +1,58 @@
 package com.liner.i_desk;
 
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Toast;
+import android.widget.SeekBar;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.liner.utils.PickerFileFilter;
 import com.liner.views.BaseDialog;
 import com.liner.views.BaseDialogBuilder;
+import com.liner.views.MediaPicker.FilePickerFragment;
+
+import java.io.File;
 
 
 public class TestingActivity extends AppCompatActivity {
 
+
+    private SeekBar testSSSS1;
+    private BaseDialog baseDialog;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_testing);
-
-        String[] test = new String[]{"One", "Two", "Three"};
-        final BaseDialog baseDialog = new BaseDialogBuilder(this)
-                .setSelectionList(test)
-                .setSelectionListener(new BaseDialog.BaseDialogSelectionListener() {
+        baseDialog = new BaseDialogBuilder(this)
+                .setDialogTitle("Выберите фото")
+                .setDialogType(BaseDialogBuilder.Type.IMAGE_CHOOSE)
+                .setFilePickListener(new BaseDialog.BaseDialogFilePickListener() {
                     @Override
-                    public void onItemClick(int position) {
-                        Toast.makeText(TestingActivity.this, "You selected "+position, Toast.LENGTH_SHORT).show();
+                    public void onFileSelected(File file) {
+
                     }
                 })
-                .setDialogType(BaseDialogBuilder.Type.SINGLE_CHOOSE)
-                .setDialogTitle("Title")
-                .setDialogText("Select one")
                 .build();
 
 
+        testSSSS1 = findViewById(R.id.testSSSS1);
+        testSSSS1.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                baseDialog.showDialog();
+            }
+        });
 
 
 

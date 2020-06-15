@@ -9,15 +9,15 @@
     tools:context=".TestingActivity">
 
 
-    <com.liner.views.AppBar
-        android:id="@+id/appBar"
+
+
+    <SeekBar
+        android:id="@+id/testSSSS1"
+        android:max="100"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-
+        android:padding="@dimen/contentMarginHalf"
+        app:layout_constraintTop_toBottomOf="@+id/testSSSS" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

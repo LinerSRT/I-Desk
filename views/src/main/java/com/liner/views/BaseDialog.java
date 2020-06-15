@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.PorterDuff;
+import android.os.Environment;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -22,12 +23,16 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.FragmentActivity;
 
+import com.liner.utils.PickerFileFilter;
 import com.liner.utils.TextUtils;
 import com.liner.utils.ViewUtils;
+import com.liner.views.MediaPicker.FilePickerFragment;
 import com.liner.views.bottomsheetcore.BaseBottomSheet;
 import com.liner.views.bottomsheetcore.config.BaseConfig;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,7 +42,7 @@ import studio.carbonylgroup.textfieldboxes.TextFieldBoxes;
 
 @SuppressLint("ViewConstructor")
 public class BaseDialog extends BaseBottomSheet {
-    private Activity activity;
+    private FragmentActivity activity;
     private TextView dialogTitle;
     private FrameLayout dialogCustomView;
     private ProgressBar indeterminateProgress;
@@ -62,9 +67,11 @@ public class BaseDialog extends BaseBottomSheet {
     private int editMinCharacters;
     private String editHelpText;
     private String resultText;
+    private PickerFileFilter.FileType fileType;
 
+    private BaseDialogFilePickListener filePickListener;
 
-    public BaseDialog(@NonNull Activity hostActivity, @NonNull BaseConfig config, BaseDialogBuilder builder) {
+    public BaseDialog(@NonNull FragmentActivity hostActivity, @NonNull BaseConfig config, BaseDialogBuilder builder) {
         super(hostActivity, config);
         this.activity = hostActivity;
         this.dialogTitleText = builder.dialogTitleText;
@@ -79,6 +86,8 @@ public class BaseDialog extends BaseBottomSheet {
         this.editListener = builder.editListener;
         this.editMinCharacters = builder.editMinCharacters;
         this.editHelpText = builder.editHelpText;
+        this.filePickListener = builder.filePickListener;
+        this.fileType = builder.fileType;
     }
 
     @NonNull
@@ -202,8 +211,58 @@ public class BaseDialog extends BaseBottomSheet {
                 dialogCancel.setVisibility(VISIBLE);
                 dialogDone.setVisibility(VISIBLE);
                 break;
-        }
+            case FILE_CHOOSE:
+                final FilePickerFragment filePickerFragment = new FilePickerFragment(Environment.getExternalStorageDirectory(), dialogType, fileType);
+                activity.getSupportFragmentManager().beginTransaction().add(R.id.baseDialogCustomView, filePickerFragment).commit();
+                dialogCancel.setText("Отмена");
+                dialogDone.setText("Выбрать");
+                dialogDone.setOnClickListener(new View.OnClickListener(){
+                    @Override
+                    public void onClick(View view) {
+                        if(filePickerFragment.getSelectedFile() != null){
+                            if(filePickListener != null) {
+                                filePickListener.onFileSelected(filePickerFragment.getSelectedFile());
+                                closeDialog();
+                            }
+                        }
+                    }
+                });
+                dialogCancel.setOnClickListener(new View.OnClickListener(){
+                    @Override
+                    public void onClick(View view) {
+                        closeDialog();
+                    }
+                });
+                dialogCancel.setVisibility(VISIBLE);
+                dialogDone.setVisibility(VISIBLE);
+                break;
 
+            case IMAGE_CHOOSE:
+                final FilePickerFragment filePickerFragment1 = new FilePickerFragment(Environment.getExternalStorageDirectory(), dialogType, PickerFileFilter.FileType.IMAGE);
+                activity.getSupportFragmentManager().beginTransaction().add(R.id.baseDialogCustomView, filePickerFragment1).commit();
+                dialogCancel.setText("Отмена");
+                dialogDone.setText("Выбрать");
+                dialogDone.setOnClickListener(new View.OnClickListener(){
+                    @Override
+                    public void onClick(View view) {
+                        if(filePickerFragment1.getSelectedFile() != null){
+                            if(filePickListener != null) {
+                                filePickListener.onFileSelected(filePickerFragment1.getSelectedFile());
+                                closeDialog();
+                            }
+                        }
+                    }
+                });
+                dialogCancel.setOnClickListener(new View.OnClickListener(){
+                    @Override
+                    public void onClick(View view) {
+                        closeDialog();
+                    }
+                });
+                dialogCancel.setVisibility(VISIBLE);
+                dialogDone.setVisibility(VISIBLE);
+                break;
+        }
         show(true);
     }
 
@@ -330,6 +389,9 @@ public class BaseDialog extends BaseBottomSheet {
         void onEditFinished(String text);
     }
 
+    public interface BaseDialogFilePickListener{
+        void onFileSelected(File file);
+    }
 
 
 }

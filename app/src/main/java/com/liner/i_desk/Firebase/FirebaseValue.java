@@ -71,6 +71,26 @@ public class FirebaseValue {
         });
     }
 
+    public static void getRequest(final String requestID, final ValueListener valueListener) {
+        if (!Firebase.isUserLoginned())
+            return;
+        Objects.requireNonNull(Firebase.getRequestsDatabase()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.hasChild(requestID)) {
+                    valueListener.onSuccess(dataSnapshot.child(requestID).getValue(RequestObject.class), dataSnapshot.child(requestID).getRef());
+                } else {
+                    valueListener.onFail("Value not exist");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
     public static void setUserValue(String userID, String key, Object value) {
         if (!Firebase.isUserLoginned())
             return;

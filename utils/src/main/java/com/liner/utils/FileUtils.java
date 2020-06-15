@@ -203,26 +203,29 @@ public class FileUtils {
         });
     }
 
+    public interface AllowedMediaSearchFolders{
+        String DCIM = "DCIM";
+        String PICTURES = "Pictures";
+        List<String> SUPPORTED_LIST = Collections.unmodifiableList(new ArrayList<String>() {
+            {
+                add(DCIM);
+                add(PICTURES);
+            }
+        });
+    }
+
     public interface FileFormat {
-        String JSON = "application/json";
-        String JAVASCRIPT = "application/javascript";
         String OCET = "application/octet-stream";
         String OGG = "application/ogg";
-        String PDF = "application/pdf";
         String ZIP = "application/zip";
         String GZIP = "application/gzip";
-        String XML = "application/xml";
 
         List<String> SUPPORTED_LIST = Collections.unmodifiableList(new ArrayList<String>() {
             {
-                add(JSON);
-                add(JAVASCRIPT);
                 add(OCET);
                 add(OGG);
-                add(PDF);
                 add(ZIP);
                 add(GZIP);
-                add(XML);
             }
         });
     }
@@ -230,9 +233,17 @@ public class FileUtils {
     public interface TextFormat {
         String HTML = "text/html";
         String PLAIN = "text/plain";
+        String XML = "application/xml";
+        String PDF = "application/pdf";
+        String JSON = "application/json";
+        String JAVASCRIPT = "application/javascript";
 
         List<String> SUPPORTED_LIST = Collections.unmodifiableList(new ArrayList<String>() {
             {
+                add(PDF);
+                add(JSON);
+                add(JAVASCRIPT);
+                add(XML);
                 add(HTML);
                 add(PLAIN);
             }

@@ -1,7 +1,9 @@
 package com.liner.i_desk.Adapters;
 
 import android.app.Activity;
+import android.app.IntentService;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
@@ -14,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.button.MaterialButton;
+import com.liner.i_desk.ActivityRequestDetail;
 import com.liner.i_desk.Firebase.DatabaseListener;
 import com.liner.i_desk.Firebase.Firebase;
 import com.liner.i_desk.Firebase.FirebaseValue;
@@ -334,6 +337,15 @@ public class RequestAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             clientHolderStatus = itemView.findViewById(R.id.clientHolderStatus);
             clientHolderAcceptorName = itemView.findViewById(R.id.clientHolderAcceptorName);
             clientHolderOpenRequest = itemView.findViewById(R.id.clientHolderOpenRequest);
+            clientHolderOpenRequest.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(activity, ActivityRequestDetail.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.putExtra("requestObject", requestObjectList.get(getAdapterPosition()));
+                    activity.startActivity(intent);
+                }
+            });
         }
     }
 
@@ -377,6 +389,15 @@ public class RequestAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 public void onClick(View view) {
                     adapterPosition = getLayoutPosition();
                     closeRequestDialog.showDialog();
+                }
+            });
+            serviceHolderOpenRequest.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(activity, ActivityRequestDetail.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.putExtra("requestObject", requestObjectList.get(getAdapterPosition()));
+                    activity.startActivity(intent);
                 }
             });
         }

@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main_content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/window_background_dark"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/window_background"
+        android:elevation="4dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:gravity="center"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <com.liner.views.YSTextView
+                android:id="@+id/requestDetailBar"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:drawableStart="@drawable/arrow_back"
+                android:drawablePadding="@dimen/contentMarginHalf"
+                android:gravity="center_vertical"
+                android:paddingStart="@dimen/contentMargin"
+                android:text="@string/app_name"
+                android:textColor="@color/text"
+                android:textSize="@dimen/primaryTextSizeLarge" />
+
+            <ImageButton
+                android:id="@+id/expandActionBar"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:rotation="180"
+                android:backgroundTint="@color/window_background_dark"
+                android:layout_marginEnd="@dimen/contentMarginHalf"
+                android:background="@drawable/circle_bg"
+                android:src="@drawable/arrow_up" />
+        </LinearLayout>
+
+        <com.liner.views.ExpandLayout
+            android:id="@+id/actionBarLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <com.liner.views.YSTextView
+                    android:id="@+id/requestDetailTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:text="Contrary to popular belief, Lorem Ipsum is not simply random text"
+                    android:textColor="@color/text"
+                    android:textSize="@dimen/primaryTextSize"
+                    app:ys_type="Bold" />
+
+                <com.liner.views.YSTextView
+                    android:id="@+id/requestDetailText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:text="is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
+                    android:textColor="@color/text_dark"
+                    android:textSize="@dimen/secondaryTextSize"
+                    app:ys_type="Light" />
+
+
+                <com.liner.views.YSTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="@dimen/contentMarginHalf"
+                    android:layout_marginEnd="8dp"
+                    android:gravity="center"
+                    android:text="Оборудование"
+                    android:textColor="@color/text"
+                    android:textSize="@dimen/secondaryTextSize"
+                    app:ys_type="Medium" />
+
+                <com.liner.views.YSTextView
+                    android:id="@+id/requestDetailDeviceText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:maxLines="200"
+                    android:text="is simply but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
+                    android:textColor="@color/text_dark"
+                    android:textSize="@dimen/secondaryTextSize"
+                    app:ys_type="Light" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/contentMarginHalf"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <com.liner.views.YSTextView
+                        android:id="@+id/requestDetailType"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="4dp"
+                        android:background="@drawable/background_round"
+                        android:backgroundTint="@color/service_request"
+                        android:padding="4dp"
+                        android:text="Сервис"
+                        android:textColor="@color/text"
+                        android:textSize="@dimen/tipsTextSize"
+                        app:ys_type="Medium" />
+
+                    <com.liner.views.YSTextView
+                        android:id="@+id/requestDetailPriority"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="4dp"
+                        android:background="@drawable/background_round"
+                        android:backgroundTint="@color/low_priority"
+                        android:padding="4dp"
+                        android:text="Низкий приоритет"
+                        android:textColor="@color/text"
+                        android:textSize="@dimen/tipsTextSize"
+                        app:ys_type="Medium" />
+
+                    <com.liner.views.YSTextView
+                        android:id="@+id/requestDetailStatus"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="4dp"
+                        android:background="@drawable/background_round"
+                        android:backgroundTint="@color/request_status_pending"
+                        android:padding="4dp"
+                        android:text="В обработке"
+                        android:textColor="@color/text"
+                        android:textSize="@dimen/tipsTextSize"
+                        app:ys_type="Medium" />
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/contentMarginHalf"
+                    android:layout_marginTop="@dimen/contentMarginHalf"
+                    android:layout_marginEnd="@dimen/contentMarginHalf"
+                    android:orientation="horizontal">
+
+                    <com.liner.views.YSTextView
+                        android:id="@+id/requestDetailCreatedTime"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="20.20.2020 20:20"
+                        android:textColor="@color/text_dark"
+                        android:textSize="@dimen/secondaryTextSizeSmall"
+                        app:ys_type="Thin" />
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1" />
+
+                    <com.liner.views.YSTextView
+                        android:id="@+id/requestDetailDeadlineTime"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="20.20.2020 20:20"
+                        android:textColor="@color/text_dark"
+                        android:textSize="@dimen/secondaryTextSizeSmall"
+                        app:ys_type="Thin" />
+                </LinearLayout>
+
+
+                <ProgressBar
+                    android:id="@+id/deadLineProgress"
+                    style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/contentMarginHalf"
+                    android:progress="50"
+                    android:progressBackgroundTintMode="src_in"
+                    android:progressTint="@color/primary"
+                    android:progressTintMode="src_in"
+                    android:secondaryProgress="100"
+                    android:secondaryProgressTint="@color/window_background_dark"
+                    android:secondaryProgressTintMode="src_in" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/contentMarginHalf"
+                    android:layout_marginEnd="@dimen/contentMarginHalf"
+                    android:orientation="horizontal">
+
+                    <com.liner.views.YSTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Дата создания"
+                        android:textColor="@color/text_dark"
+                        android:textSize="@dimen/secondaryTextSizeSmall"
+                        app:ys_type="Thin" />
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1" />
+
+                    <com.liner.views.YSTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Дедлайн"
+                        android:textColor="@color/text_dark"
+                        android:textSize="@dimen/secondaryTextSizeSmall"
+                        app:ys_type="Thin" />
+                </LinearLayout>
+
+            </LinearLayout>
+        </com.liner.views.ExpandLayout>
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tabLayout"
+            style="@style/Widget.Design.TabLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/window_background"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/YSTextView2"
+            app:tabBackground="@color/window_background"
+            app:tabGravity="center"
+            app:tabIconTint="@drawable/tab_icon_tint"
+            app:tabIconTintMode="src_in"
+            app:tabIndicatorColor="@color/primary_dark"
+            app:tabInlineLabel="true"
+            app:tabMode="auto"
+            app:tabPadding="@dimen/contentMarginHalf"
+            app:tabRippleColor="@color/primary"
+            app:tabSelectedTextColor="@color/primary_dark"
+            app:tabTextAppearance="@style/TabTextStyle"
+            app:tabTextColor="@color/text_dark" />
+
+    </LinearLayout>
+
+    <com.liner.views.ExtendedViewPager
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:overScrollMode="never" />
+
+</LinearLayout>

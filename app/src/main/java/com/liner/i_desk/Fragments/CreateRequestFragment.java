@@ -1,5 +1,6 @@
 package com.liner.i_desk.Fragments;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -283,5 +284,15 @@ public class CreateRequestFragment extends Fragment implements StepperFormListen
 
     public interface CloseCallback {
         void onClose();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        requestFileStep.submitPicker(requestCode, resultCode, data);
+    }
+
+    public interface FragmentCallback{
+        void onActivityResult(int requestCode, int resultCode, @Nullable Intent data);
     }
 }

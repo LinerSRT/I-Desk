@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="360dp"
+    android:orientation="vertical">
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/mediaPathRecycler"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:overScrollMode="never" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/mediaFileRecycler"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <com.github.florent37.shapeofview.shapes.RoundRectView
+            android:id="@+id/mediaFileProgress"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:shape_roundRect_bottomLeftRadius="@dimen/cardsCornerRadius"
+            app:shape_roundRect_bottomRightRadius="@dimen/cardsCornerRadius"
+            app:shape_roundRect_topLeftRadius="@dimen/cardsCornerRadius"
+            app:shape_roundRect_topRightRadius="@dimen/cardsCornerRadius">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#90000000"
+                android:gravity="center">
+
+                <ProgressBar
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:indeterminateTint="@color/primary" />
+            </LinearLayout>
+        </com.github.florent37.shapeofview.shapes.RoundRectView>
+
+        <com.liner.views.YSTextView
+            android:id="@+id/mediaNoItems"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:overScrollMode="never"
+            android:text="Путая дирректория"
+            android:textColor="@color/primary"
+            android:textSize="@dimen/secondaryTextSize"
+            app:ys_type="Medium" />
+    </RelativeLayout>
+</LinearLayout>

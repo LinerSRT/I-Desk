@@ -12,6 +12,10 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentActivity;
+
+import com.liner.utils.PickerFileFilter;
+import com.liner.views.MediaPicker.FilePickerFragment;
 import com.liner.views.bottomsheetcore.BaseBottomSheet;
 import com.liner.views.bottomsheetcore.config.BaseConfig;
 import com.liner.views.bottomsheetcore.config.Config;
@@ -41,6 +45,8 @@ public class BaseDialogBuilder {
     public List<BaseDialogSelectionItem> selectionItemList;
     public int editMinCharacters = 6;
     public String editHelpText;
+    public BaseDialog.BaseDialogFilePickListener filePickListener;
+    public PickerFileFilter.FileType fileType = PickerFileFilter.FileType.ALL;
 
 
     public enum Type{
@@ -51,10 +57,17 @@ public class BaseDialogBuilder {
         PROGRESS,
         INDETERMINATE,
         SINGLE_CHOOSE,
-        EDIT
+        EDIT,
+        FILE_CHOOSE,
+        IMAGE_CHOOSE,
+        VIDEO_CHOOSE,
+        AUDIO
     }
 
     public BaseDialogBuilder(Activity activity) {
+        this.activity = activity;
+    }
+    public BaseDialogBuilder(FragmentActivity activity) {
         this.activity = activity;
     }
 
@@ -65,6 +78,11 @@ public class BaseDialogBuilder {
 
     public BaseDialogBuilder setDismissOnTouchOutside(boolean dismissOnTouchOutside) {
         this.dismissOnTouchOutside = dismissOnTouchOutside;
+        return this;
+    }
+
+    public BaseDialogBuilder setFileType(PickerFileFilter.FileType fileType) {
+        this.fileType = fileType;
         return this;
     }
 
@@ -85,6 +103,11 @@ public class BaseDialogBuilder {
 
     public BaseDialogBuilder setEditHelpText(String editHelpText) {
         this.editHelpText = editHelpText;
+        return this;
+    }
+
+    public BaseDialogBuilder setFilePickListener(BaseDialog.BaseDialogFilePickListener filePickListener) {
+        this.filePickListener = filePickListener;
         return this;
     }
 
@@ -147,7 +170,7 @@ public class BaseDialogBuilder {
                 .sheetBackgroundColor(backgroundColor)
                 .sheetCornerRadius(cornerRadius)
                 .build();
-        return new BaseDialog(activity, config, this);
+        return new BaseDialog((FragmentActivity) activity, config, this);
     }
 
     public static BaseDialog buildFast(Activity activity,
