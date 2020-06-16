@@ -174,7 +174,11 @@ public class MessagingService extends Service {
     private void sendNotification(String title, String text, int iconID, RequestObject requestObject){
         Uri defaultSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         Intent intent = new Intent(getApplicationContext(), ActivityRequestDetail.class);
-        intent.putExtra("requestObject", requestObject);
+        try {
+            intent.putExtra("requestObject", requestObject);
+        } catch (RuntimeException e){
+            e.printStackTrace();
+        }
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, 0);
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);

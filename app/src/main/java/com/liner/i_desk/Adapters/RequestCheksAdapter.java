@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.abdularis.buttonprogress.DownloadButtonProgress;
 import com.google.firebase.database.DatabaseReference;
+import com.liner.i_desk.Firebase.CheckObject;
 import com.liner.i_desk.Firebase.DatabaseListener;
 import com.liner.i_desk.Firebase.FileObject;
 import com.liner.i_desk.Firebase.Firebase;
@@ -27,37 +28,28 @@ import com.liner.views.BaseDialog;
 import com.liner.views.BaseDialogBuilder;
 import com.liner.views.YSMarqueTextView;
 import com.liner.views.YSTextView;
+import com.nostra13.universalimageloader.utils.L;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 public class RequestCheksAdapter extends RecyclerView.Adapter<RequestCheksAdapter.FilesViewHolder> {
     private Activity activity;
     private RequestObject requestObject;
-    private List<String> keys;
-    private List<String> values;
-    private HashMap<String, String> requestChecks;
-
-
+    private List<CheckObject> checkList;
     private BaseDialog deleteWarnDialog;
 
     public RequestCheksAdapter(Activity activity, final RequestObject requestObject) {
         this.activity = activity;
         this.requestObject = requestObject;
         if(requestObject.getRequestChecks() == null)
-            requestChecks = new HashMap<>();
-        this.requestChecks = requestObject.getRequestChecks();
-        try {
-            keys = new ArrayList<>(requestChecks.keySet());
-            values = new ArrayList<>(requestChecks.values());
-        } catch (NullPointerException e){
-            keys = new ArrayList<>();
-            values = new ArrayList<>();
-        }
+            checkList = new ArrayList<>();
+        checkList = requestObject.getRequestChecks();
     }
 
     @NonNull
@@ -69,13 +61,13 @@ public class RequestCheksAdapter extends RecyclerView.Adapter<RequestCheksAdapte
     @Override
     public void onBindViewHolder(@NonNull final FilesViewHolder holder, int position) {
         holder.requestCheck.setEnabled(!requestObject.getRequestCreatorID().equals(Firebase.getUserUID()));
-        holder.requestCheck.setChecked(Boolean.parseBoolean(keys.get(position)));
-        holder.requestCheck.setText(values.get(position));
+        holder.requestCheck.setChecked(checkList.get(position).getCheckStatus());
+        holder.requestCheck.setText(checkList.get(position).getCheckName());
     }
 
     @Override
     public int getItemCount() {
-        return requestChecks.size();
+        return checkList == null? 0:checkList.size();
     }
 
     class FilesViewHolder extends RecyclerView.ViewHolder {
@@ -87,12 +79,8 @@ public class RequestCheksAdapter extends RecyclerView.Adapter<RequestCheksAdapte
             requestCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                    keys.set(getAdapterPosition(), String.valueOf(b));
-                    requestChecks.clear();
-                    for (int i = 0; i < keys.size(); i++) {
-                        requestChecks.put(keys.get(i), values.get(i));
-                    }
-                    requestObject.setRequestChecks(requestChecks);
+                    checkList.get(getAdapterPosition()).setCheckStatus(b);
+                    requestObject.setRequestChecks(checkList);
                     FirebaseValue.setRequest(requestObject.getRequestID(), requestObject);
                 }
             });

@@ -1,7 +1,10 @@
 package com.liner.i_desk.Firebase;
 
+import com.nostra13.universalimageloader.utils.L;
+
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.List;
 
 public class RequestObject implements Serializable {
     private String requestID;
@@ -12,7 +15,7 @@ public class RequestObject implements Serializable {
     private String requestTitle;
     private String requestText;
     private String requestUserDeviceText;
-    private HashMap<String, String> requestChecks;
+    private List<CheckObject> requestChecks;
     private HashMap<String, String> requestMessages;
     private HashMap<String, String> requestFiles;
     private long requestCreatedAt;
@@ -66,7 +69,7 @@ public class RequestObject implements Serializable {
                          String requestTitle,
                          String requestText,
                          String requestUserDeviceText,
-                         HashMap<String, String> requestChecks,
+                         List<CheckObject> requestChecks,
                          HashMap<String, String> requestMessages,
                          HashMap<String, String> requestFiles,
                          long requestCreatedAt,
@@ -185,11 +188,11 @@ public class RequestObject implements Serializable {
         this.requestUserDeviceText = requestUserDeviceText;
     }
 
-    public HashMap<String, String> getRequestChecks() {
+    public List<CheckObject> getRequestChecks() {
         return requestChecks;
     }
 
-    public void setRequestChecks(HashMap<String, String> requestChecks) {
+    public void setRequestChecks(List<CheckObject> requestChecks) {
         this.requestChecks = requestChecks;
     }
 

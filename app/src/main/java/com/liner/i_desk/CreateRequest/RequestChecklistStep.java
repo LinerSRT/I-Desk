@@ -6,11 +6,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 
+import com.liner.i_desk.Firebase.CheckObject;
 import com.liner.i_desk.R;
 import com.liner.views.RequestCheckListLayoutView;
 import com.liner.views.verticalstepperform.Step;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 
 @SuppressLint("InflateParams")
@@ -86,10 +89,10 @@ public class RequestChecklistStep extends Step<String> {
     }
 
 
-    public HashMap<String, String> getResult(){
-        HashMap<String, String> requestChecks = new HashMap<>();
+    public List<CheckObject> getResult(){
+        List<CheckObject> checkObjects = new ArrayList<>();
         for(String check:requestCheckListLayoutView.getRequestCheckList())
-            requestChecks.put("false", check);
-        return requestChecks;
+            checkObjects.add(new CheckObject(check, false));
+        return checkObjects;
     }
 }
