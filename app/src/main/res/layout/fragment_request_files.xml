@@ -1,53 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:orientation="vertical"
-    android:gravity="center_horizontal"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/fragmentRequestFilesRecycler"
+
+    <com.liner.views.DisableLayout
+        android:id="@+id/disableFilesLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:overScrollMode="never"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_height="match_parent"
+        android:background="#90000000"
+        android:elevation="3dp"
+        app:dl_enabled="true">
 
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:src="@drawable/lock_icon" />
 
-    <FrameLayout
-        android:id="@+id/fragmentRequestFileLayoutViewLayout"
-        android:layout_width="wrap_content"
-        android:visibility="gone"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/contentMarginHalf"
-        android:layout_marginBottom="@dimen/contentMarginHalf"
-        android:background="@drawable/background_round"
-        android:padding="@dimen/contentMarginHalf">
+    </com.liner.views.DisableLayout>
 
-        <com.liner.views.FileListLayoutView
-            android:id="@+id/fragmentRequestFileLayoutView"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/fragmentRequestFilesRecycler"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-    </FrameLayout>
+            android:layout_height="wrap_content"
+            android:overScrollMode="never"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/fragmentRequestAddNewView"
-        style="@style/AppTheme.Button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Выбрать файл"
-        app:icon="@drawable/add_icon"/>
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/fragmentRequestUpload"
-        style="@style/AppTheme.Button"
-        android:visibility="gone"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Загрузить"
-        app:icon="@drawable/arrow_up"/>
+        <FrameLayout
+            android:id="@+id/fragmentRequestFileLayoutViewLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/contentMarginHalf"
+            android:layout_marginBottom="@dimen/contentMarginHalf"
+            android:background="@drawable/background_round"
+            android:padding="@dimen/contentMarginHalf"
+            android:visibility="gone">
 
-</LinearLayout>
+            <com.liner.views.FileListLayoutView
+                android:id="@+id/fragmentRequestFileLayoutView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </FrameLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/fragmentRequestAddNewView"
+            style="@style/AppTheme.Button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Выбрать файл"
+            app:icon="@drawable/add_icon" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/fragmentRequestUpload"
+            style="@style/AppTheme.Button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Загрузить"
+            android:visibility="gone"
+            app:icon="@drawable/arrow_up" />
+    </LinearLayout>
+</RelativeLayout>

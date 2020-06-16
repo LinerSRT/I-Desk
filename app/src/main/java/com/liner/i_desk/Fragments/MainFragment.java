@@ -91,19 +91,14 @@ public class MainFragment extends Fragment implements PullRefreshLayout.OnRefres
             @Override
             public void onUserChanged(final UserObject userObject, int position) {
                 super.onUserChanged(userObject, position);
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        if(userObject.getUserID().equals(Firebase.getUserUID())){
-                            if(requestAdapter != null)
-                                requestAdapter.onDestroy();
-                            requestAdapter = new RequestAdapter(userObject, getActivity());
-                            requestAdapter.setAdapterCallback(MainFragment.this);
-                            requestRecycler.setAdapter(requestAdapter);
-                            requestAdapter.onStart();
-                        }
-                    }
-                }, TimeUnit.SECONDS.toMillis(1));
+                if(userObject.getUserID().equals(Firebase.getUserUID())){
+                    if(requestAdapter != null)
+                        requestAdapter.onDestroy();
+                    requestAdapter = new RequestAdapter(userObject, getActivity());
+                    requestAdapter.setAdapterCallback(MainFragment.this);
+                    requestRecycler.setAdapter(requestAdapter);
+                    requestAdapter.onStart();
+                }
             }
         };
         databaseListener.startListening();

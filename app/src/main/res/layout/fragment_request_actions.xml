@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <com.liner.views.ExpandLayout
+        android:id="@+id/expandRequestRatingBar"
+        android:layout_marginTop="@dimen/contentHeight"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:el_expanded="false">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <com.liner.views.YSTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Поставить оценку"
+                android:textColor="@color/text"
+                android:textSize="@dimen/secondaryTextSize"
+                app:ys_type="Medium" />
+
+            <com.liner.i_desk.SmileRatingBar
+                android:id="@+id/requestRatingBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+    </com.liner.views.ExpandLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/closeRequest"
+        style="@style/AppTheme.Button"
+        android:layout_width="wrap_content"
+        app:icon="@drawable/lock_icon"
+        android:layout_marginBottom="@dimen/contentHeight"
+        android:layout_height="wrap_content"
+        android:text="Закрыть заявку" />
+
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/acceptRequest"
+        style="@style/AppTheme.Button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Принять заявку" />
+
+
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/deleteRequest"
+        style="@style/AppTheme.Button"
+        android:layout_marginBottom="@dimen/contentHeight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:icon="@drawable/warning_icon"
+        app:iconTint="@color/red"
+        android:text="Удалить заявку" />
+
+</LinearLayout>

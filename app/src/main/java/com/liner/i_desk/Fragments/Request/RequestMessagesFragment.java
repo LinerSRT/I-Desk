@@ -34,6 +34,7 @@ import com.liner.utils.TextUtils;
 import com.liner.utils.Time;
 import com.liner.views.BaseDialog;
 import com.liner.views.BaseDialogBuilder;
+import com.liner.views.DisableLayout;
 import com.liner.views.FileListLayoutView;
 import com.squareup.picasso.Picasso;
 import com.stfalcon.chatkit.commons.ImageLoader;
@@ -64,6 +65,7 @@ public class RequestMessagesFragment extends Fragment implements MessageInput.At
     private BaseDialog maxSizeLimitDialog;
     private BaseDialog errorDialog;
     private List<MessageObject> messageObjectList;
+    private DisableLayout disableLayout;
 
 
     public RequestMessagesFragment(RequestObject requestObject) {
@@ -78,6 +80,15 @@ public class RequestMessagesFragment extends Fragment implements MessageInput.At
         messagesList = view.findViewById(R.id.messagesList);
         messageInput = view.findViewById(R.id.detailRequestInputMessage);
         fragmentMessagesFileLayoutView = view.findViewById(R.id.fragmentMessagesFileLayoutView);
+        disableLayout = view.findViewById(R.id.disableMessageLayout);
+
+        if(requestObject.getRequestStatus() == RequestObject.RequestStatus.CLOSED){
+            disableLayout.setVisibility(View.VISIBLE);
+            disableLayout.setDisableTouch(true);
+        } else {
+            disableLayout.setVisibility(View.GONE);
+        }
+
         this.filePicker = new FilePicker(getActivity());
         messageObjectList = new ArrayList<>();
         filePicker.allowMultiple();

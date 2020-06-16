@@ -13,14 +13,16 @@ import android.widget.FrameLayout;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.google.firebase.database.DatabaseReference;
 import com.liner.i_desk.Firebase.FireActivity;
 import com.liner.i_desk.Firebase.Firebase;
+import com.liner.i_desk.Firebase.FirebaseValue;
 import com.liner.i_desk.Firebase.MessagingService;
+import com.liner.i_desk.Firebase.UserObject;
 import com.liner.i_desk.Fragments.CreateRequestFragment;
 import com.liner.i_desk.Fragments.MainFragment;
 import com.liner.i_desk.Fragments.UserProfileFragment;
 import com.liner.i_desk.Utils.Test;
-import com.liner.utils.ViewUtils;
 import com.liner.views.BaseDialog;
 import com.liner.views.BaseDialogBuilder;
 import com.liner.views.irbottomnavigation.SpaceItem;
@@ -40,6 +42,7 @@ public class ActivityMain extends FireActivity {
     private CreateRequestFragment createRequestFragment;
 
     private BaseDialog exitDialog;
+    private BaseDialog serviceAccountWarn;
 
     @Override
     protected void onStart() {
@@ -59,6 +62,19 @@ public class ActivityMain extends FireActivity {
         } else {
             messagingService = MessagingService.serviceIntent;
         }
+        serviceAccountWarn = BaseDialogBuilder.buildFast(this,
+                "Ошибка!",
+                "Сервисные аккаунты не могут создавать заявки!",
+                null,
+                "Понятно",
+                BaseDialogBuilder.Type.ERROR,
+                null,
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        serviceAccountWarn.closeDialog();
+                    }
+                });
     }
 
     @Override
@@ -88,12 +104,32 @@ public class ActivityMain extends FireActivity {
         spaceNavigationView.setSpaceOnClickListener(new SpaceOnClickListener() {
             @Override
             public void onCentreButtonClick() {
-                new Handler().postDelayed(new Runnable() {
+                FirebaseValue.getUser(Firebase.getUserUID(), new FirebaseValue.ValueListener() {
                     @Override
-                    public void run() {
-                        replaceFragment(createRequestFragment);
+                    public void onSuccess(Object object, DatabaseReference databaseReference) {
+                        UserObject userObject = (UserObject) object;
+                        if (userObject.getUserType() == UserObject.UserType.SERVICE) {
+                            serviceAccountWarn.showDialog();
+                        } else {
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    replaceFragment(createRequestFragment);
+                                }
+                            }, 50);
+                        }
                     }
-                }, 200);
+
+                    @Override
+                    public void onFail(String errorMessage) {
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                replaceFragment(createRequestFragment);
+                            }
+                        }, 50);
+                    }
+                });
             }
 
             @Override
@@ -164,7 +200,7 @@ public class ActivityMain extends FireActivity {
         try {
             userProfileFragment.onActivityResult(requestCode, resultCode, data);
             createRequestFragment.onActivityResult(requestCode, resultCode, data);
-        } catch (NullPointerException e){
+        } catch (NullPointerException e) {
             e.printStackTrace();
         }
     }

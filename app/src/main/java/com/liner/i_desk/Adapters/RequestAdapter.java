@@ -2,9 +2,7 @@ package com.liner.i_desk.Adapters;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,8 +23,8 @@ import com.liner.utils.ViewUtils;
 import com.liner.views.BaseDialog;
 import com.liner.views.BaseDialogBuilder;
 import com.liner.views.YSTextView;
+import com.liner.views.verticalstepperform.Step;
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -57,18 +55,18 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
             @Override
             public void onRequestAdded(RequestObject requestObject, int position) {
                 super.onRequestAdded(requestObject, position);
-                if(!contain(requestObject)){
-                    switch (userType){
+                if (!contain(requestObject)) {
+                    switch (userType) {
                         case ADMIN:
                         case SERVICE:
                             requestObjectList.add(requestObject);
-                            if(requestObjectList.size() != 0)
-                                notifyItemInserted(requestObjectList.size()-1);
+                            if (requestObjectList.size() != 0)
+                                notifyItemInserted(requestObjectList.size() - 1);
                             else
                                 notifyItemInserted(0);
                             break;
                         case CLIENT:
-                            if(requestObject.getRequestCreatorID().equals(Firebase.getUserUID())) {
+                            if (requestObject.getRequestCreatorID().equals(Firebase.getUserUID())) {
                                 requestObjectList.add(requestObject);
                                 if (requestObjectList.size() != 0)
                                     notifyItemInserted(requestObjectList.size() - 1);
@@ -77,7 +75,7 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
                             }
                             break;
                     }
-                    if(adapterCallback != null)
+                    if (adapterCallback != null)
                         adapterCallback.onDataChanged(requestObjectList.size());
                 }
                 sortRequests();
@@ -86,11 +84,11 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
             @Override
             public void onRequestChanged(RequestObject requestObject, int position) {
                 super.onRequestChanged(requestObject, position);
-                if(contain(requestObject)) {
+                if (contain(requestObject)) {
                     int index = getIndex(requestObject);
                     requestObjectList.set(index, requestObject);
                     notifyItemChanged(index);
-                    if(adapterCallback != null)
+                    if (adapterCallback != null)
                         adapterCallback.onDataChanged(requestObjectList.size());
                 }
                 sortRequests();
@@ -99,11 +97,11 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
             @Override
             public void onRequestDeleted(RequestObject requestObject, int position) {
                 super.onRequestDeleted(requestObject, position);
-                if(requestObjectList.contains(requestObject)) {
+                if (requestObjectList.contains(requestObject)) {
                     int index = getIndex(requestObject);
                     requestObjectList.remove(index);
                     notifyItemRemoved(index);
-                    if(adapterCallback != null)
+                    if (adapterCallback != null)
                         adapterCallback.onDataChanged(requestObjectList.size());
                 }
                 sortRequests();
@@ -179,7 +177,7 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
         );
     }
 
-    private void sortRequests(){
+    private void sortRequests() {
         Collections.sort(requestObjectList, new Comparator<RequestObject>() {
             @Override
             public int compare(RequestObject a, RequestObject b) {
@@ -199,54 +197,103 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
     public void onBindViewHolder(@NonNull final RequestViewHolder holder, int position) {
         adapterPosition = position;
         RequestObject item = requestObjectList.get(position);
-            Picasso.get().load(item.getRequestCreatorPhotoURL()).resize(ViewUtils.dpToPx(48),ViewUtils.dpToPx(48)).into(holder.serviceHolderUserPhoto);
-            holder.serviceHolderUserName.setText(item.getRequestCreatorName());
-            holder.serviceHolderTitle.setText(item.getRequestTitle());
-            holder.serviceHolderText.setText(item.getRequestText());
-            switch (item.getRequestType()) {
-                case SERVICE:
-                    holder.serviceHolderRequestType.setText("Сервис");
-                    holder.serviceHolderRequestType.getBackground().setColorFilter(activity.getResources().getColor(R.color.service_request), PorterDuff.Mode.SRC_IN);
-                    break;
-                case INCIDENT:
-                    holder.serviceHolderRequestType.setText("Инцидент");
-                    holder.serviceHolderRequestType.getBackground().setColorFilter(activity.getResources().getColor(R.color.incident_request), PorterDuff.Mode.SRC_IN);
-                    break;
-                case CONSULTATION:
-                    holder.serviceHolderRequestType.setText("Консультация");
-                    holder.serviceHolderRequestType.getBackground().setColorFilter(activity.getResources().getColor(R.color.consultation_request), PorterDuff.Mode.SRC_IN);
-                    break;
-            }
-            switch (item.getRequestPriority()) {
-                case VERY_LOW:
-                    holder.serviceHolderRequestPriority.setText("Оч. низкий приоритет");
-                    holder.serviceHolderRequestPriority.getBackground().setColorFilter(activity.getResources().getColor(R.color.very_low_priority), PorterDuff.Mode.SRC_IN);
-                    break;
-                case LOW:
-                    holder.serviceHolderRequestPriority.setText("Низкий приоритет");
-                    holder.serviceHolderRequestPriority.getBackground().setColorFilter(activity.getResources().getColor(R.color.low_priority), PorterDuff.Mode.SRC_IN);
-                    break;
-                case MEDIUM:
-                    holder.serviceHolderRequestPriority.setText("Нормальный приоритет");
-                    holder.serviceHolderRequestPriority.getBackground().setColorFilter(activity.getResources().getColor(R.color.medium_priority), PorterDuff.Mode.SRC_IN);
-                    break;
-                case HIGH:
-                    holder.serviceHolderRequestPriority.setText("Оч. высокий приоритет");
-                    holder.serviceHolderRequestPriority.getBackground().setColorFilter(activity.getResources().getColor(R.color.high_priority), PorterDuff.Mode.SRC_IN);
-                    break;
-                case VERY_HIGH:
-                    holder.serviceHolderRequestPriority.setText("Высокий приоритет");
-                    holder.serviceHolderRequestPriority.getBackground().setColorFilter(activity.getResources().getColor(R.color.very_high_priority), PorterDuff.Mode.SRC_IN);
-                    break;
-            }
-            holder.serviceHolderCreatedAt.setText(Time.getHumanReadableTime(item.getRequestCreatedAt(), "dd MMM HH:mm"));
-            holder.serviceHolderDeadlineAt.setText(Time.getHumanReadableTime(item.getRequestDeadlineAt(), "dd MMM HH:mm"));
+        holder.requestRate.setVisibility((item.isRequestRated())?View.VISIBLE:View.GONE);
+        holder.requestClosedHolder.setVisibility((item.getRequestStatus() == RequestObject.RequestStatus.CLOSED)?View.VISIBLE:View.GONE);
+        if(item.getRequestRate() != 0)
+            holder.requestRate.setText(String.valueOf(item.getRequestRate()));
+        Picasso.get().load(item.getRequestCreatorPhotoURL()).resize(ViewUtils.dpToPx(48), ViewUtils.dpToPx(48)).into(holder.serviceHolderUserPhoto);
+        holder.serviceHolderUserName.setText(item.getRequestCreatorName());
+        holder.serviceHolderTitle.setText(item.getRequestTitle());
+        holder.serviceHolderText.setText(item.getRequestText());
+        switch (item.getRequestType()) {
+            case SERVICE:
+                holder.serviceHolderRequestType.setText("Сервис");
+                holder.serviceHolderRequestType.getBackground().setColorFilter(activity.getResources().getColor(R.color.service_request), PorterDuff.Mode.SRC_IN);
+                break;
+            case INCIDENT:
+                holder.serviceHolderRequestType.setText("Инцидент");
+                holder.serviceHolderRequestType.getBackground().setColorFilter(activity.getResources().getColor(R.color.incident_request), PorterDuff.Mode.SRC_IN);
+                break;
+            case CONSULTATION:
+                holder.serviceHolderRequestType.setText("Консультация");
+                holder.serviceHolderRequestType.getBackground().setColorFilter(activity.getResources().getColor(R.color.consultation_request), PorterDuff.Mode.SRC_IN);
+                break;
+        }
+        switch (item.getRequestPriority()) {
+            case VERY_LOW:
+                holder.serviceHolderRequestPriority.setText("Оч. низкий приоритет");
+                holder.serviceHolderRequestPriority.getBackground().setColorFilter(activity.getResources().getColor(R.color.very_low_priority), PorterDuff.Mode.SRC_IN);
+                break;
+            case LOW:
+                holder.serviceHolderRequestPriority.setText("Низкий приоритет");
+                holder.serviceHolderRequestPriority.getBackground().setColorFilter(activity.getResources().getColor(R.color.low_priority), PorterDuff.Mode.SRC_IN);
+                break;
+            case MEDIUM:
+                holder.serviceHolderRequestPriority.setText("Нормальный приоритет");
+                holder.serviceHolderRequestPriority.getBackground().setColorFilter(activity.getResources().getColor(R.color.medium_priority), PorterDuff.Mode.SRC_IN);
+                break;
+            case HIGH:
+                holder.serviceHolderRequestPriority.setText("Оч. высокий приоритет");
+                holder.serviceHolderRequestPriority.getBackground().setColorFilter(activity.getResources().getColor(R.color.high_priority), PorterDuff.Mode.SRC_IN);
+                break;
+            case VERY_HIGH:
+                holder.serviceHolderRequestPriority.setText("Высокий приоритет");
+                holder.serviceHolderRequestPriority.getBackground().setColorFilter(activity.getResources().getColor(R.color.very_high_priority), PorterDuff.Mode.SRC_IN);
+                break;
+        }
+        holder.serviceHolderCreatedAt.setText(Time.getHumanReadableTime(item.getRequestCreatedAt(), "dd MMM HH:mm"));
+        holder.serviceHolderDeadlineAt.setText(Time.getHumanReadableTime(item.getRequestDeadlineAt(), "dd MMM HH:mm"));
 
     }
 
     @Override
     public int getItemCount() {
         return requestObjectList.size();
+    }
+
+    public void setAdapterCallback(AdapterCallback adapterCallback) {
+        this.adapterCallback = adapterCallback;
+    }
+
+    public void onStart() {
+        databaseListener.startListening();
+    }
+
+    public void onDestroy() {
+        requestObjectList.clear();
+        notifyDataSetChanged();
+        databaseListener.stopListening();
+    }
+
+    private boolean contain(RequestObject item) {
+        if (requestObjectList.size() <= 0)
+            return false;
+        for (RequestObject requestObject : requestObjectList) {
+            if (requestObject.getRequestID().equals(item.getRequestID())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private int getIndex(RequestObject item) {
+        int index = 0;
+        if (requestObjectList.size() <= 0)
+            return index;
+
+        for (RequestObject requestObject : requestObjectList) {
+            if (requestObject.getRequestID().equals(item.getRequestID())) {
+                return index;
+            }
+            index++;
+        }
+        return index;
+    }
+
+    public interface AdapterCallback {
+        void onDataChanged(int itemsSize);
+
+        void onLoadError();
     }
 
     class RequestViewHolder extends RecyclerView.ViewHolder {
@@ -258,11 +305,15 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
         private YSTextView serviceHolderRequestPriority;
         private YSTextView serviceHolderCreatedAt;
         private YSTextView serviceHolderDeadlineAt;
+        private YSTextView requestRate;
+        private YSTextView requestClosedHolder;
         private ImageButton serviceHolderOpenRequest;
 
         public RequestViewHolder(@NonNull View itemView) {
             super(itemView);
             serviceHolderUserPhoto = itemView.findViewById(R.id.serviceHolderUserPhoto);
+            requestRate = itemView.findViewById(R.id.requestRate);
+            requestClosedHolder = itemView.findViewById(R.id.requestClosedHolder);
             serviceHolderUserName = itemView.findViewById(R.id.serviceHolderUserName);
             serviceHolderTitle = itemView.findViewById(R.id.serviceHolderTitle);
             serviceHolderText = itemView.findViewById(R.id.serviceHolderText);
@@ -281,48 +332,5 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
                 }
             });
         }
-    }
-
-    public void setAdapterCallback(AdapterCallback adapterCallback) {
-        this.adapterCallback = adapterCallback;
-    }
-
-    public void onStart(){
-        databaseListener.startListening();
-    }
-
-    public void onDestroy(){
-        requestObjectList.clear();
-        notifyDataSetChanged();
-        databaseListener.stopListening();
-    }
-
-    public interface AdapterCallback{
-        void onDataChanged(int itemsSize);
-        void onLoadError();
-    }
-
-    private boolean contain(RequestObject item){
-        if(requestObjectList.size() <= 0)
-            return false;
-        for(RequestObject requestObject:requestObjectList){
-            if(requestObject.getRequestID().equals(item.getRequestID())){
-                return true;
-            }
-        }
-        return false;
-    }
-    private int getIndex(RequestObject item){
-        int index = 0;
-        if(requestObjectList.size() <= 0)
-            return index;
-
-        for(RequestObject requestObject:requestObjectList){
-            if(requestObject.getRequestID().equals(item.getRequestID())){
-                return index;
-            }
-            index++;
-        }
-        return index;
     }
 }

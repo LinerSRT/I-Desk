@@ -31,6 +31,7 @@ import com.liner.i_desk.R;
 import com.liner.utils.FileUtils;
 import com.liner.views.BaseDialog;
 import com.liner.views.BaseDialogBuilder;
+import com.liner.views.DisableLayout;
 import com.liner.views.FileListLayoutView;
 
 import java.util.ArrayList;
@@ -53,6 +54,7 @@ public class RequestFilesFragment extends Fragment {
     private BaseDialog maxSizeLimitDialog;
     private BaseDialog errorDialog;
     private FrameLayout fragmentRequestFileLayoutViewLayout;
+    private DisableLayout disableLayout;
 
     public RequestFilesFragment(RequestObject requestObject) {
         this.requestObject = requestObject;
@@ -67,6 +69,13 @@ public class RequestFilesFragment extends Fragment {
         fragmentRequestUpload = view.findViewById(R.id.fragmentRequestUpload);
         fragmentRequestFileLayoutView = view.findViewById(R.id.fragmentRequestFileLayoutView);
         fragmentRequestFileLayoutViewLayout = view.findViewById(R.id.fragmentRequestFileLayoutViewLayout);
+        disableLayout = view.findViewById(R.id.disableFilesLayout);
+        if(requestObject.getRequestStatus() == RequestObject.RequestStatus.CLOSED){
+            disableLayout.setVisibility(View.VISIBLE);
+            disableLayout.setDisableTouch(true);
+        } else {
+            disableLayout.setVisibility(View.GONE);
+        }
         this.filePicker = new FilePicker(getActivity());
         filePicker.allowMultiple();
         filePicker.setFilePickerCallback(new FilePickerCallback() {

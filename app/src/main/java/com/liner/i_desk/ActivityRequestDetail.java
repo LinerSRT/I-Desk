@@ -12,8 +12,12 @@ import android.widget.ImageButton;
 import android.widget.ProgressBar;
 
 import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
+import com.liner.i_desk.Adapters.RequestCheksAdapter;
 import com.liner.i_desk.Firebase.DatabaseListener;
 import com.liner.i_desk.Firebase.FireActivity;
 import com.liner.i_desk.Firebase.Firebase;
@@ -41,6 +45,7 @@ public class ActivityRequestDetail extends FireActivity {
     private YSTextView requestDetailStatus;
     private YSTextView requestDetailCreatedTime;
     private YSTextView requestDetailDeadlineTime;
+    private YSTextView requestClosedDetail;
     private ExpandLayout actionBarLayout;
     private ImageButton expandActionBar;
 
@@ -54,6 +59,8 @@ public class ActivityRequestDetail extends FireActivity {
     private RequestMessagesFragment requestMessagesFragment;
     private UserProfileFragment userProfileFragment;
     private RequestActionsFragment requestActionsFragment;
+    private RecyclerView requestChecksRecycler;
+    private RequestCheksAdapter requestCheksAdapter;
 
     private int activeItem = 1;
 
@@ -74,11 +81,14 @@ public class ActivityRequestDetail extends FireActivity {
         requestDetailStatus = findViewById(R.id.requestDetailStatus);
         requestDetailCreatedTime = findViewById(R.id.requestDetailCreatedTime);
         requestDetailDeadlineTime = findViewById(R.id.requestDetailDeadlineTime);
+        requestClosedDetail = findViewById(R.id.requestClosedDetail);
         deadlineProgress = findViewById(R.id.deadLineProgress);
         actionBarLayout = findViewById(R.id.actionBarLayout);
         expandActionBar = findViewById(R.id.expandActionBar);
+        requestChecksRecycler = findViewById(R.id.requestChecksRecycler);
 
         if (getIntent().getSerializableExtra("requestObject") != null) {
+
             expandActionBar.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -93,11 +103,12 @@ public class ActivityRequestDetail extends FireActivity {
                     super.onRequestChanged(requestObject, position);
                     if (item.getRequestID().equals(requestObject.getRequestID())) {
                         requestObject = item;
-                        initPage();
+
+                        initPage(activeItem);
                     }
                 }
             };
-            initPage();
+            initPage(1);
             activityBar.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -111,7 +122,7 @@ public class ActivityRequestDetail extends FireActivity {
         }
     }
 
-    private void initPage(){
+    private void initPage(int startPage){
         fragmentAdapter = new FragmentAdapter(ActivityRequestDetail.this, getSupportFragmentManager());
         requestFilesFragment = new RequestFilesFragment(requestObject);
         requestMessagesFragment = new RequestMessagesFragment(requestObject);
@@ -131,8 +142,24 @@ public class ActivityRequestDetail extends FireActivity {
         fragmentAdapter.addTab(new FragmentAdapter.FragmentTab(requestActionsFragment, "Действия", R.drawable.star_icon));
         viewPager.setOffscreenPageLimit(4);
         viewPager.setAdapter(fragmentAdapter);
-        viewPager.setCurrentItem(activeItem);
+        viewPager.setCurrentItem(startPage);
         tabLayout.setupWithViewPager(viewPager);
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                activeItem = position;
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -167,6 +194,10 @@ public class ActivityRequestDetail extends FireActivity {
     }
 
     private void updateRequestUI() {
+        requestChecksRecycler.setLayoutManager(new LinearLayoutManager(this));
+        requestCheksAdapter = new RequestCheksAdapter(this, requestObject);
+        requestChecksRecycler.setAdapter(requestCheksAdapter);
+        requestClosedDetail.setVisibility((requestObject.getRequestStatus() == RequestObject.RequestStatus.CLOSED)?View.VISIBLE:View.GONE);
         requestDetailTitle.setText(requestObject.getRequestTitle());
         requestDetailText.setText(requestObject.getRequestText());
         requestDetailDeviceText.setText(requestObject.getRequestUserDeviceText());

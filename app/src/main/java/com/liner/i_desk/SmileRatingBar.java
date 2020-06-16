@@ -16,7 +16,6 @@ import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.OvershootInterpolator;
 
 import androidx.annotation.Nullable;
@@ -57,26 +56,6 @@ public class SmileRatingBar extends View implements TouchActiveIndicator {
     private RectF[] mPlaceHolders = new RectF[mSmileys.length];
     private Path[] mPlaceHolderPaths = new Path[mSmileys.length];
     private OnSmileySelectedListener mOnSmileySelectedListener;
-
-    public enum Type {
-        TERRIBLE(1), BAD(2), OKAY(3), GOOD(4), GREAT(5), NONE(-1);
-
-
-        int index;
-
-        Type(int i) {
-            index = i;
-        }
-
-        public int getRating() {
-            if (NONE == this) {
-                return -1;
-            }
-            return index;
-        }
-
-    }
-
     private SmileyRating.Type mSelectedSmiley = SmileyRating.Type.NONE;
     private float mHolderScale = 0f;
     private float mSmileyPositionX = 0f;
@@ -88,18 +67,17 @@ public class SmileRatingBar extends View implements TouchActiveIndicator {
     private boolean mInflationDone = false;
     private boolean mDiwallowSelection = false;
     private TextPaint mTextPaint = new TextPaint();
-
     private int mFaceColor;
     private int mDrawingColor;
     private ClickAnalyser mClickAnalyser;
     private RectF mFacePosition = new RectF();
-
     private int mTextSelectedColor = getContext().getResources().getColor(R.color.primary);
-    private int mTextNonSelectedColor =  getContext().getResources().getColor(R.color.disabled);
+    private int mTextNonSelectedColor = getContext().getResources().getColor(R.color.disabled);
     private int mPlaceholderBackgroundColor = getContext().getResources().getColor(R.color.window_background_dark);
-
     private ValueAnimator mSlideAnimator = new ValueAnimator();
     private ValueAnimator mAppearAnimator = new ValueAnimator();
+    private float mPrevX;
+    private boolean mActiveFaceClicked = false;
 
     public SmileRatingBar(Context context) {
         super(context);
@@ -188,6 +166,21 @@ public class SmileRatingBar extends View implements TouchActiveIndicator {
 
             }
         });
+        setFaceColor(SmileyRating.Type.TERRIBLE, getResources().getColor(R.color.very_high_priority));
+        setFaceColor(SmileyRating.Type.BAD, getResources().getColor(R.color.high_priority));
+        setFaceColor(SmileyRating.Type.OKAY, getResources().getColor(R.color.medium_priority));
+        setFaceColor(SmileyRating.Type.GOOD, getResources().getColor(R.color.low_priority));
+        setFaceColor(SmileyRating.Type.GREAT, getResources().getColor(R.color.very_low_priority));
+        setFaceBackgroundColor(SmileyRating.Type.TERRIBLE, getResources().getColor(R.color.window_background));
+        setFaceBackgroundColor(SmileyRating.Type.BAD, getResources().getColor(R.color.window_background));
+        setFaceBackgroundColor(SmileyRating.Type.OKAY, getResources().getColor(R.color.window_background));
+        setFaceBackgroundColor(SmileyRating.Type.GOOD, getResources().getColor(R.color.window_background));
+        setFaceBackgroundColor(SmileyRating.Type.GREAT, getResources().getColor(R.color.window_background));
+        setTitle(SmileyRating.Type.TERRIBLE, "Ужасно");
+        setTitle(SmileyRating.Type.BAD, "Плохо");
+        setTitle(SmileyRating.Type.OKAY, "Нормально");
+        setTitle(SmileyRating.Type.GOOD, "Хорошо");
+        setTitle(SmileyRating.Type.GREAT, "Отлично");
     }
 
     @Override
@@ -252,7 +245,6 @@ public class SmileRatingBar extends View implements TouchActiveIndicator {
             mPlaceHolderPaths[i] = path;
         }
     }
-
 
     private void createTitleSpots(float smileySpace) {
         mTextPaint.setTextSize(smileySpace * TEXT_SIZE_SCALE_FROM_SMILEY_SIZE);
@@ -412,7 +404,6 @@ public class SmileRatingBar extends View implements TouchActiveIndicator {
         canvas.restoreToCount(save);
     }
 
-
     private boolean isActiveSmiley(float x, float y) {
         return inFaceBounds(x, y, mFacePosition);
     }
@@ -436,10 +427,6 @@ public class SmileRatingBar extends View implements TouchActiveIndicator {
             mSlideAnimator.cancel();
         }
     }
-
-
-    private float mPrevX;
-    private boolean mActiveFaceClicked = false;
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
@@ -566,6 +553,7 @@ public class SmileRatingBar extends View implements TouchActiveIndicator {
         setRating(rating, false);
     }
 
+
     public void setRating(int rating, boolean animate) {
         if (rating < -1 || rating == 0 || rating > mPlaceHolders.length) {
             throw new IllegalArgumentException("You must provide valid rating value " + rating + " is not a valid rating.");
@@ -614,6 +602,42 @@ public class SmileRatingBar extends View implements TouchActiveIndicator {
         mDiwallowSelection = disallow;
     }
 
+    public SmileyRating.Type getSelectedSmiley() {
+        return mSelectedSmiley;
+    }
+
+    public void setSmileySelectedListener(OnSmileySelectedListener listener) {
+        mOnSmileySelectedListener = listener;
+    }
+
+    @Override
+    public boolean isBeingTouched() {
+        return mActiveFaceClicked;
+    }
+
+    public enum Type {
+        TERRIBLE(1), BAD(2), OKAY(3), GOOD(4), GREAT(5), NONE(-1);
+
+
+        int index;
+
+        Type(int i) {
+            index = i;
+        }
+
+        public int getRating() {
+            if (NONE == this) {
+                return -1;
+            }
+            return index;
+        }
+
+    }
+
+    public interface OnSmileySelectedListener {
+        void onSmileySelected(SmileyRating.Type type);
+    }
+
     private static class Text {
 
         private float x;
@@ -631,10 +655,9 @@ public class SmileRatingBar extends View implements TouchActiveIndicator {
 
         private static final int MAX_CLICK_DISTANCE = 20;
         private static final int MAX_CLICK_DURATION = 200;
-
+        private final float mDensity;
         private float mPressX;
         private float mPressY;
-        private final float mDensity;
         private long mPressStartTime;
         private boolean mMoved = false;
         private boolean mClickEventOccured = true;
@@ -692,23 +715,6 @@ public class SmileRatingBar extends View implements TouchActiveIndicator {
         private float pxToDp(float px) {
             return px / mDensity;
         }
-    }
-
-    public SmileyRating.Type getSelectedSmiley() {
-        return mSelectedSmiley;
-    }
-
-    public void setSmileySelectedListener(OnSmileySelectedListener listener) {
-        mOnSmileySelectedListener = listener;
-    }
-
-    @Override
-    public boolean isBeingTouched() {
-        return mActiveFaceClicked;
-    }
-
-    public interface OnSmileySelectedListener {
-        void onSmileySelected(SmileyRating.Type type);
     }
 
 

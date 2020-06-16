@@ -332,6 +332,7 @@ public class RequestObject implements Serializable {
     public enum RequestStatus {
         PENDING,
         PROCESSING,
+        CLOSE_REQUEST,
         CLOSED
     }
 

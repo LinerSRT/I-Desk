@@ -152,5 +152,8 @@
         <attr name="active_centre_button_background_color" format="color"/>
         <attr name="centre_part_linear" format="boolean" />
     </declare-styleable>
+    <declare-styleable name="DisableLayout">
+        <attr name="dl_enabled" format="boolean"/>
+    </declare-styleable>
 
 </resources>

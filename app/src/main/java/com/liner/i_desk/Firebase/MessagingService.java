@@ -19,6 +19,7 @@ import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
 import com.liner.i_desk.ActivityMain;
+import com.liner.i_desk.ActivityRequestDetail;
 import com.liner.i_desk.R;
 import com.liner.utils.ImageUtils;
 import com.liner.utils.TextUtils;
@@ -65,13 +66,13 @@ public class MessagingService extends Service {
                         case SERVICE:
                         case ADMIN:
                             if (currentTime - requestCreationTime <= triggerTime) {
-                                makeNotification(requestObject, NotificationType.NEW_REQUEST);
+                                sendNotification("Новая заявка!" ,"Пользователь "+requestObject.getRequestCreatorName()+" создал новую заявку", R.drawable.requests_icon, requestObject);
                             }
                             break;
                         case CLIENT:
                             if(requestObject.getRequestCreatorID().equals(Firebase.getUserUID())){
                                 if (currentTime - requestCreationTime <= triggerTime) {
-                                    makeNotification(requestObject, NotificationType.NEW_REQUEST);
+                                    sendNotification("Новая заявка!" ,"Вы успешно создали заявку", R.drawable.requests_icon, requestObject);
                                 }
                             }
                             break;
@@ -83,7 +84,41 @@ public class MessagingService extends Service {
             @Override
             public void onRequestChanged(RequestObject requestObject, int position) {
                 super.onRequestChanged(requestObject, position);
-
+                if(requestObject.getRequestCreatorID().equals(Firebase.getUserUID())){
+                    //todo если заявка текущего пользователя
+                    switch (requestObject.getRequestStatus()){
+                        case PROCESSING:
+                            if(requestObject.getRequestCreatorName() != null){
+                                sendNotification("Ваша заявка изменена!" ,"Статус вашей заявки \"В обработке\", исполнитель - "+requestObject.getRequestCreatorName(), R.drawable.requests_icon, requestObject);
+                            } else {
+                                sendNotification("Ваша заявка изменена!" ,"Статус вашей заявки \"В обработке\"", R.drawable.requests_icon, requestObject);
+                            }
+                            break;
+                        case CLOSE_REQUEST:
+                            sendNotification("Запрос на закрытие заявки!" ,"Исполнитель прислал вам запрос на закрытие заявки", R.drawable.requests_icon, requestObject);
+                            break;
+                        case CLOSED:
+                            sendNotification("Заявка закрыта!" ,"Ваша заявка теперь закрыта", R.drawable.requests_icon, requestObject);
+                            break;
+                        default:
+                            sendNotification("Ваша заявка изменена!" ,"нажмите что бы посмотреть изменения", R.drawable.requests_icon, requestObject);
+                    }
+                } else if(requestObject.getRequestAcceptorID() != null){
+                    if(requestObject.getRequestAcceptorID().equals(Firebase.getUserUID())) {
+                        //todo если исполнитель не пуст, и это текущий пользователь
+                        switch (requestObject.getRequestStatus()) {
+                            case PROCESSING:
+                                sendNotification("Статус заявки "+requestObject.getRequestCreatorName()+" изменен" ,"Статус - \"В обработке\"", R.drawable.requests_icon, requestObject);
+                                break;
+                            case CLOSE_REQUEST:
+                                sendNotification("Запрос на закрытие заявки отправлен" ,"Заявителю был отправлен запрос для закрытия заявки", R.drawable.requests_icon, requestObject);
+                                break;
+                            case CLOSED:
+                                sendNotification("Заявка "+requestObject.getRequestCreatorName()+" закрыта" ,"Заявитель закрыл заявку", R.drawable.requests_icon, requestObject);
+                                break;
+                        }
+                    }
+                }
             }
 
             @Override
@@ -115,8 +150,7 @@ public class MessagingService extends Service {
         super.onDestroy();
         serviceIntent = null;
         databaseListener.stopListening();
-        if(Firebase.isUserLoginned())
-            restartService();
+        restartService();
     }
 
 
@@ -137,33 +171,10 @@ public class MessagingService extends Service {
         return null;
     }
 
-
-    private void makeNotification(final RequestObject requestObject, final NotificationType notificationType) {
-        if(requestObject.getRequestCreatorPhotoURL() != null) {
-            Picasso.get().load(requestObject.getRequestCreatorPhotoURL()).resize(ViewUtils.dpToPx(64), ViewUtils.dpToPx(64)).into(new Target() {
-                @Override
-                public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                    sendNotification(requestObject, notificationType, bitmap);
-                }
-
-                @Override
-                public void onBitmapFailed(Exception e, Drawable errorDrawable) {
-                    sendNotification(requestObject, notificationType, ImageUtils.drawableToBitmap(getResources().getDrawable(R.drawable.temp_user_photo)));
-                }
-
-                @Override
-                public void onPrepareLoad(Drawable placeHolderDrawable) {
-
-                }
-            });
-        } else {
-            sendNotification(requestObject, notificationType, ImageUtils.drawableToBitmap(getResources().getDrawable(R.drawable.temp_user_photo)));
-        }
-    }
-
-    private void sendNotification(final RequestObject requestObject, final NotificationType notificationType, Bitmap bitmap){
+    private void sendNotification(String title, String text, int iconID, RequestObject requestObject){
         Uri defaultSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        Intent intent = new Intent(getApplicationContext(), ActivityMain.class);
+        Intent intent = new Intent(getApplicationContext(), ActivityRequestDetail.class);
+        intent.putExtra("requestObject", requestObject);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, 0);
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
@@ -176,34 +187,9 @@ public class MessagingService extends Service {
             Objects.requireNonNull(notificationManager).createNotificationChannel(notificationChannel);
         }
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID);
-
-        switch (notificationType){
-            case NEW_REQUEST:
-                if(requestObject.getRequestCreatorID().equals(Firebase.getUserUID())){
-                    notificationBuilder.setContentTitle("Ваша заявка создана");
-                    notificationBuilder.setContentText("Ваша заявка была успешно создана!");
-                } else {
-                    notificationBuilder.setContentTitle("Создана новая заявка");
-                    notificationBuilder.setContentText("Пользователь "+requestObject.getRequestCreatorName()+" создал новую заявку!");
-                }
-                notificationBuilder.setSmallIcon(R.drawable.requests_icon);
-                break;
-            case NEW_MESSAGE:
-                break;
-            case EDIT_REQUEST:
-                if(requestObject.getRequestCreatorID().equals(Firebase.getUserUID())){
-                    notificationBuilder.setContentTitle("Ваша заявка обновлена!");
-                    notificationBuilder.setContentText("Состояние вашей заявки обновлено, проверьте изменения!");
-                } else {
-                    notificationBuilder.setContentTitle("Заявка обновлена!");
-                    notificationBuilder.setContentText("Состояние заявки "+requestObject.getRequestCreatorName()+" обновлено");
-                }
-                notificationBuilder.setSmallIcon(R.drawable.requests_icon);
-                break;
-        }
-        if(bitmap != null){
-            notificationBuilder.setLargeIcon(bitmap);
-        }
+        notificationBuilder.setContentTitle(title);
+        notificationBuilder.setContentText(text);
+        notificationBuilder.setSmallIcon(iconID);
         notificationBuilder.setStyle(new NotificationCompat.BigTextStyle().bigText(requestObject.getRequestText()));
         notificationBuilder.setColorized(true);
         notificationBuilder.setAutoCancel(true);
@@ -215,10 +201,12 @@ public class MessagingService extends Service {
         notificationManager.notify(new Random().nextInt(), notificationBuilder.build());
     }
 
+
     private enum NotificationType {
         NEW_REQUEST,
-        EDIT_REQUEST,
-        NEW_MESSAGE
+        NEW_MESSAGE,
+        CLOSE_REQUEST,
+        REQUEST_CHANGED
     }
 
 }
