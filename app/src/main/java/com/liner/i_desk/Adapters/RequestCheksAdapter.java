@@ -51,8 +51,13 @@ public class RequestCheksAdapter extends RecyclerView.Adapter<RequestCheksAdapte
         if(requestObject.getRequestChecks() == null)
             requestChecks = new HashMap<>();
         this.requestChecks = requestObject.getRequestChecks();
-        keys = new ArrayList<>(requestChecks.keySet());
-        values = new ArrayList<>(requestChecks.values());
+        try {
+            keys = new ArrayList<>(requestChecks.keySet());
+            values = new ArrayList<>(requestChecks.values());
+        } catch (NullPointerException e){
+            keys = new ArrayList<>();
+            values = new ArrayList<>();
+        }
     }
 
     @NonNull

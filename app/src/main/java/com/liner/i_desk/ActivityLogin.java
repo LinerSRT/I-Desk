@@ -18,6 +18,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -49,6 +50,7 @@ public class ActivityLogin extends AppCompatActivity {
     private String userEmail = "", userPassword = "";
     private BaseDialog errorDialog;
     private BaseDialog progressDialog;
+    private BaseDialog resetPasswordDialog;
     private BaseDialog accountTypeSelectionDialog;
     private UserObject.UserType accountType = UserObject.UserType.CLIENT;
 
@@ -59,6 +61,7 @@ public class ActivityLogin extends AppCompatActivity {
         MaterialButton loginSignWithGoogle = findViewById(R.id.loginSignWithGoogle);
         MaterialButton loginSignIn = findViewById(R.id.loginSignIn);
         MaterialButton loginRegisterAccount = findViewById(R.id.loginRegisterAccount);
+        MaterialButton loginResetPassword = findViewById(R.id.loginResetPassword);
         loginTextFieldEmailBox = findViewById(R.id.loginTextFieldEmailBox);
         loginTextFieldPasswordBox = findViewById(R.id.loginTextFieldPasswordBox);
         loginExtendedPasswordEdit = findViewById(R.id.loginExtendedPasswordEdit);
@@ -83,6 +86,19 @@ public class ActivityLogin extends AppCompatActivity {
                 BaseDialogBuilder.Type.INDETERMINATE,
                 null,
                 null);
+        resetPasswordDialog = BaseDialogBuilder.buildFast(this,
+                "Сброс пароля",
+                "На ваш E-mail выслана инструкция для сброса пароля",
+                null,
+                "Ок",
+                BaseDialogBuilder.Type.INFO,
+                null,
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        resetPasswordDialog.closeDialog();
+                    }
+                });
 
         errorDialog = BaseDialogBuilder.buildFast(this,
                 "Ошибка",
@@ -209,6 +225,27 @@ public class ActivityLogin extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        loginResetPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                TextUtils.hideKeyboard(ActivityLogin.this);
+                if (TextUtils.isEmailValid(userEmail)) {
+                    loginTextFieldEmailBox.removeError();
+                    FirebaseAuth.getInstance().sendPasswordResetEmail(userEmail).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                resetPasswordDialog.showDialog();
+                            } else {
+                                errorDialog.showDialog();
+                            }
+                        }
+                    });
+                } else {
+                    loginTextFieldEmailBox.setError("Введите правильный Email", true);
+                }
+            }
+        });
     }
 
     @Override
@@ -244,7 +281,9 @@ public class ActivityLogin extends AppCompatActivity {
                             .setDialogText("Выберите тип вашего аккаунта")
                             .setSelectionList(selectionItems)
                             .build();
+
                     accountTypeSelectionDialog.showDialog();
+
                 } else {
                     progressDialog.closeDialog();
                     errorDialog.showDialog();

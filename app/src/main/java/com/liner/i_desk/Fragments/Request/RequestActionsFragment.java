@@ -40,7 +40,7 @@ public class RequestActionsFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull final LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_request_actions, container, false);
         expandRequestRatingBar = view.findViewById(R.id.expandRequestRatingBar);
         requestRatingBar = view.findViewById(R.id.requestRatingBar);
@@ -129,32 +129,81 @@ public class RequestActionsFragment extends Fragment {
         closeRequest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                switch (requestObject.getRequestStatus()) {
-                    case CLOSED:
-                    case CLOSE_REQUEST:
-                        infoDialog.setDialogTitleText("Ошибка!");
-                        infoDialog.setDialogTextText("Запрос уже отправлен!");
-                        infoDialog.showDialog();
-                        break;
-                    case PROCESSING:
-                        switch (userObject.getUserType()) {
-                            case ADMIN:
-                            case SERVICE:
+                switch (userObject.getUserType()) {
+                    case ADMIN:
+                    case SERVICE:
+                        switch (requestObject.getRequestStatus()){
+                            case CLOSED:
+                                break;
+                            case CLOSE_REQUEST:
+                                infoDialog.setDialogTitleText("Ошибка!");
+                                infoDialog.setDialogTextText("Запрос уже отправлен!");
+                                infoDialog.setDialogDone("Ок", new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        infoDialog.closeDialog();
+                                    }
+                                });
+                                infoDialog.showDialog();
+                                break;
+                            case PROCESSING:
                                 requestObject.setRequestStatus(RequestObject.RequestStatus.CLOSE_REQUEST);
                                 FirebaseValue.setRequest(requestObject.getRequestID(), requestObject);
+                                infoDialog.setDialogTitleText("Запрос отправлен");
+                                infoDialog.setDialogTextText("Запрос на закрытие заявки отправлен успешно");
+                                infoDialog.setDialogDone("Ок", new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        infoDialog.closeDialog();
+                                    }
+                                });
+                                infoDialog.showDialog();
                                 break;
-                            case CLIENT:
+                            case PENDING:
+                                infoDialog.setDialogTitleText("Ошибка!");
+                                infoDialog.setDialogTextText("Вы должны принять заявку что бы сделать это!");
+                                infoDialog.setDialogDone("Ок", new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        infoDialog.closeDialog();
+                                    }
+                                });
+                                infoDialog.showDialog();
+                                break;
+                        }
+                        break;
+                    case CLIENT:
+                        switch (requestObject.getRequestStatus()){
+                            case CLOSED:
+                            case CLOSE_REQUEST:
+                            case PROCESSING:
+                                infoDialog.setDialogTitleText("Закрыто!");
+                                infoDialog.setDialogTextText("Вы закрыли свою заявку!");
+                                infoDialog.setDialogDone("Ок", new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        infoDialog.closeDialog();
+                                    }
+                                });
+                                infoDialog.showDialog();
                                 requestObject.setRequestStatus(RequestObject.RequestStatus.CLOSED);
                                 requestObject.setRequestRated(true);
                                 FirebaseValue.setRequest(requestObject.getRequestID(), requestObject);
                                 break;
+                            case PENDING:
+                                infoDialog.setDialogTitleText("Ошибка!");
+                                infoDialog.setDialogTextText("Вашу заявку еще никто не принял!");
+                                infoDialog.setDialogDone("Ок", new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        infoDialog.closeDialog();
+                                    }
+                                });
+                                infoDialog.showDialog();
+                                break;
                         }
-                        infoDialog.setDialogTitleText("Запрос отправлен");
-                        infoDialog.setDialogTextText("Запрос на закрытие заявки отправлен успешно");
-                        infoDialog.showDialog();
                         break;
                 }
-
             }
         });
 
