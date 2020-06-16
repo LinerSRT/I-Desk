@@ -41,17 +41,20 @@ public class IDesk extends Application {
                 ))
                 .commit();
         if(Firebase.isUserLoginned()){
-            Objects.requireNonNull(Firebase.getUsersDatabase()).child(Objects.requireNonNull(Firebase.getUserUID())).addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    dataSnapshot.child("userStatus").getRef().onDisconnect().setValue(UserObject.UserStatus.OFFLINE);
-                }
+            if(Firebase.getUserUID() != null) {
+                Objects.requireNonNull(Firebase.getUsersDatabase()).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if(dataSnapshot.child(Firebase.getUserUID()).exists())
+                            dataSnapshot.child(Firebase.getUserUID()).child("userStatus").getRef().onDisconnect().setValue(UserObject.UserStatus.OFFLINE);
+                    }
 
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                }
-            });
+                    }
+                });
+            }
         }
 
         context = this;

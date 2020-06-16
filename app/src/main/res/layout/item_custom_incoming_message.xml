@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="16dp"
+    android:layout_marginTop="8dp"
+    android:layout_marginRight="16dp"
+    android:layout_marginBottom="8dp">
+
+    <com.stfalcon.chatkit.utils.ShapeImageView
+        android:id="@id/messageUserAvatar"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp" />
+
+
+    <TextView
+        android:id="@+id/messageUserName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="UserNickName"
+        android:layout_toEndOf="@id/messageUserAvatar"
+        android:layout_toRightOf="@id/messageUserAvatar"
+        android:textSize="@dimen/secondaryTextSizeSmall"
+        android:textColor="@color/primary_dark"
+        android:textStyle="bold"
+        />
+
+    <com.google.android.flexbox.FlexboxLayout
+        android:id="@id/bubble"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/messageUserName"
+        android:layout_marginTop="@dimen/contentMarginHalf"
+        android:layout_toEndOf="@id/messageUserAvatar"
+        android:layout_toRightOf="@id/messageUserAvatar"
+        android:background="@color/primary_dark"
+        android:orientation="vertical"
+        app:alignContent="stretch"
+        app:alignItems="stretch"
+        app:flexWrap="wrap"
+        app:justifyContent="flex_start">
+
+        <TextView
+            android:id="@id/messageText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:autoLink="all"
+            android:textColor="@color/white"
+            android:textSize="@dimen/secondaryTextSize" />
+
+
+        <com.liner.i_desk.Fragments.Request.Messages.ImageMessageView
+            android:id="@+id/incomingImageMessageView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/contentMarginHalf" />
+
+
+        <com.liner.i_desk.Fragments.Request.Messages.VideoMessageView
+            android:id="@+id/incomingVideoMessageView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/contentMarginHalf" />
+
+        <me.jagar.chatvoiceplayerlibrary.VoicePlayerView
+            android:id="@+id/incomingVoicePlayerView"
+            android:layout_width="match_parent"
+            android:layout_height="75dp"
+            android:layout_marginTop="@dimen/contentMarginHalf"
+            android:gravity="center"
+            android:visibility="gone"
+            app:enableVisualizer="false"
+            app:playPauseBackgroundColor="@color/primary"
+            app:playPauseCornerRadius="100"
+            app:playProgressbarColor="@color/primary"
+            app:progressTimeColor="@color/white"
+            app:seekBarProgressColor="@color/primary"
+            app:seekBarThumbColor="@color/primary"
+            app:showShareButton="false"
+            app:showTiming="true"
+            app:timingBackgroundColor="@color/primary"
+            app:viewBackground="@color/window_background"
+            app:viewCornerRadius="32"
+            app:visualizationNotPlayedColor="@color/disabled"
+            app:visualizationPlayedColor="@color/primary" />
+
+        <com.liner.i_desk.Fragments.Request.Messages.FileMessageView
+            android:id="@+id/incomingMessageView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/contentMarginHalf" />
+
+        <TextView
+            android:id="@id/messageTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/messageText"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="@dimen/contentMarginHalf"
+            android:textColor="@color/white"
+            android:textSize="@dimen/secondaryTextSizeSmall"
+            app:layout_alignSelf="center" />
+
+    </com.google.android.flexbox.FlexboxLayout>
+
+
+</RelativeLayout>

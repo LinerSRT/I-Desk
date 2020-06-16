@@ -71,6 +71,26 @@ public class FirebaseValue {
         });
     }
 
+    public static void getFile(final String fileID, final ValueListener valueListener) {
+        if (!Firebase.isUserLoginned())
+            return;
+        Objects.requireNonNull(Firebase.getFilesDatabase()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.hasChild(fileID)) {
+                    valueListener.onSuccess(dataSnapshot.child(fileID).getValue(FileObject.class), dataSnapshot.child(fileID).getRef());
+                } else {
+                    valueListener.onFail("Value not exist");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
     public static void getRequest(final String requestID, final ValueListener valueListener) {
         if (!Firebase.isUserLoginned())
             return;
@@ -133,6 +153,11 @@ public class FirebaseValue {
         if (!Firebase.isUserLoginned())
             return;
         Objects.requireNonNull(Firebase.getUsersDatabase()).child(userID).setValue(value);
+    }
+    public static void setMessage(String messageID, Object value) {
+        if (!Firebase.isUserLoginned())
+            return;
+        Objects.requireNonNull(Firebase.getMessagesDatabase()).child(messageID).setValue(value);
     }
 
     public static void setRequest(String requestID, Object value) {

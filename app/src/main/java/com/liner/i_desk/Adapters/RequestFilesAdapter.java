@@ -76,6 +76,8 @@ public class RequestFilesAdapter extends RecyclerView.Adapter<RequestFilesAdapte
             public void onFileAdded(final FileObject fileObject, int position, final String key) {
                 super.onFileAdded(fileObject, position, key);
                 if (!contain(fileObject)) {
+                    if(requestObject.getRequestFiles() == null)
+                        requestObject.setRequestFiles(new HashMap<String, String>());
                     HashMap<String, String> requestFiles = requestObject.getRequestFiles();
                     if(requestFiles.containsKey(key)) {
                         if (fileObject.getFileCreatorID().equals(requestObject.getRequestCreatorID()) || fileObject.getFileCreatorID().equals(requestObject.getRequestAcceptorID())) {

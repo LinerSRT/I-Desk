@@ -9,6 +9,7 @@
     android:clipToPadding="false"
     android:paddingTop="15dp"
     android:background="@drawable/background_round"
+    android:backgroundTint="@color/window_background_dark"
     android:paddingBottom="15dp"
     android:visibility="visible">
 

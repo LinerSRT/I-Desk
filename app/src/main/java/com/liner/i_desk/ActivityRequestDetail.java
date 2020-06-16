@@ -16,6 +16,7 @@ import androidx.annotation.Nullable;
 import com.google.android.material.tabs.TabLayout;
 import com.liner.i_desk.Firebase.DatabaseListener;
 import com.liner.i_desk.Firebase.FireActivity;
+import com.liner.i_desk.Firebase.Firebase;
 import com.liner.i_desk.Firebase.RequestObject;
 import com.liner.i_desk.Fragments.Request.RequestActionsFragment;
 import com.liner.i_desk.Fragments.Request.RequestFilesFragment;
@@ -54,6 +55,10 @@ public class ActivityRequestDetail extends FireActivity {
     private UserProfileFragment userProfileFragment;
     private RequestActionsFragment requestActionsFragment;
 
+    private int activeItem = 1;
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,53 +93,11 @@ public class ActivityRequestDetail extends FireActivity {
                     super.onRequestChanged(requestObject, position);
                     if (item.getRequestID().equals(requestObject.getRequestID())) {
                         requestObject = item;
-                        updateRequestUI();
+                        initPage();
                     }
                 }
             };
-            fragmentAdapter = new FragmentAdapter(this, getSupportFragmentManager());
-            requestFilesFragment = new RequestFilesFragment(requestObject);
-            requestMessagesFragment = new RequestMessagesFragment(requestObject);
-            userProfileFragment = new UserProfileFragment(requestObject.getRequestCreatorID(), true);
-            requestActionsFragment = new RequestActionsFragment(requestObject);
-
-            fragmentAdapter.addTab(new FragmentAdapter.FragmentTab(requestFilesFragment, "Файлы", R.drawable.file_icon));
-            fragmentAdapter.addTab(new FragmentAdapter.FragmentTab(requestMessagesFragment, "Сообщения", R.drawable.message_icon));
-            fragmentAdapter.addTab(new FragmentAdapter.FragmentTab(userProfileFragment, "Профиль", R.drawable.user_icon));
-            fragmentAdapter.addTab(new FragmentAdapter.FragmentTab(requestActionsFragment, "Действия", R.drawable.star_icon));
-            viewPager.setOffscreenPageLimit(4);
-            viewPager.setAdapter(fragmentAdapter);
-            viewPager.setCurrentItem(1);
-            tabLayout.setupWithViewPager(viewPager);
-            tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-                @Override
-                public void onTabSelected(TabLayout.Tab tab) {
-                    switch (tab.getPosition()) {
-                        case 0:
-                        case 1:
-                        case 2:
-                            if (actionBarLayout.isExpanded()) {
-                                actionBarLayout.collapse();
-                                animateExpandButton();
-                            }
-                            break;
-                        case 3:
-                            actionBarLayout.expand();
-                            animateExpandButton();
-                            break;
-                    }
-                }
-
-                @Override
-                public void onTabUnselected(TabLayout.Tab tab) {
-
-                }
-
-                @Override
-                public void onTabReselected(TabLayout.Tab tab) {
-
-                }
-            });
+            initPage();
             activityBar.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -148,6 +111,60 @@ public class ActivityRequestDetail extends FireActivity {
         }
     }
 
+    private void initPage(){
+        fragmentAdapter = new FragmentAdapter(ActivityRequestDetail.this, getSupportFragmentManager());
+        requestFilesFragment = new RequestFilesFragment(requestObject);
+        requestMessagesFragment = new RequestMessagesFragment(requestObject);
+        if(requestObject.getRequestCreatorID().equals(Firebase.getUserUID())){
+            if(requestObject.getRequestAcceptorID() != null){
+                userProfileFragment = new UserProfileFragment(requestObject.getRequestAcceptorID(), true);
+            } else {
+                userProfileFragment = new UserProfileFragment("NO_ACCEPTOR", true);
+            }
+        } else {
+            userProfileFragment = new UserProfileFragment(requestObject.getRequestCreatorID(), true);
+        }
+        requestActionsFragment = new RequestActionsFragment(requestObject);
+        fragmentAdapter.addTab(new FragmentAdapter.FragmentTab(requestFilesFragment, "Файлы", R.drawable.file_icon));
+        fragmentAdapter.addTab(new FragmentAdapter.FragmentTab(requestMessagesFragment, "Сообщения", R.drawable.message_icon));
+        fragmentAdapter.addTab(new FragmentAdapter.FragmentTab(userProfileFragment, "Профиль", R.drawable.user_icon));
+        fragmentAdapter.addTab(new FragmentAdapter.FragmentTab(requestActionsFragment, "Действия", R.drawable.star_icon));
+        viewPager.setOffscreenPageLimit(4);
+        viewPager.setAdapter(fragmentAdapter);
+        viewPager.setCurrentItem(activeItem);
+        tabLayout.setupWithViewPager(viewPager);
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                activeItem = tab.getPosition();
+                switch (tab.getPosition()) {
+                    case 0:
+                    case 1:
+                    case 2:
+                        if (actionBarLayout.isExpanded()) {
+                            actionBarLayout.collapse();
+                            animateExpandButton();
+                        }
+                        break;
+                    case 3:
+                        actionBarLayout.expand();
+                        animateExpandButton();
+                        break;
+                }
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+        updateRequestUI();
+    }
 
     private void updateRequestUI() {
         requestDetailTitle.setText(requestObject.getRequestTitle());
@@ -169,7 +186,7 @@ public class ActivityRequestDetail extends FireActivity {
         }
         switch (requestObject.getRequestPriority()) {
             case VERY_LOW:
-                requestDetailPriority.setText("Очень низкий приоритет");
+                requestDetailPriority.setText("Оч. низкий приоритет");
                 requestDetailPriority.getBackground().setColorFilter(getResources().getColor(R.color.very_low_priority), PorterDuff.Mode.SRC_IN);
                 break;
             case LOW:
@@ -181,7 +198,7 @@ public class ActivityRequestDetail extends FireActivity {
                 requestDetailPriority.getBackground().setColorFilter(getResources().getColor(R.color.medium_priority), PorterDuff.Mode.SRC_IN);
                 break;
             case HIGH:
-                requestDetailPriority.setText("Очень высокий приоритет");
+                requestDetailPriority.setText("Оч. высокий приоритет");
                 requestDetailPriority.getBackground().setColorFilter(getResources().getColor(R.color.high_priority), PorterDuff.Mode.SRC_IN);
                 break;
             case VERY_HIGH:
@@ -223,6 +240,7 @@ public class ActivityRequestDetail extends FireActivity {
         super.onActivityResult(requestCode, resultCode, data);
         try {
             requestFilesFragment.onActivityResult(requestCode, resultCode, data);
+            requestMessagesFragment.onActivityResult(requestCode, resultCode, data);
         } catch (NullPointerException e) {
             e.printStackTrace();
         }

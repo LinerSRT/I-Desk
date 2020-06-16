@@ -11,6 +11,7 @@ import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.button.MaterialButton;
@@ -68,6 +69,9 @@ public class UserProfileFragment extends Fragment implements ImagePickerCallback
     public CameraImagePicker cameraImagePicker;
     public String pickedPhotoPath;
 
+    private YSTextView noUser;
+    private NestedScrollView nestedScrollView;
+
     private String userID;
     private boolean forceHideUserProfileActions = false;
     public UserProfileFragment(String userID) {
@@ -101,197 +105,206 @@ public class UserProfileFragment extends Fragment implements ImagePickerCallback
         userAboutText = view.findViewById(R.id.userAboutText);
         editUserProfile = view.findViewById(R.id.editUserProfile);
         signOut = view.findViewById(R.id.signOut);
-        if(userID.equals(Firebase.getUserUID())){
-            if(forceHideUserProfileActions){
+        noUser = view.findViewById(R.id.noUser);
+        nestedScrollView = view.findViewById(R.id.nestedScrollViewUserProfile);
+        if(userID.equals("NO_ACCEPTOR")){
+            nestedScrollView.setVisibility(View.GONE);
+            noUser.setVisibility(View.VISIBLE);
+        } else {
+            nestedScrollView.setVisibility(View.VISIBLE);
+            noUser.setVisibility(View.GONE);
+            if (userID.equals(Firebase.getUserUID())) {
+                if (forceHideUserProfileActions) {
+                    editUserProfile.setVisibility(View.GONE);
+                    signOut.setVisibility(View.GONE);
+                } else {
+                    editUserProfile.setVisibility(View.VISIBLE);
+                    signOut.setVisibility(View.VISIBLE);
+                }
+                uploadingDialog = BaseDialogBuilder.buildFast(
+                        getActivity(),
+                        "Загрузка фото",
+                        "Ваше фото загружается на сервер, подождите",
+                        null,
+                        null,
+                        BaseDialogBuilder.Type.PROGRESS,
+                        null,
+                        null
+                );
+                errorDialog = BaseDialogBuilder.buildFast(getActivity(),
+                        "Ошибка", "Что-то пошло не так. Попробуйте еще раз",
+                        null,
+                        "Ок",
+                        BaseDialogBuilder.Type.ERROR,
+                        null,
+                        new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                errorDialog.closeDialog();
+                            }
+                        });
+
+                List<BaseDialogSelectionItem> mediaSelectionItems = new ArrayList<>();
+                mediaSelectionItems.add(new BaseDialogSelectionItem(R.drawable.image_icon, "Выбрать изображение", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        mediaSelectionDialog.closeDialog();
+                        imagePicker.pickImage();
+
+                    }
+                }));
+                mediaSelectionItems.add(new BaseDialogSelectionItem(R.drawable.camera_icon, "Сделать фото", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        mediaSelectionDialog.closeDialog();
+                        pickedPhotoPath = cameraImagePicker.pickImage();
+
+                    }
+                }));
+                mediaSelectionDialog = new BaseDialogBuilder(getActivity())
+                        .setDialogTitle("Выберите вариант")
+                        .setDialogText("")
+                        .setSelectionList(mediaSelectionItems)
+                        .setDismissOnTouchOutside(true)
+                        .setDialogType(BaseDialogBuilder.Type.SINGLE_CHOOSE)
+                        .build();
+                List<BaseDialogSelectionItem> selectionItems = new ArrayList<>();
+                selectionItems.add(new BaseDialogSelectionItem(R.drawable.user_icon, "Никнейм", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        selectionDialog.closeDialog();
+                        new BaseDialogBuilder(getActivity())
+                                .setDialogTitle("Никнейм")
+                                .setDialogType(BaseDialogBuilder.Type.EDIT)
+                                .setEditHelpText("Укажите ваш новый никнем")
+                                .setEditMinCharacters(6)
+                                .setEditListener(new BaseDialog.BaseDialogEditListener() {
+                                    @Override
+                                    public void onEditFinished(String text) {
+                                        for (RequestObject requestObject : databaseListener.getRequests()) {
+                                            if (requestObject.getRequestAcceptorID() != null && requestObject.getRequestAcceptorID().equals(Firebase.getUserUID())) {
+                                                requestObject.setRequestAcceptorName(text);
+                                            }
+                                            if (requestObject.getRequestCreatorID().equals(Firebase.getUserUID())) {
+                                                requestObject.setRequestCreatorName(text);
+                                            }
+                                            FirebaseValue.setRequest(requestObject.getRequestID(), requestObject);
+                                        }
+                                        FirebaseValue.setUserValue(Firebase.getUserUID(), "userName", text);
+                                    }
+                                }).build().showDialog();
+                    }
+                }));
+                selectionItems.add(new BaseDialogSelectionItem(R.drawable.status_icon, "Статус", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        selectionDialog.closeDialog();
+                        new BaseDialogBuilder(getActivity())
+                                .setDialogTitle("Статус")
+                                .setDialogType(BaseDialogBuilder.Type.EDIT)
+                                .setEditHelpText("Укажите ваш новый статус")
+                                .setEditMinCharacters(4)
+                                .setEditListener(new BaseDialog.BaseDialogEditListener() {
+                                    @Override
+                                    public void onEditFinished(String text) {
+                                        FirebaseValue.setUserValue(Firebase.getUserUID(), "userStatusText", text);
+                                    }
+                                }).build().showDialog();
+                    }
+                }));
+                selectionItems.add(new BaseDialogSelectionItem(R.drawable.about_icon, "О себе", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        selectionDialog.closeDialog();
+                        new BaseDialogBuilder(getActivity())
+                                .setDialogTitle("Информация о себе")
+                                .setDialogType(BaseDialogBuilder.Type.EDIT)
+                                .setEditHelpText("Укажите кратко информацию о себе")
+                                .setEditMinCharacters(1)
+                                .setEditListener(new BaseDialog.BaseDialogEditListener() {
+                                    @Override
+                                    public void onEditFinished(String text) {
+                                        FirebaseValue.setUserValue(Firebase.getUserUID(), "userAboutText", text);
+                                    }
+                                }).build().showDialog();
+                    }
+                }));
+                selectionItems.add(new BaseDialogSelectionItem(R.drawable.camera_icon, "Фото профиля", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        selectionDialog.closeDialog();
+                        mediaSelectionDialog.showDialog();
+                    }
+                }));
+                selectionDialog = new BaseDialogBuilder(getActivity())
+                        .setDialogTitle("Выберите вариант")
+                        .setDialogText("Выберите что вы хотите изменить")
+                        .setSelectionList(selectionItems)
+                        .setDismissOnTouchOutside(true)
+                        .setDialogType(BaseDialogBuilder.Type.SINGLE_CHOOSE)
+                        .build();
+                editUserProfile.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        selectionDialog.showDialog();
+                    }
+                });
+                signOut.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        FireActivity activity = (FireActivity) getActivity();
+                        activity.signOut();
+                    }
+                });
+
+            } else {
                 editUserProfile.setVisibility(View.GONE);
                 signOut.setVisibility(View.GONE);
-            } else {
-                editUserProfile.setVisibility(View.VISIBLE);
-                signOut.setVisibility(View.VISIBLE);
             }
-            uploadingDialog = BaseDialogBuilder.buildFast(
-                    getActivity(),
-                    "Загрузка фото",
-                    "Ваше фото загружается на сервер, подождите",
-                    null,
-                    null,
-                    BaseDialogBuilder.Type.PROGRESS,
-                    null,
-                    null
-            );
-            errorDialog = BaseDialogBuilder.buildFast(getActivity(),
-                    "Ошибка", "Что-то пошло не так. Попробуйте еще раз",
-                    null,
-                    "Ок",
-                    BaseDialogBuilder.Type.ERROR,
-                    null,
-                    new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            errorDialog.closeDialog();
-                        }
-                    });
+            userRequestCount.setText("0");
+            userMessageCount.setText("0");
+            databaseListener = new DatabaseListener() {
+                @Override
+                public void onUserAdded(UserObject userObject, int position) {
+                    super.onUserAdded(userObject, position);
+                    if (userObject.getUserID().equals(userID)) {
+                        currentUser = userObject;
+                        updateUserData();
+                    }
+                }
 
-            List<BaseDialogSelectionItem> mediaSelectionItems = new ArrayList<>();
-            mediaSelectionItems.add(new BaseDialogSelectionItem(R.drawable.image_icon, "Выбрать изображение", new View.OnClickListener() {
                 @Override
-                public void onClick(View view) {
-                    mediaSelectionDialog.closeDialog();
-                    imagePicker.pickImage();
+                public void onUserChanged(UserObject userObject, int position) {
+                    super.onUserChanged(userObject, position);
+                    if (userObject.getUserID().equals(userID)) {
+                        currentUser = userObject;
+                        updateUserData();
+                    }
+                }
 
-                }
-            }));
-            mediaSelectionItems.add(new BaseDialogSelectionItem(R.drawable.camera_icon, "Сделать фото", new View.OnClickListener() {
                 @Override
-                public void onClick(View view) {
-                    mediaSelectionDialog.closeDialog();
-                    pickedPhotoPath = cameraImagePicker.pickImage();
+                public void onRequestAdded(RequestObject requestObject, int position) {
+                    super.onRequestAdded(requestObject, position);
+                    if (requestObject.getRequestCreatorID().equals(Firebase.getUserUID()))
+                        userRequestCount.setText(String.valueOf(Integer.parseInt(userRequestCount.getText().toString().trim()) + 1));
+                }
 
-                }
-            }));
-            mediaSelectionDialog = new BaseDialogBuilder(getActivity())
-                    .setDialogTitle("Выберите вариант")
-                    .setDialogText("")
-                    .setSelectionList(mediaSelectionItems)
-                    .setDismissOnTouchOutside(true)
-                    .setDialogType(BaseDialogBuilder.Type.SINGLE_CHOOSE)
-                    .build();
-            List<BaseDialogSelectionItem> selectionItems = new ArrayList<>();
-            selectionItems.add(new BaseDialogSelectionItem(R.drawable.user_icon, "Никнейм", new View.OnClickListener() {
                 @Override
-                public void onClick(View view) {
-                    selectionDialog.closeDialog();
-                    new BaseDialogBuilder(getActivity())
-                            .setDialogTitle("Никнейм")
-                            .setDialogType(BaseDialogBuilder.Type.EDIT)
-                            .setEditHelpText("Укажите ваш новый никнем")
-                            .setEditMinCharacters(6)
-                            .setEditListener(new BaseDialog.BaseDialogEditListener() {
-                                @Override
-                                public void onEditFinished(String text) {
-                                    for(RequestObject requestObject:databaseListener.getRequests()){
-                                        if(requestObject.getRequestAcceptorID() != null && requestObject.getRequestAcceptorID().equals(Firebase.getUserUID())){
-                                            requestObject.setRequestAcceptorName(text);
-                                        }
-                                        if(requestObject.getRequestCreatorID().equals(Firebase.getUserUID())){
-                                            requestObject.setRequestCreatorName(text);
-                                        }
-                                        FirebaseValue.setRequest(requestObject.getRequestID(), requestObject);
-                                    }
-                                    FirebaseValue.setUserValue(Firebase.getUserUID(), "userName", text);
-                                }
-                            }).build().showDialog();
+                public void onMessageAdded(MessageObject messageObject, int position) {
+                    super.onMessageAdded(messageObject, position);
+                    if (messageObject.getCreatorID().equals(Firebase.getUserUID()))
+                        userMessageCount.setText(String.valueOf(Integer.parseInt(userMessageCount.getText().toString().trim()) + 1));
                 }
-            }));
-            selectionItems.add(new BaseDialogSelectionItem(R.drawable.status_icon, "Статус", new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    selectionDialog.closeDialog();
-                    new BaseDialogBuilder(getActivity())
-                            .setDialogTitle("Статус")
-                            .setDialogType(BaseDialogBuilder.Type.EDIT)
-                            .setEditHelpText("Укажите ваш новый статус")
-                            .setEditMinCharacters(4)
-                            .setEditListener(new BaseDialog.BaseDialogEditListener() {
-                                @Override
-                                public void onEditFinished(String text) {
-                                    FirebaseValue.setUserValue(Firebase.getUserUID(), "userStatusText", text);
-                                }
-                            }).build().showDialog();
-                }
-            }));
-            selectionItems.add(new BaseDialogSelectionItem(R.drawable.about_icon, "О себе", new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    selectionDialog.closeDialog();
-                    new BaseDialogBuilder(getActivity())
-                            .setDialogTitle("Информация о себе")
-                            .setDialogType(BaseDialogBuilder.Type.EDIT)
-                            .setEditHelpText("Укажите кратко информацию о себе")
-                            .setEditMinCharacters(1)
-                            .setEditListener(new BaseDialog.BaseDialogEditListener() {
-                                @Override
-                                public void onEditFinished(String text) {
-                                    FirebaseValue.setUserValue(Firebase.getUserUID(), "userAboutText", text);
-                                }
-                            }).build().showDialog();
-                }
-            }));
-            selectionItems.add(new BaseDialogSelectionItem(R.drawable.camera_icon, "Фото профиля", new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    selectionDialog.closeDialog();
-                    mediaSelectionDialog.showDialog();
-                }
-            }));
-            selectionDialog = new BaseDialogBuilder(getActivity())
-                    .setDialogTitle("Выберите вариант")
-                    .setDialogText("Выберите что вы хотите изменить")
-                    .setSelectionList(selectionItems)
-                    .setDismissOnTouchOutside(true)
-                    .setDialogType(BaseDialogBuilder.Type.SINGLE_CHOOSE)
-                    .build();
-            editUserProfile.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    selectionDialog.showDialog();
-                }
-            });
-            signOut.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    FireActivity activity = (FireActivity) getActivity();
-                    activity.signOut();
-                }
-            });
+            };
 
-        } else {
-            editUserProfile.setVisibility(View.GONE);
-            signOut.setVisibility(View.GONE);
+            databaseListener.startListening();
         }
-        userRequestCount.setText("0");
-        userMessageCount.setText("0");
-        databaseListener = new DatabaseListener() {
-            @Override
-            public void onUserAdded(UserObject userObject, int position) {
-                super.onUserAdded(userObject, position);
-                if (userObject.getUserID().equals(userID)) {
-                    currentUser = userObject;
-                    updateUserData();
-                }
-            }
-
-            @Override
-            public void onUserChanged(UserObject userObject, int position) {
-                super.onUserChanged(userObject, position);
-                if (userObject.getUserID().equals(userID)) {
-                    currentUser = userObject;
-                    updateUserData();
-                }
-            }
-
-            @Override
-            public void onRequestAdded(RequestObject requestObject, int position) {
-                super.onRequestAdded(requestObject, position);
-                if (requestObject.getRequestCreatorID().equals(Firebase.getUserUID()))
-                    userRequestCount.setText(String.valueOf(Integer.parseInt(userRequestCount.getText().toString().trim()) + 1));
-            }
-
-            @Override
-            public void onMessageAdded(MessageObject messageObject, int position) {
-                super.onMessageAdded(messageObject, position);
-                if (messageObject.getCreatorID().equals(Firebase.getUserUID()))
-                    userMessageCount.setText(String.valueOf(Integer.parseInt(userMessageCount.getText().toString().trim()) + 1));
-            }
-        };
-
-        databaseListener.startListening();
         return view;
     }
 
     @Override
     public void onDetach() {
-        if (databaseListener.isListening())
+        if (databaseListener != null)
             databaseListener.stopListening();
         super.onDetach();
     }

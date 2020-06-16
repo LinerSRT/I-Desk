@@ -2,7 +2,6 @@ package com.liner.i_desk.Firebase;
 
 import com.google.firebase.database.DatabaseReference;
 import com.liner.i_desk.Constants;
-import com.liner.utils.FileUtils;
 
 import java.util.List;
 
@@ -15,15 +14,20 @@ public abstract class DatabaseListener implements DatabaseAbstractListener {
     private boolean listening = false;
 
 
-
     protected DatabaseListener() {
-        if(!Firebase.isUserLoginned()){
+        if (!Firebase.isUserLoginned()) {
             return;
         }
+
+    }
+
+
+    public void startListening() {
+        listening = true;
         userObjectFirebaseListener = new FirebaseListener<UserObject>(Constants.USERS_DATABASE_KEY) {
             @Override
             public void onItemAdded(String key, UserObject item, int pos, DatabaseReference reference) {
-                if(item.getUserID().equals(Firebase.getUserUID()))
+                if (item.getUserID().equals(Firebase.getUserUID()))
                     currentUser = item;
                 onUserAdded(item, pos);
             }
@@ -106,42 +110,42 @@ public abstract class DatabaseListener implements DatabaseAbstractListener {
 
             }
         };
+        userObjectFirebaseListener.start();
+        requestObjectFirebaseListener.start();
+        messageObjectFirebaseListener.start();
+        fileObjectFirebaseListener.start();
     }
 
-
-    public void startListening() {
-        listening = true;
-        if(userObjectFirebaseListener != null)
-            userObjectFirebaseListener.start();
-        if(requestObjectFirebaseListener != null)
-            requestObjectFirebaseListener.start();
-        if(messageObjectFirebaseListener != null)
-            messageObjectFirebaseListener.start();
-        if(fileObjectFirebaseListener != null)
-            fileObjectFirebaseListener.start();
-    }
     public void stopListening() {
         listening = false;
-        if(userObjectFirebaseListener != null)
+        if (userObjectFirebaseListener != null)
             userObjectFirebaseListener.destroy();
-        if(requestObjectFirebaseListener != null)
+        if (requestObjectFirebaseListener != null)
             requestObjectFirebaseListener.destroy();
-        if(messageObjectFirebaseListener != null)
+        if (messageObjectFirebaseListener != null)
             messageObjectFirebaseListener.destroy();
-        if(fileObjectFirebaseListener != null)
+        if (fileObjectFirebaseListener != null)
             fileObjectFirebaseListener.destroy();
+        userObjectFirebaseListener = null;
+        requestObjectFirebaseListener = null;
+        messageObjectFirebaseListener = null;
+        fileObjectFirebaseListener = null;
+
     }
 
-    public List<UserObject> getUsers(){
+    public List<UserObject> getUsers() {
         return userObjectFirebaseListener.getItems();
     }
-    public List<RequestObject> getRequests(){
+
+    public List<RequestObject> getRequests() {
         return requestObjectFirebaseListener.getItems();
     }
-    public List<MessageObject> getMessages(){
+
+    public List<MessageObject> getMessages() {
         return messageObjectFirebaseListener.getItems();
     }
-    public List<FileObject> getFiles(){
+
+    public List<FileObject> getFiles() {
         return fileObjectFirebaseListener.getItems();
     }
 

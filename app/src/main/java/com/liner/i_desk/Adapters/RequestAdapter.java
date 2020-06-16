@@ -219,7 +219,7 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
             }
             switch (item.getRequestPriority()) {
                 case VERY_LOW:
-                    holder.serviceHolderRequestPriority.setText("Очень низкий приоритет");
+                    holder.serviceHolderRequestPriority.setText("Оч. низкий приоритет");
                     holder.serviceHolderRequestPriority.getBackground().setColorFilter(activity.getResources().getColor(R.color.very_low_priority), PorterDuff.Mode.SRC_IN);
                     break;
                 case LOW:
@@ -231,7 +231,7 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
                     holder.serviceHolderRequestPriority.getBackground().setColorFilter(activity.getResources().getColor(R.color.medium_priority), PorterDuff.Mode.SRC_IN);
                     break;
                 case HIGH:
-                    holder.serviceHolderRequestPriority.setText("Очень высокий приоритет");
+                    holder.serviceHolderRequestPriority.setText("Оч. высокий приоритет");
                     holder.serviceHolderRequestPriority.getBackground().setColorFilter(activity.getResources().getColor(R.color.high_priority), PorterDuff.Mode.SRC_IN);
                     break;
                 case VERY_HIGH:
@@ -292,6 +292,8 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
     }
 
     public void onDestroy(){
+        requestObjectList.clear();
+        notifyDataSetChanged();
         databaseListener.stopListening();
     }
 

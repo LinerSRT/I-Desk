@@ -23,7 +23,9 @@
 
     <com.baoyz.widget.PullRefreshLayout
         android:id="@+id/requestRefreshLayout"
+        app:refreshType="smartisan"
         android:layout_width="match_parent"
+        app:refreshColor="@color/primary"
         android:layout_height="match_parent">
 
         <androidx.recyclerview.widget.RecyclerView

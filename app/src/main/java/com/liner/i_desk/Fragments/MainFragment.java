@@ -48,6 +48,20 @@ public class MainFragment extends Fragment implements PullRefreshLayout.OnRefres
         View view = inflater.inflate(R.layout.fragmnet_main, container, false);
         requestRecycler = view.findViewById(R.id.requestRecycler);
         requestRefreshLayout = view.findViewById(R.id.requestRefreshLayout);
+        requestRefreshLayout.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                requestRefreshLayout.setRefreshing(true);
+                requestAdapter.onDestroy();
+                databaseListener.stopListening();
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        databaseListener.startListening();
+                    }
+                }, 1500);
+            }
+        });
         noRequests = view.findViewById(R.id.noRequests);
         requestRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
         return view;
@@ -70,6 +84,7 @@ public class MainFragment extends Fragment implements PullRefreshLayout.OnRefres
                     requestAdapter.setAdapterCallback(MainFragment.this);
                     requestRecycler.setAdapter(requestAdapter);
                     requestAdapter.onStart();
+                    requestRefreshLayout.setRefreshing(false);
                 }
             }
 

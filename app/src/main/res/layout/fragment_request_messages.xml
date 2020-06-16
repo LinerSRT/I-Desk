@@ -1,6 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+    <com.stfalcon.chatkit.messages.MessagesList
+        android:id="@+id/messagesList"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_margin="@dimen/contentMarginHalf"
+        android:layout_weight="1"
+        android:background="@drawable/background_round"
+        android:overScrollMode="never"
+        app:incomingDefaultBubbleColor="@color/primary_dark"
+        app:incomingDefaultBubblePressedColor="@color/primary"
+        app:incomingDefaultBubbleSelectedColor="@color/primary"
+        app:incomingTextColor="@color/white"
+        app:incomingTextLinkColor="@color/primary"
+        app:incomingTextSize="@dimen/secondaryTextSize"
+        app:incomingTimeTextColor="@color/text_dark"
+        app:incomingTimeTextSize="@dimen/tipsTextSize"
+        app:outcomingDefaultBubbleColor="@color/window_background_dark"
+        app:outcomingDefaultBubblePressedColor="@color/window_background_dark"
+        app:outcomingDefaultBubbleSelectedColor="@color/window_background_dark"
+        app:outcomingTextColor="@color/text"
+        app:outcomingTextLinkColor="@color/primary"
+        app:outcomingTextSize="@dimen/secondaryTextSize"
+        app:outcomingTimeTextColor="@color/text_dark"
+        app:outcomingTimeTextSize="@dimen/tipsTextSize" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <com.liner.views.FileListLayoutView
+        android:background="@drawable/background_round"
+        android:id="@+id/fragmentMessagesFileLayoutView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <com.stfalcon.chatkit.messages.MessageInput
+        android:id="@+id/detailRequestInputMessage"
+        android:layout_width="match_parent"
+        android:background="@drawable/background_round"
+        android:layout_margin="@dimen/contentMarginHalf"
+        android:layout_height="64dp"
+        app:attachmentButtonBackground="@drawable/background_round_dark"
+        app:attachmentButtonDefaultIconColor="?colorPrimaryDark"
+        app:attachmentButtonDefaultIconDisabledColor="?disabledColor"
+        app:attachmentButtonDefaultIconPressedColor="?colorPrimary"
+        app:delayTypingStatus="3000"
+        app:inputButtonBackground="@drawable/background_round_dark"
+        app:inputButtonDefaultIconColor="?colorPrimaryDark"
+        app:inputButtonDefaultIconDisabledColor="?disabledColor"
+        app:inputButtonDefaultIconPressedColor="?colorPrimary"
+        app:inputButtonHeight="40dp"
+        app:inputButtonWidth="40dp"
+        app:inputHint="Сообщение"
+        app:inputHintColor="?textColorDark"
+        app:inputMaxLines="2"
+        app:inputTextColor="?textColor"
+        app:inputTextSize="@dimen/secondaryTextSize"
+        app:showAttachmentButton="true" />
+
+</LinearLayout>

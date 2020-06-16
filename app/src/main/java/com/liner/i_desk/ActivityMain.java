@@ -80,7 +80,7 @@ public class ActivityMain extends FireActivity {
         spaceNavigationView.initWithSaveInstanceState(savedInstanceState);
         spaceNavigationView.addSpaceItem(new SpaceItem("Заявки", R.drawable.requests_icon, SpaceItem.Align.LEFT));
         spaceNavigationView.addSpaceItem(new SpaceItem(R.drawable.user_icon, SpaceItem.Align.RIGHT));
-        spaceNavigationView.addSpaceItem(new SpaceItem(R.drawable.message_icon, SpaceItem.Align.RIGHT));
+        //spaceNavigationView.addSpaceItem(new SpaceItem(R.drawable.message_icon, SpaceItem.Align.RIGHT));
         spaceNavigationView.setCentreButtonIcon(R.drawable.add_icon_white);
         spaceNavigationView.setCentreButtonColor(getResources().getColor(R.color.primary));
         spaceNavigationView.shouldShowFullBadgeText(true);

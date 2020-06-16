@@ -5,11 +5,24 @@
     android:layout_height="match_parent"
     android:background="@color/window_background_dark">
 
+    <com.liner.views.YSTextView
+        android:id="@+id/noUser"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:text="Эту заявку еще не принял ни один исполнитель"
+        android:textColor="@color/red"
+        android:gravity="center"
+        android:textSize="@dimen/secondaryTextSizeSmall"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:ys_type="Light" />
+
     <androidx.core.widget.NestedScrollView
+        android:id="@+id/nestedScrollViewUserProfile"
+        style="@style/ScrollbarStyle"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        style="@style/ScrollbarStyle"
         android:overScrollMode="never"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -23,8 +36,8 @@
 
             <com.github.florent37.shapeofview.shapes.RoundRectView
                 android:layout_width="250dp"
-                android:layout_gravity="center_horizontal"
                 android:layout_height="250dp"
+                android:layout_gravity="center_horizontal"
                 android:layout_margin="@dimen/contentMarginHalf"
                 app:shape_roundRect_bottomLeftRadius="@dimen/cardsCornerRadius"
                 app:shape_roundRect_bottomRightRadius="@dimen/cardsCornerRadius"
@@ -280,23 +293,22 @@
                 android:background="?android:attr/listDivider" />
 
 
-
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/editUserProfile"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/contentMarginHalf"
                 android:layout_marginEnd="@dimen/contentMarginHalf"
-                android:text="Редактировать профиль"/>
+                android:text="Редактировать профиль" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/signOut"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/contentMarginHalf"
-                android:layout_marginBottom="@dimen/contentHeight"
                 android:layout_marginEnd="@dimen/contentMarginHalf"
-                android:text="Выйти из аккаунта"/>
+                android:layout_marginBottom="@dimen/contentHeight"
+                android:text="Выйти из аккаунта" />
 
 
         </LinearLayout>

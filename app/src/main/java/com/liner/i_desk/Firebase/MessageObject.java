@@ -18,6 +18,7 @@ public class MessageObject implements Serializable, IMessage, MessageContentType
     private String creatorName;
     private String creatorPhotoURL;
     private String creatorID;
+    private boolean isRead;
 
     /**
      * Конструктор для Firebase должен быть пустой.
@@ -94,9 +95,19 @@ public class MessageObject implements Serializable, IMessage, MessageContentType
         return new Date(messageCreatedAt);
     }
 
+    public boolean isRead() {
+        return isRead;
+    }
+
+    public void setRead(boolean read) {
+        isRead = read;
+    }
+
     /**
      * Стандартные get'еры и set'еры
      */
+
+
     public String getMessageID() {
         return messageID;
     }
