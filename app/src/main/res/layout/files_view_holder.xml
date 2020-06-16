@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/contentMarginHalf"
+    android:layout_marginTop="@dimen/contentMarginHalf"
+    android:layout_marginEnd="@dimen/contentMarginHalf"
+    android:background="@drawable/background_round"
+    android:orientation="vertical"
+    android:padding="@dimen/contentMarginHalf">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/fileHolderIcon"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/file_icon" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="@dimen/contentMarginHalf"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <com.liner.views.YSMarqueTextView
+                android:id="@+id/fileHolderName"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:maxLines="1"
+                android:text="Filename"
+                android:textColor="@color/text"
+                android:textSize="@dimen/secondaryTextSize"
+                app:ys_type="Light" />
+
+            <com.liner.views.YSTextView
+                android:id="@+id/fileHolderSize"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:text="200 MB"
+                android:textColor="@color/text_dark"
+                android:textSize="@dimen/tipsTextSize"
+                app:ys_type="Light" />
+        </LinearLayout>
+
+        <com.github.abdularis.buttonprogress.DownloadButtonProgress
+            android:id="@+id/fileHolderDownload"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            app:currentProgress="50"
+            app:finishBackgroundColor="@color/primary"
+            app:finishIconDrawable="@drawable/download_finished_icon"
+            app:idleBackgroundColor="@color/window_background_dark"
+            app:idleIconDrawable="@drawable/download_icon"
+            app:state="IDLE"
+            app:progressIndeterminateColor="@color/primary_dark"
+            app:progressDeterminateColor="@color/primary_dark"
+            app:determinateBackgroundColor="@color/window_background_dark"
+            app:progressWidth="3dp"
+            android:layout_marginEnd="@dimen/contentMarginHalf"
+            app:progressMargin="2dp"
+            />
+
+        <ImageButton
+            android:id="@+id/fileHolderDelete"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/delete_icon"
+            android:background="@drawable/circle_bg"
+            android:backgroundTint="@color/window_background_dark"/>
+
+    </LinearLayout>
+
+</LinearLayout>

@@ -24,7 +24,7 @@ import com.liner.i_desk.Firebase.FileObject;
 import com.liner.i_desk.Firebase.Firebase;
 import com.liner.i_desk.Firebase.FirebaseValue;
 import com.liner.i_desk.Firebase.RequestObject;
-import com.liner.i_desk.Firebase.Storage.FirebaseUploadTask;
+import com.liner.i_desk.Firebase.Storage.FirebaseFileManager;
 import com.liner.i_desk.Firebase.Storage.TaskListener;
 import com.liner.i_desk.Firebase.UserObject;
 import com.liner.i_desk.R;
@@ -179,55 +179,52 @@ public class CreateRequestFragment extends Fragment implements StepperFormListen
         newRequest.setRequestCreatorLastOnlineTime(Time.getTime());
         if (!requestFileStep.getResult().isEmpty()) {
             uploadFilesDialog.showDialog();
-            new FirebaseUploadTask().with(getActivity())
-                    .userUID(Firebase.getUserUID())
-                    .fileList(requestFileStep.getResult())
-                    .uploadFiles(new TaskListener<List<FileObject>>() {
-                        @Override
-                        public void onStart(String fileUID) {
+            new FirebaseFileManager().uploadFiles(requestFileStep.getResult(), new TaskListener<List<FileObject>>() {
+                @Override
+                public void onStart(String fileUID) {
 
+                }
+
+                @Override
+                public void onProgress(long transferredBytes, long totalBytes) {
+
+                }
+
+                @Override
+                public void onFinish(List<FileObject> result, String fileUID) {
+                    for (FileObject fileObject : result) {
+                        newRequest.getRequestFiles().put(fileObject.getFileID(), fileObject.getFileCreatorID());
+                    }
+                    FirebaseValue.getUser(Firebase.getUserUID(), new FirebaseValue.ValueListener() {
+                        @Override
+                        public void onSuccess(Object object, DatabaseReference databaseReference) {
+                            UserObject userObject = (UserObject) object;
+                            if (userObject.getUserRequests() == null)
+                                userObject.setUserRequests(new ArrayList<String>());
+                            newRequest.setRequestCreatorName(userObject.getUserName());
+                            newRequest.setRequestCreatorPhotoURL(userObject.getUserProfilePhotoURL());
+                            userObject.getUserRequests().add(newRequest.getRequestID());
+                            Objects.requireNonNull(Firebase.getRequestsDatabase()).child(newRequest.getRequestID()).setValue(newRequest);
+                            FirebaseValue.setUser(Firebase.getUserUID(), userObject);
+                            uploadFilesDialog.closeDialog();
+                            processingDialog.closeDialog();
+                            finishDialog.showDialog();
                         }
 
                         @Override
-                        public void onProgress(long transferredBytes, long totalBytes) {
-
-                        }
-
-                        @Override
-                        public void onFinish(List<FileObject> result, String fileUID) {
-                            for (FileObject fileObject : result) {
-                                newRequest.getRequestFiles().put(fileObject.getFileID(), fileObject.getFileCreatorID());
-                            }
-                            FirebaseValue.getUser(Firebase.getUserUID(), new FirebaseValue.ValueListener() {
-                                @Override
-                                public void onSuccess(Object object, DatabaseReference databaseReference) {
-                                    UserObject userObject = (UserObject) object;
-                                    if (userObject.getUserRequests() == null)
-                                        userObject.setUserRequests(new ArrayList<String>());
-                                    newRequest.setRequestCreatorName(userObject.getUserName());
-                                    newRequest.setRequestCreatorPhotoURL(userObject.getUserProfilePhotoURL());
-                                    userObject.getUserRequests().add(newRequest.getRequestID());
-                                    Objects.requireNonNull(Firebase.getRequestsDatabase()).child(newRequest.getRequestID()).setValue(newRequest);
-                                    FirebaseValue.setUser(Firebase.getUserUID(), userObject);
-                                    uploadFilesDialog.closeDialog();
-                                    processingDialog.closeDialog();
-                                    finishDialog.showDialog();
-                                }
-
-                                @Override
-                                public void onFail(String errorMessage) {
-                                    uploadFilesDialog.closeDialog();
-                                    errorDialog.showDialog();
-                                }
-                            });
-                        }
-
-                        @Override
-                        public void onFailed(Exception reason) {
+                        public void onFail(String errorMessage) {
                             uploadFilesDialog.closeDialog();
                             errorDialog.showDialog();
                         }
                     });
+                }
+
+                @Override
+                public void onFailed(Exception reason) {
+                    uploadFilesDialog.closeDialog();
+                    errorDialog.showDialog();
+                }
+            });
         } else {
             FirebaseValue.getUser(Firebase.getUserUID(), new FirebaseValue.ValueListener() {
                 @Override

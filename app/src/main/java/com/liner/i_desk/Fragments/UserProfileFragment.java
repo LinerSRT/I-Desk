@@ -26,7 +26,7 @@ import com.liner.i_desk.Firebase.Firebase;
 import com.liner.i_desk.Firebase.FirebaseValue;
 import com.liner.i_desk.Firebase.MessageObject;
 import com.liner.i_desk.Firebase.RequestObject;
-import com.liner.i_desk.Firebase.Storage.FirebaseUploadTask;
+import com.liner.i_desk.Firebase.Storage.FirebaseFileManager;
 import com.liner.i_desk.Firebase.Storage.TaskListener;
 import com.liner.i_desk.Firebase.UserObject;
 import com.liner.i_desk.R;
@@ -325,51 +325,44 @@ public class UserProfileFragment extends Fragment implements ImagePickerCallback
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
-            if (imagePicker == null) {
-                imagePicker = new ImagePicker(getActivity());
-                imagePicker.setImagePickerCallback(this);
-            }
             if (requestCode == Picker.PICK_IMAGE_DEVICE) {
                 imagePicker.submit(data);
             } else if (requestCode == Picker.PICK_IMAGE_CAMERA) {
                 if (pickedPhotoPath != null)
-                    new FirebaseUploadTask().with(getActivity())
-                            .file(new File(pickedPhotoPath))
-                            .userUID(Firebase.getUserUID())
-                            .uploadFile(new TaskListener<FileObject>() {
-                                @Override
-                                public void onStart(String fileUID) {
-                                    uploadingDialog.showDialog();
-                                }
+                    new FirebaseFileManager().uploadFile(new File(pickedPhotoPath), new TaskListener<FileObject>() {
+                        @Override
+                        public void onStart(String fileUID) {
+                            uploadingDialog.showDialog();
+                        }
 
-                                @Override
-                                public void onProgress(long transferredBytes, long totalBytes) {
-                                    uploadingDialog.getProgressBar().setProgress(Math.round((((float) transferredBytes / (float) totalBytes) * 100)));
-                                }
+                        @Override
+                        public void onProgress(long transferredBytes, long totalBytes) {
+                            uploadingDialog.getProgressBar().setProgress(Math.round((((float) transferredBytes / (float) totalBytes) * 100)));
+                        }
 
-                                @Override
-                                public void onFinish(FileObject result, String fileUID) {
-                                    Picasso.get().load(new File(pickedPhotoPath)).resize(ViewUtils.dpToPx(250), ViewUtils.dpToPx(250)).into(userPhoto);
-                                    for(RequestObject requestObject:databaseListener.getRequests()){
-                                        if(requestObject.getRequestAcceptorID() != null && requestObject.getRequestAcceptorID().equals(Firebase.getUserUID())){
-                                            requestObject.setRequestAcceptorPhotoURL(result.getFileURL());
-                                        }
-                                        if(requestObject.getRequestCreatorID().equals(Firebase.getUserUID())){
-                                            requestObject.setRequestCreatorPhotoURL(result.getFileURL());
-                                        }
-                                        FirebaseValue.setRequest(requestObject.getRequestID(), requestObject);
-                                    }
-
-                                    FirebaseValue.setUserValue(Firebase.getUserUID(), "userProfilePhotoURL", result.getFileURL());
-                                    uploadingDialog.closeDialog();
+                        @Override
+                        public void onFinish(FileObject result, String fileUID) {
+                            Picasso.get().load(new File(pickedPhotoPath)).resize(ViewUtils.dpToPx(250), ViewUtils.dpToPx(250)).into(userPhoto);
+                            for(RequestObject requestObject:databaseListener.getRequests()){
+                                if(requestObject.getRequestAcceptorID() != null && requestObject.getRequestAcceptorID().equals(Firebase.getUserUID())){
+                                    requestObject.setRequestAcceptorPhotoURL(result.getFileURL());
                                 }
-
-                                @Override
-                                public void onFailed(Exception reason) {
-                                    uploadingDialog.closeDialog();
-                                    errorDialog.showDialog();
+                                if(requestObject.getRequestCreatorID().equals(Firebase.getUserUID())){
+                                    requestObject.setRequestCreatorPhotoURL(result.getFileURL());
                                 }
-                            });
+                                FirebaseValue.setRequest(requestObject.getRequestID(), requestObject);
+                            }
+
+                            FirebaseValue.setUserValue(Firebase.getUserUID(), "userProfilePhotoURL", result.getFileURL());
+                            uploadingDialog.closeDialog();
+                        }
+
+                        @Override
+                        public void onFailed(Exception reason) {
+                            uploadingDialog.closeDialog();
+                            errorDialog.showDialog();
+                        }
+                    });
             }
         } else {
             errorDialog.showDialog();
@@ -378,35 +371,30 @@ public class UserProfileFragment extends Fragment implements ImagePickerCallback
 
     @Override
     public void onImagesChosen(final List<ChosenImage> list) {
-        new FirebaseUploadTask().with(getActivity())
-                .file(new File(list.get(0).getOriginalPath()))
-                .userUID(Firebase.getUserUID())
-                .uploadFile(new TaskListener<FileObject>() {
-                    @Override
-                    public void onStart(String fileUID) {
-                        uploadingDialog.showDialog();
-                    }
+        new FirebaseFileManager().uploadFile(new File(list.get(0).getOriginalPath()), new TaskListener<FileObject>() {
+            @Override
+            public void onStart(String fileUID) {
+                uploadingDialog.showDialog();
+            }
 
-                    @Override
-                    public void onProgress(long transferredBytes, long totalBytes) {
-                        uploadingDialog.getProgressBar().setProgress(Math.round((((float) transferredBytes / (float) totalBytes) * 100)));
-                    }
+            @Override
+            public void onProgress(long transferredBytes, long totalBytes) {
+                uploadingDialog.getProgressBar().setProgress(Math.round((((float) transferredBytes / (float) totalBytes) * 100)));
+            }
 
-                    @Override
-                    public void onFinish(FileObject result, String fileUID) {
-                        Picasso.get().load(new File(list.get(0).getOriginalPath())).resize(ViewUtils.dpToPx(250), ViewUtils.dpToPx(250)).into(userPhoto);
-                        FirebaseValue.setUserValue(Firebase.getUserUID(), "userProfilePhotoURL", result.getFileURL());
-                        uploadingDialog.closeDialog();
-                    }
+            @Override
+            public void onFinish(FileObject result, String fileUID) {
+                Picasso.get().load(new File(list.get(0).getOriginalPath())).resize(ViewUtils.dpToPx(250), ViewUtils.dpToPx(250)).into(userPhoto);
+                FirebaseValue.setUserValue(Firebase.getUserUID(), "userProfilePhotoURL", result.getFileURL());
+                uploadingDialog.closeDialog();
+            }
 
-                    @Override
-                    public void onFailed(Exception reason) {
-                        uploadingDialog.closeDialog();
-                        errorDialog.showDialog();
-                    }
-                });
-
-
+            @Override
+            public void onFailed(Exception reason) {
+                uploadingDialog.closeDialog();
+                errorDialog.showDialog();
+            }
+        });
     }
 
     @Override

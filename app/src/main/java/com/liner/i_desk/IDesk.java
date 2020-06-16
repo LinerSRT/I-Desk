@@ -4,6 +4,7 @@ import android.app.Application;
 
 import androidx.annotation.NonNull;
 
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
@@ -28,7 +29,8 @@ public class IDesk extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+        FirebaseApp.initializeApp(this);
+        //FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         Picasso.Builder builder = new Picasso.Builder(this);
         builder.downloader(new OkHttp3Downloader(this, Integer.MAX_VALUE));
         FileDownloader.setupOnApplicationOnCreate(this)

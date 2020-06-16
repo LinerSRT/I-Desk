@@ -91,6 +91,38 @@ public class FirebaseValue {
         });
     }
 
+    public void getRequests(String userID, final ValueListener valueListener){
+        final List<RequestObject> resultList = new ArrayList<>();
+        getUser(userID, new ValueListener() {
+            @Override
+            public void onSuccess(Object object, final DatabaseReference databaseReference) {
+                final UserObject userObject = (UserObject) object;
+                Objects.requireNonNull(Firebase.getRequestsDatabase()).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if(userObject.getUserRequests().contains(dataSnapshot.getKey())){
+                            resultList.add(dataSnapshot.getValue(RequestObject.class));
+                        }
+                        if(resultList.size() == userObject.getUserRequests().size()){
+                            valueListener.onSuccess(resultList, null);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+            }
+
+            @Override
+            public void onFail(String errorMessage) {
+                valueListener.onFail(errorMessage);
+            }
+        });
+    }
+
+
     public static void setUserValue(String userID, String key, Object value) {
         if (!Firebase.isUserLoginned())
             return;
@@ -147,99 +179,6 @@ public class FirebaseValue {
         });
     }
 
-    public static void uploadFileList(final List<File> fileList, final FileListUploadListener fileListUploadListener){
-        final List<FileObject> fileObjects = new ArrayList<>();
-        uploadCount = 0;
-        uploadedCount = 0;
-        uploadSize = FileUtils.getListFilesSize(fileList);
-        for(final File file:fileList){
-            uploadByteArray(FileUtils.getFileByteArray(file), file.getName(), new FileUploadListener() {
-                @Override
-                public void onStart() {
-                    Log.d(getClass().getSimpleName(), "Start upload ["+file.getName()+"] finished");
-                }
-
-                @Override
-                public void onProgress(long transferredBytes, long totalBytes) {
-                    Log.d(getClass().getSimpleName(), "Uploading "+uploadCount+" of "+fileList.size()+" | "+file.getName()+" ["+transferredBytes+"/"+totalBytes+"]");
-                    uploadCount += transferredBytes;
-                    fileListUploadListener.onUploading(Math.round((uploadCount/uploadSize)*100));
-                }
-
-                @Override
-                public void onFail(String reason) {
-                    fileListUploadListener.onFail(reason);
-                }
-
-                @Override
-                public void onFinish(FileObject fileObject) {
-                    uploadCount++;
-                    Log.d(getClass().getSimpleName(), "Upload ["+file.getName()+"] finished");
-                    fileObjects.add(fileObject);
-                    if(uploadCount == fileList.size())
-                        fileListUploadListener.onFinish(fileObjects);
-                }
-            });
-        }
-    }
-
-    public static void uploadByteArray(byte[] bytes, final String filenameWithExtension, final FileUploadListener fileUploadListener) {
-        final String fileID = TextUtils.getUniqueString();
-        final StorageReference path = FirebaseStorage.getInstance().getReference(Firebase.getUserUID()+File.separator+filenameWithExtension);
-        final UploadTask uploadTask = path.putBytes(bytes);
-        fileUploadListener.onStart();
-        uploadTask.addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-                if (task.isSuccessful()) {
-                    path.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                        @Override
-                        public void onSuccess(Uri uri) {
-                            final String fileURL = uri.toString();
-                            path.getMetadata().addOnSuccessListener(new OnSuccessListener<StorageMetadata>() {
-                                @Override
-                                public void onSuccess(final StorageMetadata storageMetadata) {
-                                    FileObject fileObject = new FileObject(
-                                            fileID,
-                                            filenameWithExtension,
-                                            fileURL,
-                                            storageMetadata.getContentType(),
-                                            Firebase.getUserUID(),
-                                            storageMetadata.getCreationTimeMillis(),
-                                            storageMetadata.getSizeBytes()
-                                    );
-                                    Objects.requireNonNull(Firebase.getFilesDatabase()).child(fileObject.getFileID()).setValue(fileObject);
-                                    fileUploadListener.onFinish(fileObject);
-                                }
-                            }).addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    fileUploadListener.onFail(e.getMessage());
-                                }
-                            });
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            fileUploadListener.onFail(e.getMessage());
-                        }
-                    });
-                } else {
-                    fileUploadListener.onFail(Objects.requireNonNull(task.getException()).getMessage());
-                }
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                fileUploadListener.onFail(e.getMessage());
-            }
-        }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onProgress(@NonNull UploadTask.TaskSnapshot taskSnapshot) {
-                fileUploadListener.onProgress(taskSnapshot.getBytesTransferred(), taskSnapshot.getTotalByteCount());
-            }
-        });
-    }
 
 
 

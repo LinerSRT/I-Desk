@@ -44,6 +44,9 @@ public class MessagingService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         serviceIntent = intent;
+        if(!Firebase.isUserLoginned()){
+            stopSelf();
+        }
         databaseListener = new DatabaseListener() {
             @Override
             public void onUserAdded(UserObject user, int position) {
@@ -112,7 +115,8 @@ public class MessagingService extends Service {
         super.onDestroy();
         serviceIntent = null;
         databaseListener.stopListening();
-        restartService();
+        if(Firebase.isUserLoginned())
+            restartService();
     }
 
 

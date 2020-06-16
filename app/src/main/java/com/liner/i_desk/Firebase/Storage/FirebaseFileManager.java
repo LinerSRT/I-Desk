@@ -1,6 +1,7 @@
 package com.liner.i_desk.Firebase.Storage;
 
 import android.net.Uri;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -29,61 +30,37 @@ import java.util.List;
 import java.util.Objects;
 
 public class FirebaseFileManager {
-    public String fileURL;
-    public List<File> fileList;
-    public File file;
-    private String fileName;
-    private String userUID;
-    private byte[] data;
-    private StorageReference storageReference;
-    private String referencePath;
-
     private int uploadedFiles = 0;
+    private int ID = -1;
 
-    public FirebaseFileManager(FirebaseUploadTask task) {
-        this.fileName = task.fileName;
-        this.userUID = task.userUID;
-        this.data = task.data;
-        this.fileList = task.fileList;
-        this.file = task.file;
-        this.referencePath = userUID + File.separator + fileName;
-        storageReference = FirebaseStorage.getInstance().getReference(referencePath);
+    public FirebaseFileManager() {
     }
 
-    public FirebaseFileManager(FirebaseDownloadTask task) {
-        this.userUID = task.userUID;
-        this.fileName = task.fileName;
-        this.fileURL = task.fileURL;
-        this.referencePath = userUID + File.separator + fileName;
-        storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(fileURL);
-    }
-
-
-    public void uploadFiles(final TaskListener<List<FileObject>> listener) {
+    public void uploadFiles(final List<File> files, final TaskListener<List<FileObject>> listener) {
         final List<FileObject> resultList = new ArrayList<>();
         listener.onStart(null);
-        FirebaseValue.getUser(userUID, new FirebaseValue.ValueListener() {
+        FirebaseValue.getUser(Firebase.getUserUID(), new FirebaseValue.ValueListener() {
             @Override
             public void onSuccess(Object object, DatabaseReference databaseReference) {
                 final UserObject userObject = (UserObject) object;
-                for (File item : fileList) {
+                for (final File item : files) {
                     final String fileUID = TextUtils.getUniqueString();
-                    storageReference.putFile(Uri.fromFile(item)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                    FirebaseStorage.getInstance().getReference(Firebase.getUserUID() + File.separator + item.getName()).putFile(Uri.fromFile(item)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onComplete(@NonNull final Task<UploadTask.TaskSnapshot> task) {
                             if (task.isSuccessful()) {
-                                storageReference.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
+                                FirebaseStorage.getInstance().getReference(Firebase.getUserUID() + File.separator + item.getName()).getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
                                     @Override
                                     public void onComplete(@NonNull final Task<Uri> fileDownloadURL) {
-                                        storageReference.getMetadata().addOnCompleteListener(new OnCompleteListener<StorageMetadata>() {
+                                        FirebaseStorage.getInstance().getReference(Firebase.getUserUID() + File.separator + item.getName()).getMetadata().addOnCompleteListener(new OnCompleteListener<StorageMetadata>() {
                                             @Override
                                             public void onComplete(@NonNull Task<StorageMetadata> fileMetadata) {
                                                 FileObject fileObject = new FileObject(
                                                         fileUID,
-                                                        fileName,
+                                                        item.getName(),
                                                         Objects.requireNonNull(fileDownloadURL.getResult()).toString(),
                                                         Objects.requireNonNull(fileMetadata.getResult()).getContentType(),
-                                                        userUID,
+                                                        Firebase.getUserUID(),
                                                         fileMetadata.getResult().getCreationTimeMillis(),
                                                         fileMetadata.getResult().getSizeBytes()
                                                 );
@@ -93,8 +70,8 @@ public class FirebaseFileManager {
                                                 userObject.getUserFiles().add(fileObject.getFileID());
                                                 resultList.add(fileObject);
                                                 uploadedFiles++;
-                                                if (uploadedFiles == fileList.size()) {
-                                                    FirebaseValue.setUser(userUID, userObject);
+                                                if (uploadedFiles == files.size()) {
+                                                    FirebaseValue.setUser(Firebase.getUserUID(), userObject);
                                                     listener.onFinish(resultList, null);
                                                 }
                                             }
@@ -125,22 +102,21 @@ public class FirebaseFileManager {
             }
         });
     }
-
-    public void uploadFile(final TaskListener<FileObject> listener) {
+    public void uploadFile(final File file, final TaskListener<FileObject> listener) {
         final String fileUID = TextUtils.getUniqueString();
         listener.onStart(fileUID);
-        storageReference.putFile(Uri.fromFile(file)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+        FirebaseStorage.getInstance().getReference(Firebase.getUserUID() + File.separator + file.getName()).putFile(Uri.fromFile(file)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onComplete(@NonNull final Task<UploadTask.TaskSnapshot> task) {
                 if (task.isSuccessful()) {
-                    FirebaseValue.getUser(userUID, new FirebaseValue.ValueListener() {
+                    FirebaseValue.getUser(Firebase.getUserUID(), new FirebaseValue.ValueListener() {
                         @Override
                         public void onSuccess(Object object, DatabaseReference databaseReference) {
                             final UserObject userObject = (UserObject) object;
-                            storageReference.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
+                            FirebaseStorage.getInstance().getReference(Firebase.getUserUID() + File.separator + file.getName()).getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
                                 @Override
                                 public void onComplete(@NonNull final Task<Uri> fileDownloadURL) {
-                                    storageReference.getMetadata().addOnCompleteListener(new OnCompleteListener<StorageMetadata>() {
+                                    FirebaseStorage.getInstance().getReference(Firebase.getUserUID() + File.separator + file.getName()).getMetadata().addOnCompleteListener(new OnCompleteListener<StorageMetadata>() {
                                         @Override
                                         public void onComplete(@NonNull Task<StorageMetadata> fileMetadata) {
                                             if (userObject.getUserFiles() == null)
@@ -148,14 +124,14 @@ public class FirebaseFileManager {
                                             userObject.getUserFiles().add(fileUID);
                                             final FileObject fileObject = new FileObject(
                                                     fileUID,
-                                                    fileName,
+                                                    file.getName(),
                                                     fileDownloadURL.getResult().toString(),
                                                     Objects.requireNonNull(fileMetadata.getResult()).getContentType(),
-                                                    userUID,
+                                                    Firebase.getUserUID(),
                                                     fileMetadata.getResult().getCreationTimeMillis(),
                                                     fileMetadata.getResult().getSizeBytes()
                                             );
-                                            FirebaseValue.setUser(userUID, userObject);
+                                            FirebaseValue.setUser(Firebase.getUserUID(), userObject);
                                             Firebase.getFilesDatabase().child(fileUID).setValue(fileObject).addOnCompleteListener(new OnCompleteListener<Void>() {
                                                 @Override
                                                 public void onComplete(@NonNull Task<Void> task) {
@@ -192,23 +168,22 @@ public class FirebaseFileManager {
 
 
     }
-
-    public void uploadBytes(final TaskListener<FileObject> listener) {
+    public void uploadBytes(byte[] data, final TaskListener<FileObject> listener) {
         final String fileUID = TextUtils.getUniqueString();
         listener.onStart(fileUID);
-        if (file != null) {
-            storageReference.putFile(Uri.fromFile(file)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+        final String fileName = TextUtils.getUniqueString();
+        FirebaseStorage.getInstance().getReference(Firebase.getUserUID() + File.separator + fileName).putBytes(data).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onComplete(@NonNull final Task<UploadTask.TaskSnapshot> task) {
                     if (task.isSuccessful()) {
-                        FirebaseValue.getUser(userUID, new FirebaseValue.ValueListener() {
+                        FirebaseValue.getUser(Firebase.getUserUID(), new FirebaseValue.ValueListener() {
                             @Override
                             public void onSuccess(Object object, DatabaseReference databaseReference) {
                                 final UserObject userObject = (UserObject) object;
-                                storageReference.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
+                                FirebaseStorage.getInstance().getReference(Firebase.getUserUID() + File.separator + fileName).getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
                                     @Override
                                     public void onComplete(@NonNull final Task<Uri> fileDownloadURL) {
-                                        storageReference.getMetadata().addOnCompleteListener(new OnCompleteListener<StorageMetadata>() {
+                                        FirebaseStorage.getInstance().getReference(Firebase.getUserUID() + File.separator + fileName).getMetadata().addOnCompleteListener(new OnCompleteListener<StorageMetadata>() {
                                             @Override
                                             public void onComplete(@NonNull Task<StorageMetadata> fileMetadata) {
                                                 if (userObject.getUserFiles() == null)
@@ -219,14 +194,11 @@ public class FirebaseFileManager {
                                                         fileName,
                                                         fileDownloadURL.getResult().toString(),
                                                         Objects.requireNonNull(fileMetadata.getResult()).getContentType(),
-                                                        userUID,
+                                                        Firebase.getUserUID(),
                                                         fileMetadata.getResult().getCreationTimeMillis(),
                                                         fileMetadata.getResult().getSizeBytes()
                                                 );
-                                                if(userObject.getUserFiles() == null)
-                                                    userObject.setUserFiles(new ArrayList<String>());
-                                                userObject.getUserFiles().add(fileObject.getFileID());
-                                                FirebaseValue.setUser(userUID, userObject);
+                                                FirebaseValue.setUser(Firebase.getUserUID(), userObject);
                                                 Firebase.getFilesDatabase().child(fileUID).setValue(fileObject).addOnCompleteListener(new OnCompleteListener<Void>() {
                                                     @Override
                                                     public void onComplete(@NonNull Task<Void> task) {
@@ -259,140 +231,18 @@ public class FirebaseFileManager {
                     listener.onProgress(taskSnapshot.getBytesTransferred(), taskSnapshot.getTotalByteCount());
                 }
             });
-        } else if (fileList != null) {
 
-            for (File item : fileList) {
-                storageReference.putFile(Uri.fromFile(item)).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull final Task<UploadTask.TaskSnapshot> task) {
-                        if (task.isSuccessful()) {
-                            FirebaseValue.getUser(userUID, new FirebaseValue.ValueListener() {
-                                @Override
-                                public void onSuccess(Object object, DatabaseReference databaseReference) {
-                                    final UserObject userObject = (UserObject) object;
-                                    storageReference.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
-                                        @Override
-                                        public void onComplete(@NonNull final Task<Uri> fileDownloadURL) {
-                                            storageReference.getMetadata().addOnCompleteListener(new OnCompleteListener<StorageMetadata>() {
-                                                @Override
-                                                public void onComplete(@NonNull Task<StorageMetadata> fileMetadata) {
-                                                    if (userObject.getUserFiles() == null)
-                                                        userObject.setUserFiles(new ArrayList<String>());
-                                                    userObject.getUserFiles().add(fileUID);
-                                                    final FileObject fileObject = new FileObject(
-                                                            fileUID,
-                                                            fileName,
-                                                            fileDownloadURL.getResult().toString(),
-                                                            Objects.requireNonNull(fileMetadata.getResult()).getContentType(),
-                                                            userUID,
-                                                            fileMetadata.getResult().getCreationTimeMillis(),
-                                                            fileMetadata.getResult().getSizeBytes()
-                                                    );
-                                                    FirebaseValue.setUser(userUID, userObject);
-                                                    Firebase.getFilesDatabase().child(fileUID).setValue(fileObject).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                        @Override
-                                                        public void onComplete(@NonNull Task<Void> task) {
-                                                            listener.onFinish(fileObject, fileUID);
-                                                        }
-                                                    });
-                                                }
-                                            });
-                                        }
-                                    });
-                                }
-
-                                @Override
-                                public void onFail(String errorMessage) {
-
-                                }
-                            });
-                        } else {
-                            listener.onFailed(task.getException());
-                        }
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        listener.onFailed(e);
-                    }
-                }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onProgress(@NonNull UploadTask.TaskSnapshot taskSnapshot) {
-                        listener.onProgress(taskSnapshot.getBytesTransferred(), taskSnapshot.getTotalByteCount());
-                    }
-                });
-
-
-            }
-
-
-        } else if (data != null) {
-            storageReference.putBytes(data).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onComplete(@NonNull final Task<UploadTask.TaskSnapshot> task) {
-                    if (task.isSuccessful()) {
-                        FirebaseValue.getUser(userUID, new FirebaseValue.ValueListener() {
-                            @Override
-                            public void onSuccess(Object object, DatabaseReference databaseReference) {
-                                final UserObject userObject = (UserObject) object;
-                                storageReference.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
-                                    @Override
-                                    public void onComplete(@NonNull final Task<Uri> fileDownloadURL) {
-                                        storageReference.getMetadata().addOnCompleteListener(new OnCompleteListener<StorageMetadata>() {
-                                            @Override
-                                            public void onComplete(@NonNull Task<StorageMetadata> fileMetadata) {
-                                                if (userObject.getUserFiles() == null)
-                                                    userObject.setUserFiles(new ArrayList<String>());
-                                                userObject.getUserFiles().add(fileUID);
-                                                final FileObject fileObject = new FileObject(
-                                                        fileUID,
-                                                        fileName,
-                                                        fileDownloadURL.getResult().toString(),
-                                                        Objects.requireNonNull(fileMetadata.getResult()).getContentType(),
-                                                        userUID,
-                                                        fileMetadata.getResult().getCreationTimeMillis(),
-                                                        fileMetadata.getResult().getSizeBytes()
-                                                );
-                                                FirebaseValue.setUser(userUID, userObject);
-                                                Firebase.getFilesDatabase().child(fileUID).setValue(fileObject).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                    @Override
-                                                    public void onComplete(@NonNull Task<Void> task) {
-                                                        listener.onFinish(fileObject, fileUID);
-                                                    }
-                                                });
-                                            }
-                                        });
-                                    }
-                                });
-                            }
-
-                            @Override
-                            public void onFail(String errorMessage) {
-
-                            }
-                        });
-                    } else {
-                        listener.onFailed(task.getException());
-                    }
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    listener.onFailed(e);
-                }
-            }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onProgress(@NonNull UploadTask.TaskSnapshot taskSnapshot) {
-                    listener.onProgress(taskSnapshot.getBytesTransferred(), taskSnapshot.getTotalByteCount());
-                }
-            });
-        }
     }
 
-    public void download(final TaskListener<File> listener) {
+    public void cancel(){
+        FileDownloader.getImpl().pause(ID);
+    }
+
+    public void download(FileObject fileObject, final TaskListener<File> listener) {
         listener.onStart(null);
-        FileDownloader.getImpl().create(fileURL)
-                .setPath(FileUtils.getDownloadDir() + fileName)
+        FileDownloader.getImpl().create(fileObject.getFileURL())
+                .setPath(FileUtils.getDownloadDir() + fileObject.getFileName())
+                .setTag(fileObject.getFileName())
                 .setListener(new FileDownloadListener() {
                     @Override
                     protected void pending(BaseDownloadTask task, int soFarBytes, int totalBytes) {
@@ -401,6 +251,7 @@ public class FirebaseFileManager {
                     @Override
                     protected void started(BaseDownloadTask task) {
                         listener.onStart(null);
+                        ID = task.getId();
                     }
 
                     @Override

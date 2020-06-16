@@ -2,6 +2,7 @@ package com.liner.i_desk;
 
 import android.animation.PropertyValuesHolder;
 import android.animation.ValueAnimator;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
@@ -9,6 +10,8 @@ import android.view.View;
 import android.view.animation.OvershootInterpolator;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
+
+import androidx.annotation.Nullable;
 
 import com.google.android.material.tabs.TabLayout;
 import com.liner.i_desk.Firebase.DatabaseListener;
@@ -45,6 +48,11 @@ public class ActivityRequestDetail extends FireActivity {
     private ExtendedViewPager viewPager;
     private FragmentAdapter fragmentAdapter;
     private TabLayout tabLayout;
+
+    private RequestFilesFragment requestFilesFragment;
+    private RequestMessagesFragment requestMessagesFragment;
+    private UserProfileFragment userProfileFragment;
+    private RequestActionsFragment requestActionsFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,10 +93,15 @@ public class ActivityRequestDetail extends FireActivity {
                 }
             };
             fragmentAdapter = new FragmentAdapter(this, getSupportFragmentManager());
-            fragmentAdapter.addTab(new FragmentAdapter.FragmentTab(new RequestFilesFragment(requestObject), "Файлы", R.drawable.file_icon));
-            fragmentAdapter.addTab(new FragmentAdapter.FragmentTab(new RequestMessagesFragment(requestObject), "Сообщения", R.drawable.message_icon));
-            fragmentAdapter.addTab(new FragmentAdapter.FragmentTab(new UserProfileFragment(requestObject.getRequestCreatorID(), true), "Профиль", R.drawable.user_icon));
-            fragmentAdapter.addTab(new FragmentAdapter.FragmentTab(new RequestActionsFragment(requestObject), "Действия", R.drawable.star_icon));
+            requestFilesFragment = new RequestFilesFragment(requestObject);
+            requestMessagesFragment = new RequestMessagesFragment(requestObject);
+            userProfileFragment = new UserProfileFragment(requestObject.getRequestCreatorID(), true);
+            requestActionsFragment = new RequestActionsFragment(requestObject);
+
+            fragmentAdapter.addTab(new FragmentAdapter.FragmentTab(requestFilesFragment, "Файлы", R.drawable.file_icon));
+            fragmentAdapter.addTab(new FragmentAdapter.FragmentTab(requestMessagesFragment, "Сообщения", R.drawable.message_icon));
+            fragmentAdapter.addTab(new FragmentAdapter.FragmentTab(userProfileFragment, "Профиль", R.drawable.user_icon));
+            fragmentAdapter.addTab(new FragmentAdapter.FragmentTab(requestActionsFragment, "Действия", R.drawable.star_icon));
             viewPager.setOffscreenPageLimit(4);
             viewPager.setAdapter(fragmentAdapter);
             viewPager.setCurrentItem(1);
@@ -96,11 +109,11 @@ public class ActivityRequestDetail extends FireActivity {
             tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
                 @Override
                 public void onTabSelected(TabLayout.Tab tab) {
-                    switch (tab.getPosition()){
+                    switch (tab.getPosition()) {
                         case 0:
                         case 1:
                         case 2:
-                            if(actionBarLayout.isExpanded()) {
+                            if (actionBarLayout.isExpanded()) {
                                 actionBarLayout.collapse();
                                 animateExpandButton();
                             }
@@ -205,6 +218,16 @@ public class ActivityRequestDetail extends FireActivity {
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        try {
+            requestFilesFragment.onActivityResult(requestCode, resultCode, data);
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
+    }
+
     private void animateExpandButton() {
         ValueAnimator animation = ValueAnimator.ofPropertyValuesHolder(PropertyValuesHolder.ofFloat("Rotation", actionBarLayout.isExpanded() ? 180 : 0, actionBarLayout.isExpanded() ? 0 : 180));
         animation.setDuration(400);
@@ -215,7 +238,7 @@ public class ActivityRequestDetail extends FireActivity {
                 expandActionBar.setRotation((Float) valueAnimator.getAnimatedValue("Rotation"));
             }
         });
-        if(animation.isRunning())
+        if (animation.isRunning())
             animation.cancel();
         animation.start();
     }

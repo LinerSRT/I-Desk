@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.SnapHelper;
 import com.kbeanie.multipicker.api.entity.ChosenFile;
 import com.liner.utils.FileUtils;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -75,6 +76,10 @@ public class FileListLayoutView extends BaseItem {
         fileAdapter.notifyItemRemoved(position);
     }
 
+    public void removeAll() {
+        fileItemList.clear();
+        fileAdapter.notifyDataSetChanged();
+    }
 
     public int findPositionForObject(ChosenFile file) {
         return fileItemList.indexOf(file);
@@ -82,6 +87,13 @@ public class FileListLayoutView extends BaseItem {
 
     public List<ChosenFile> getFileItemList() {
         return fileItemList;
+    }
+
+    public List<File> getFilesItemList() {
+        List<File> result = new ArrayList<>();
+        for(ChosenFile chosenFile:fileItemList)
+            result.add(new File(chosenFile.getOriginalPath()));
+        return result;
     }
 
     public class FileAdapter extends RecyclerView.Adapter<FileAdapter.FileHolder> {

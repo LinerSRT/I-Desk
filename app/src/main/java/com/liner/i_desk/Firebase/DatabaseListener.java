@@ -2,6 +2,7 @@ package com.liner.i_desk.Firebase;
 
 import com.google.firebase.database.DatabaseReference;
 import com.liner.i_desk.Constants;
+import com.liner.utils.FileUtils;
 
 import java.util.List;
 
@@ -16,6 +17,9 @@ public abstract class DatabaseListener implements DatabaseAbstractListener {
 
 
     protected DatabaseListener() {
+        if(!Firebase.isUserLoginned()){
+            return;
+        }
         userObjectFirebaseListener = new FirebaseListener<UserObject>(Constants.USERS_DATABASE_KEY) {
             @Override
             public void onItemAdded(String key, UserObject item, int pos, DatabaseReference reference) {
@@ -84,17 +88,17 @@ public abstract class DatabaseListener implements DatabaseAbstractListener {
         fileObjectFirebaseListener = new FirebaseListener<FileObject>(Constants.FILES_DATABASE_KEY) {
             @Override
             public void onItemAdded(String key, FileObject item, int pos, DatabaseReference reference) {
-                onFileAdded(item, pos);
+                onFileAdded(item, pos, key);
             }
 
             @Override
             public void onItemChanged(String key, FileObject item, int pos, DatabaseReference reference) {
-                onFileChanged(item, pos);
+                onFileChanged(item, pos, key);
             }
 
             @Override
             public void onItemRemoved(String key, FileObject item, int pos, DatabaseReference reference) {
-                onFileDeleted(item, pos);
+                onFileDeleted(item, pos, key);
             }
 
             @Override
@@ -206,17 +210,17 @@ public abstract class DatabaseListener implements DatabaseAbstractListener {
     }
 
     @Override
-    public void onFileAdded(FileObject fileObject, int position) {
+    public void onFileAdded(FileObject fileObject, int position, String key) {
 
     }
 
     @Override
-    public void onFileChanged(FileObject fileObject, int position) {
+    public void onFileChanged(FileObject fileObject, int position, String key) {
 
     }
 
     @Override
-    public void onFileDeleted(FileObject fileObject, int position) {
+    public void onFileDeleted(FileObject fileObject, int position, String key) {
 
     }
 }

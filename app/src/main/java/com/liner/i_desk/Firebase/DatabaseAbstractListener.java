@@ -9,7 +9,7 @@ public interface DatabaseAbstractListener{
     void onMessageAdded(MessageObject messageObject, int position);
     void onMessageChanged(MessageObject messageObject, int position);
     void onMessageDeleted(MessageObject messageObject, int position);
-    void onFileAdded(FileObject fileObject, int position);
-    void onFileChanged(FileObject fileObject, int position);
-    void onFileDeleted(FileObject fileObject, int position);
+    void onFileAdded(FileObject fileObject, int position, String key);
+    void onFileChanged(FileObject fileObject, int position, String key);
+    void onFileDeleted(FileObject fileObject, int position, String key);
 }

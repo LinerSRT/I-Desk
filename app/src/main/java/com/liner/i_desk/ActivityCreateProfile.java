@@ -15,7 +15,7 @@ import com.kbeanie.multipicker.api.MediaPicker;
 import com.kbeanie.multipicker.api.callbacks.MediaPickerCallback;
 import com.kbeanie.multipicker.api.entity.ChosenImage;
 import com.kbeanie.multipicker.api.entity.ChosenVideo;
-import com.liner.i_desk.Firebase.Storage.FirebaseUploadTask;
+import com.liner.i_desk.Firebase.Storage.FirebaseFileManager;
 import com.liner.i_desk.Firebase.Storage.TaskListener;
 import com.liner.i_desk.Firebase.FileObject;
 import com.liner.i_desk.Firebase.FireActivity;
@@ -175,33 +175,30 @@ public class ActivityCreateProfile extends FireActivity {
         mediaPicker.setMediaPickerCallback(new MediaPickerCallback() {
             @Override
             public void onMediaChosen(final List<ChosenImage> list, List<ChosenVideo> list1) {
-                new FirebaseUploadTask().with(ActivityCreateProfile.this)
-                        .file(new File(list.get(0).getOriginalPath()))
-                        .userUID(Firebase.getUserUID())
-                        .uploadFile(new TaskListener<FileObject>() {
-                            @Override
-                            public void onStart(String fileUID) {
-                                uploadingDialog.showDialog();
-                            }
+                new FirebaseFileManager().uploadFile(new File(list.get(0).getOriginalPath()), new TaskListener<FileObject>() {
+                    @Override
+                    public void onStart(String fileUID) {
+                        uploadingDialog.showDialog();
+                    }
 
-                            @Override
-                            public void onProgress(long transferredBytes, long totalBytes) {
-                                uploadingDialog.getProgressBar().setProgress(Math.round((((float)transferredBytes/(float)totalBytes)*100)));
-                            }
+                    @Override
+                    public void onProgress(long transferredBytes, long totalBytes) {
+                        uploadingDialog.getProgressBar().setProgress(Math.round((((float)transferredBytes/(float)totalBytes)*100)));
+                    }
 
-                            @Override
-                            public void onFinish(FileObject result, String fileUID) {
-                                Picasso.get().load(new File(list.get(0).getOriginalPath())).resize(ViewUtils.dpToPx(120),ViewUtils.dpToPx(120)).into(createProfilePhoto);
-                                userPhotoURL = result.getFileURL();
-                                uploadingDialog.closeDialog();
-                            }
+                    @Override
+                    public void onFinish(FileObject result, String fileUID) {
+                        Picasso.get().load(new File(list.get(0).getOriginalPath())).resize(ViewUtils.dpToPx(120),ViewUtils.dpToPx(120)).into(createProfilePhoto);
+                        userPhotoURL = result.getFileURL();
+                        uploadingDialog.closeDialog();
+                    }
 
-                            @Override
-                            public void onFailed(Exception reason) {
-                                uploadingDialog.closeDialog();
-                                errorDialog.showDialog();
-                            }
-                        });
+                    @Override
+                    public void onFailed(Exception reason) {
+                        uploadingDialog.closeDialog();
+                        errorDialog.showDialog();
+                    }
+                });
             }
 
             @Override

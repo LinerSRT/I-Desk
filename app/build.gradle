@@ -81,4 +81,5 @@ dependencies {
     implementation 'com.kbeanie:multipicker:1.6@aar'
     implementation 'com.github.jd-alexander:LikeButton:0.2.3'
     implementation 'com.github.sujithkanna:smileyrating:2.0.0'
+    implementation 'com.github.abdularis:androidbuttonprogress:1.0.2'
 }
